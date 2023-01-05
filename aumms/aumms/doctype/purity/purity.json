@@ -1,0 +1,86 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "allow_import": 1,
+ "autoname": "field:purity",
+ "creation": "2023-01-05 14:43:49.081619",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "purity",
+  "column_break_2",
+  "purity_percentage",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "purity",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Purity",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "purity_percentage",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Purity Percentage",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Purity",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Purity",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-01-05 14:44:20.669850",
+ "modified_by": "Administrator",
+ "module": "AuMMS",
+ "name": "Purity",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
