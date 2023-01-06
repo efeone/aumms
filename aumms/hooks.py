@@ -105,7 +105,10 @@ doctype_js = {'Item': 'public/js/item.js'}
 doc_events = {
 	'Item': {
         'validate': 'aumms.aumms.doc_events.item.validate_item'
-	}
+	},
+	'Item Group':{
+		'autoname': 'aumms.aumms.doc_events.item_group.autoname_item_group'
+    }
 }
 
 # Scheduled Tasks
