@@ -1,0 +1,63 @@
+{
+ "charts": [],
+ "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">AuMMS</span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Board Rate\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Group\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Type\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity\",\"col\":3}}]",
+ "creation": "2023-01-06 12:02:34.084523",
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "shortcut",
+ "idx": 0,
+ "label": "AuMMS",
+ "links": [],
+ "modified": "2023-01-06 12:06:39.014760",
+ "modified_by": "Administrator",
+ "module": "AuMMS",
+ "name": "AuMMS",
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 1.0,
+ "shortcuts": [
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "format": "{} Submitted",
+   "label": "Board Rate",
+   "link_to": "Board Rate",
+   "stats_filter": "{\"docstatus\":[\"=\",\"1\"]}",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Item",
+   "link_to": "Item",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Item Group",
+   "link_to": "Item Group",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Item Type",
+   "link_to": "Item Type",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Purity",
+   "link_to": "Purity",
+   "type": "DocType"
+  }
+ ],
+ "title": "AuMMS"
+}
