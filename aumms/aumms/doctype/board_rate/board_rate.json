@@ -1,16 +1,21 @@
 {
  "actions": [],
- "allow_rename": 1,
+ "autoname": "naming_series:",
  "creation": "2023-01-05 12:14:35.062006",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "naming_series",
   "board_rate",
+  "item_type",
+  "purity_mandatory",
+  "uom",
+  "column_break_4",
   "date",
   "time",
-  "uom",
+  "purity",
   "amended_from"
  ],
  "fields": [
@@ -18,19 +23,25 @@
    "default": "Today",
    "fieldname": "date",
    "fieldtype": "Date",
-   "label": "Date"
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
   },
   {
    "default": "Now",
    "fieldname": "time",
    "fieldtype": "Time",
-   "label": "Time"
+   "in_list_view": 1,
+   "label": "Time",
+   "reqd": 1
   },
   {
    "fieldname": "uom",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "UOM",
-   "options": "UOM"
+   "options": "UOM",
+   "reqd": 1
   },
   {
    "fieldname": "amended_from",
@@ -44,16 +55,55 @@
   {
    "fieldname": "board_rate",
    "fieldtype": "Currency",
-   "label": "Board Rate"
+   "in_list_view": 1,
+   "label": "Board Rate",
+   "reqd": 1
+  },
+  {
+   "fieldname": "purity",
+   "fieldtype": "Link",
+   "label": "Purity",
+   "mandatory_depends_on": "purity_mandatory",
+   "options": "Purity"
+  },
+  {
+   "default": "BR-.DD.-.MM.-.YY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Naming Series",
+   "options": "BR-.DD.-.MM.-.YY.-",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fetch_from": "item_type.purity_mandatory",
+   "fieldname": "purity_mandatory",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Purity Mandatory",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-05 14:58:06.487052",
+ "modified": "2023-01-06 13:24:16.055342",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Board Rate",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
