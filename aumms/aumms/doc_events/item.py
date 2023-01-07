@@ -33,3 +33,21 @@ def uom_is_a_purity_uom(uom):
 def get_purity_uom():
     """ method to get all uoms with is purity checked"""
     return frappe.db.get_all('UOM', {'is_purity_uom': 1})
+
+@frappe.whitelist()
+def check_conversion_factor_for_uom(doc, method):
+    """
+        method using for checking and warning the user that the coversion factor is 0
+        args:
+            doc: object of item document
+            method: before save of item document
+    """
+    for uom in doc.uoms:
+        if not uom.conversion_factor:
+            # alert message to user
+            frappe.msgprint(
+                msg = _(
+                    'The conversion factor between {} and {} is zero.'.format(uom.uom, doc.stock_uom)
+                    ),
+                title = 'Alert'
+            )

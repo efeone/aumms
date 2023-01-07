@@ -104,7 +104,8 @@ doctype_js = {'Item': 'public/js/item.js'}
 
 doc_events = {
 	'Item': {
-        'validate': 'aumms.aumms.doc_events.item.validate_item'
+        'validate': 'aumms.aumms.doc_events.item.validate_item',
+		'before_save': 'aumms.aumms.doc_events.item.check_conversion_factor_for_uom'
 	},
 	'Item Group':{
 		'autoname': 'aumms.aumms.doc_events.item_group.autoname_item_group'
