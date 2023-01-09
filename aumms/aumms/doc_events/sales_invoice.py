@@ -1,7 +1,7 @@
 import frappe
 
 @frappe.whitelist()#function for qty, making_charge_percentage, making_charge & board_rate fetching
-def fetch_qty(item,type):
+def fetch_qty(item, type, purity):
     qty = ''
     charge_percentage = ''
     charge = ''
@@ -11,7 +11,8 @@ def fetch_qty(item,type):
         qty = item_doc.weight_per_unit
         charge_percentage = item_doc.making_charge_percentage
         charge = item_doc.making_charge
-    if type:
-        b_rate = frappe.get_last_doc('Board Rate', {'item_type':type})
-        rate = b_rate.board_rate
-    return (qty, charge_percentage, charge, rate)
+    if type and purity:
+        board_rate = frappe.db.get_value('Board Rate',
+            {'item_type': type, 'purity': purity},
+            'board_rate')
+    return (qty, charge_percentage, charge, board_rate)
