@@ -232,7 +232,7 @@
    "print_hide_if_no_value": 0,
    "print_width": null,
    "read_only": 0,
-   "read_only_depends_on": "eval:doc.item_type &&doc.parent_item_group",
+   "read_only_depends_on": "",
    "report_hide": 0,
    "reqd": 0,
    "search_index": 0,
