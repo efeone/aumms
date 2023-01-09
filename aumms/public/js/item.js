@@ -39,6 +39,10 @@ let append_purity_uoms = function (frm) {
     let uoms = []
     let existing_uom = get_existing_uoms(uoms)
 
+    // clear uom table
+    frm.clear_table('uoms');
+    frm.refresh_field('uoms');
+
     // check uom not in exising uom list and add first uom
     if (!existing_uom.includes(frm.doc.stock_uom)) {
         frm.add_child('uoms', {
