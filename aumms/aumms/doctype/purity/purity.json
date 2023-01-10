@@ -17,7 +17,6 @@
   {
    "fieldname": "purity",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Purity",
    "reqd": 1,
    "unique": 1
@@ -52,7 +51,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-06 16:24:10.251651",
+ "modified": "2023-01-10 11:36:25.500214",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Purity",
