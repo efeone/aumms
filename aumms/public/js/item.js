@@ -62,12 +62,16 @@ let append_purity_uoms = function (frm) {
 
             // check uom not in exising uom list and add uom
             if (!existing_uom.includes(uom.name)) {
-                frm.add_child('uoms', {
-                    'uom': uom.name
-                })
+
+                let uoms = frm.add_child('uoms')
+                    uoms.uom = uom.name
+
             }
 		});
         frm.refresh_field('uoms');
+
+        //trigger all uom of uoms
+        trigger_uoms()
     })
 }
 
@@ -80,5 +84,20 @@ let get_existing_uoms = function (uoms) {
         });
     }
     return uoms;
+
+}
+
+let trigger_uoms = function () {
+    // function to trigger every uom of uoms table
+
+    if (cur_frm.doc.uoms) {
+        cur_frm.doc.uoms.forEach(uom  => {
+
+            // trigger uom field
+            cur_frm.script_manager.trigger('uom', uom.doctype, uom.name);
+
+        });
+    }
+    cur_frm.refresh_field('uoms');
 
 }
