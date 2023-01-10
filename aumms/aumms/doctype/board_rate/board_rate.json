@@ -8,14 +8,18 @@
  "engine": "InnoDB",
  "field_order": [
   "naming_series",
-  "board_rate",
-  "item_type",
-  "purity_mandatory",
-  "uom",
-  "column_break_4",
   "date",
+  "column_break_3",
   "time",
+  "section_break_5",
+  "item_type",
+  "column_break_7",
   "purity",
+  "purity_mandatory",
+  "section_break_10",
+  "uom",
+  "section_break_9",
+  "board_rate",
   "amended_from"
  ],
  "fields": [
@@ -76,10 +80,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "column_break_4",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "item_type",
    "fieldtype": "Link",
    "label": "Item Type",
@@ -94,12 +94,32 @@
    "hidden": 1,
    "label": "Purity Mandatory",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_5",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_10",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-06 13:24:16.055342",
+ "modified": "2023-01-10 11:26:03.530912",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Board Rate",
