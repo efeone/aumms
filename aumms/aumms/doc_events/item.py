@@ -24,7 +24,7 @@ def uom_is_a_purity_uom(uom):
         function to check uom is a purity uom
         args:
             uom: name of uom document
-        output: a message iff uom is not a purity uom 
+        output: a message iff uom is not a purity uom
     """
     if not frappe.db.exists('UOM', {'name': uom, 'is_purity_uom': 1}):
         frappe.throw(_('{} is not a purity uom'.format(uom)))
@@ -51,3 +51,12 @@ def check_conversion_factor_for_uom(doc, method):
                     ),
                 title = 'Alert'
             )
+
+@frappe.whitelist()
+def making_charge_to_item(item_group, charge_based_on, type):#set making_charge_percentage from itrm group
+    percentage = ''
+    if charge_based_on == 'Percentage':
+        if frappe.db.exists('Item Group', {'name':item_group , 'item_type':type}):
+            item_group_doc = frappe.get_last_doc('Item Group', filters = {'name':item_group , 'item_type':type})
+            percentage = item_group_doc.percentage
+    return percentage
