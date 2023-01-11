@@ -18,6 +18,11 @@ def validate_item(doc, method):
     # check purchase uom is a purity uom
     if doc.purchase_uom:
         uom_is_a_purity_uom(doc.purchase_uom)
+     # validate purity field is Mandatory
+    if doc.purity_mandatory and not doc.purity:
+        frappe.throw(_('Purity is Mandatory'))
+
+
 
 def uom_is_a_purity_uom(uom):
     """
