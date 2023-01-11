@@ -11,6 +11,24 @@ frappe.ui.form.on('Item', {
         if (frm.doc.stock_uom) {
             append_purity_uoms(frm)
         }
+    },
+    item_group(frm) {
+      frappe.call({ // set making_charge_percentage from itrm group
+        method:'aumms.aumms.doc_events.item.making_charge_to_item',
+        args:{
+          'item_group':frm.doc.item_group,
+          'charge_based_on':frm.doc.making_charge_based_on,
+          'type':frm.doc.item_type
+        },
+        callback:function(r){
+          if (r.message){
+            frm.set_value('making_charge_percentage', r.message)
+          }
+          else {
+            frm.set_value('making_charge_percentage', 0)
+          }
+        }
+      })
     }
 })
 
