@@ -114,7 +114,10 @@ doc_events = {
 	},
 	'Item Group':{
 		'autoname': 'aumms.aumms.doc_events.item_group.autoname_item_group'
-    }
+    },
+	'Purchase Receipt': {
+		'on_submit': 'aumms.aumms.utils.create_metal_ledger_entries'
+	}
 }
 
 # Scheduled Tasks

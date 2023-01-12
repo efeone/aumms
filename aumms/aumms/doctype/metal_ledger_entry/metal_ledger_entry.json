@@ -19,6 +19,7 @@
   "party",
   "section_break_10",
   "stock_uom",
+  "item_type",
   "purity",
   "purity_percentage",
   "column_break_14",
@@ -26,6 +27,7 @@
   "board_rate",
   "incoming_rate",
   "outgoing_rate",
+  "amount",
   "section_break_11",
   "company",
   "batch_no",
@@ -99,7 +101,8 @@
    "in_filter": 1,
    "in_list_view": 1,
    "label": "Party",
-   "options": "party_type"
+   "options": "party_type",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_10",
@@ -173,18 +176,33 @@
    "fieldname": "outgoing_rate",
    "fieldtype": "Currency",
    "label": "Outgoing Rate",
-   "options": "Company:company:default_currency"
+   "options": "Company:company:default_currency",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_11",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "options": "Company:company:default_currency",
+   "read_only": 1
   }
  ],
  "hide_toolbar": 1,
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-01-11 11:28:37.942342",
+ "modified": "2023-01-12 11:46:46.674057",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Metal Ledger Entry",
