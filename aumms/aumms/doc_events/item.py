@@ -58,10 +58,27 @@ def check_conversion_factor_for_uom(doc, method):
             )
 
 @frappe.whitelist()
-def making_charge_to_item(item_group, charge_based_on, type):#set making_charge_percentage from itrm group
+def making_charge_to_item(item_group, charge_based_on, type):
+    '''set making_charge_percentage from item group'''
     percentage = ''
     if charge_based_on == 'Percentage':
         if frappe.db.exists('Item Group', {'name':item_group , 'item_type':type}):
             item_group_doc = frappe.get_last_doc('Item Group', filters = {'name':item_group , 'item_type':type})
             percentage = item_group_doc.percentage
     return percentage
+
+@frappe.whitelist()
+def check_is_sales_or_purchase(item_group):
+    ''' Method to differentiate item group into sales item or purchase item '''
+    item_details = { 'is_sales_item':0, 'is_purchase_item':0 }
+
+    if frappe.db.exists('Item Group', {'name':item_group, 'is_sales_item': 1}):
+        # To enable is_sales_item in item
+        item_group_doc = frappe.get_last_doc('Item Group', filters = {'name':item_group, 'is_sales_item': 1})
+        item_details['is_sales_item'] = item_group_doc.is_sales_item
+
+    if frappe.db.exists('Item Group', {'name':item_group, 'is_purchase_item': 1}):
+        # To enable is_purchase_item in item
+        item_group_doc = frappe.get_last_doc('Item Group', filters = {'name':item_group, 'is_purchase_item': 1})
+        item_details['is_purchase_item'] = item_group_doc.is_purchase_item
+    return item_details

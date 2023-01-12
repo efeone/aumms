@@ -13,7 +13,8 @@ frappe.ui.form.on('Item', {
         }
     },
     item_group(frm) {
-      frappe.call({ // set making_charge_percentage from itrm group
+      frappe.call({
+        // set making_charge_percentage from item group
         method:'aumms.aumms.doc_events.item.making_charge_to_item',
         args:{
           'item_group':frm.doc.item_group,
@@ -29,6 +30,25 @@ frappe.ui.form.on('Item', {
           }
         }
       })
+     if(frm.doc.is_sales_item){
+      frappe.call ({
+        // To defferentiate the item group into sales item or purchase item
+           method: 'aumms.aumms.doc_events.item.check_is_sales_or_purchase',
+            args: {
+              'item_group': frm.doc.item_group
+            },
+            callback: function(r){
+              if(r.message){
+                  frm.set_value('is_sales_item', r.message['is_sales_item'])
+                  frm.set_value('is_purchase_item', r.message['is_purchase_item'])
+                }
+              else{
+                frm.set_value('is_sales_item', 0)
+                frm.set_value('is_purchase_item', 0)
+              }
+            }
+          })
+        }
     }
 })
 
