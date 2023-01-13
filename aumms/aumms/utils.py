@@ -61,7 +61,7 @@ def create_metal_ledger_entries(doc, method=None):
             fields['outgoing_rate'] = item.rate
             fields['batch_no'] = item.batch_no
             fields['item_type'] = item.item_type
-            fields['amount'] = item.amount
+            fields['amount'] = -item.amount
 
             # create metal ledger entry doc with fields
             frappe.get_doc(fields).insert(ignore_permissions = 1)
@@ -75,3 +75,39 @@ def create_metal_ledger_entries(doc, method=None):
             ),
             alert = 1
         )
+
+@frappe.whitelist()
+def cancel_metal_ledger_entries(doc, method=None):
+    """
+        method to cancel metal ledger entries of this voucher and create new entries
+        args:
+            doc: object of purchase receipt
+            method: on cancel of purchase receipt
+    """
+    # get all Metal Ledger Entry linked with this doctype
+    ml_entries = frappe.db.get_all('Metal Ledger Entry', {
+        'voucher_type': doc.doctype,
+        'voucher_no': doc.name
+        })
+
+    for ml in ml_entries:
+        # get doc of metal ledger entry
+        ml_doc = frappe.get_doc('Metal Ledger Entry', ml.name)
+        # change is_cancelled value from 0 to 1
+        ml_doc.is_cancelled = 1
+        # ignoring this doctype from linked metal ledger doc
+        ml_doc.ignore_linked_doctypes = (doc.doctype)
+        # ignoring the links with this doctype
+        ml_doc.flags.ignore_links = 1
+        ml_doc.save(ignore_permissions = 1)
+
+        # creating new document of metal ledger entry
+        ml_doc.qty = -ml_doc.qty # updating value of qty as minus of existing qty
+
+        # changing outgoing rate to incoming rate
+        ml_doc.incoming_rate = ml_doc.outgoing_rate
+        ml_doc.outgoing_rate = 0
+
+        ml_doc.amount = -ml_doc.amount # updating amount value to minus of existing amount
+        # insert new metal ledger entry doc
+        ml_doc.insert(ignore_permissions = 1)

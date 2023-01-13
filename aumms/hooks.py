@@ -116,7 +116,8 @@ doc_events = {
 		'autoname': 'aumms.aumms.doc_events.item_group.autoname_item_group'
     },
 	'Purchase Receipt': {
-		'on_submit': 'aumms.aumms.utils.create_metal_ledger_entries'
+		'on_submit': 'aumms.aumms.utils.create_metal_ledger_entries',
+		'on_cancel': 'aumms.aumms.utils.cancel_metal_ledger_entries'
 	}
 }
 

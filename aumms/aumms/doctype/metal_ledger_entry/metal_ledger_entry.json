@@ -133,6 +133,7 @@
    "fieldname": "is_cancelled",
    "fieldtype": "Check",
    "label": "Is Cancelled",
+   "read_only": 1,
    "report_hide": 1
   },
   {
@@ -202,7 +203,7 @@
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-01-12 11:46:46.674057",
+ "modified": "2023-01-13 10:25:54.081353",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Metal Ledger Entry",
