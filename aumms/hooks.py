@@ -33,7 +33,8 @@ doctype_js = {
 	'Item': 'public/js/item.js',
 	'Sales Invoice':'public/js/sales_invoice.js',
 	'Item Group': 'public/js/item_group.js',
-	'Purchase Receipt': 'public/js/purchase_receipt.js'
+	'Purchase Receipt': 'public/js/purchase_receipt.js',
+	'Purchase Invoice': 'public/js/purchase_invoice.js'
 	}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -116,7 +117,10 @@ doc_events = {
 		'autoname': 'aumms.aumms.doc_events.item_group.autoname_item_group'
     },
 	'Purchase Receipt': {
-		'on_submit': 'aumms.aumms.utils.create_metal_ledger_entries',
+		'on_submit': [
+			  'aumms.aumms.utils.create_metal_ledger_entries',
+			  'aumms.aumms.doc_events.purchase_receipt.create_purchase_invoice'
+		],
 		'on_cancel': 'aumms.aumms.utils.cancel_metal_ledger_entries'
 	}
 }
