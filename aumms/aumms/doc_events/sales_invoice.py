@@ -11,6 +11,7 @@ def get_item_details(item_code, item_type, date, time, purity):
         item_details['qty'] = item_doc.weight_per_unit
         item_details['making_charge_percentage'] = item_doc.making_charge_percentage
         item_details['making_charge'] = item_doc.making_charge
-        board_rate = get_board_rate(date, time, item_type, item_doc.stock_uom, purity)
-        item_details['board_rate'] = board_rate
+        if frappe.db.exists('Board Rate', {'item_type':item_type, 'purity':purity}):
+            board_rate_doc = frappe.get_last_doc('Board Rate', filters = {'item_type':item_type, 'purity':purity})
+            item_details['board_rate'] = board_rate_doc.board_rate
     return item_details
