@@ -8,6 +8,19 @@ frappe.ui.form.on('Purchase Receipt', {
       change_is_metal_transaction(frm, 0)
     }
     frm.refresh_field('items')
+  },
+  refresh (frm) {
+
+    if ([1, 2].includes(frm.doc.docstatus)) {
+
+      // Custom button Metal Ledger in View
+      frm.add_custom_button('Metal Ledger', () => {
+        // route to Metal Ledger Report with filter of this voucher no
+        frappe.set_route('query-report', 'Metal Ledger', { 'voucher_no': frm.doc.name });
+      }, 'View');
+
+    }
+
   }
 });
 
