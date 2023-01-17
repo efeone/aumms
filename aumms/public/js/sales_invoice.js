@@ -21,7 +21,7 @@ frappe.ui.form.on('Sales Invoice Item', {
             d.making_charge_based_on = r.message ['making_charge_based_on']
             d.amount_with_out_making_charge = r.message['qty'] * r.message['board_rate']
             setTimeout(() => {
-             frappe.model.set_value(d.doctype, d.name, 'rate', ((r.message['qty'] * r.message['board_rate']) + r.message['making_charge'])/r.message['qty'])// set time out of 500 ms for  rate
+             frappe.model.set_value(d.doctype, d.name, 'rate', (d.amount_with_out_making_charge + d.making_charge)/d.qty)// set time out of 500 ms for  rate
            }, 500);
             if (r.message['making_charge']){
               d.making_charge = r.message['making_charge']
