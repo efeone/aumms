@@ -74,22 +74,21 @@ let append_purity_uoms = function (frm) {
             frm: current document
     */
 
-    let uoms = []
-    let existing_uom = get_existing_uoms(uoms)
-
     // clear uom table
     frm.clear_table('uoms');
     frm.refresh_field('uoms');
 
-    // check uom not in exising uom list and add first uom
-    if (!existing_uom.includes(frm.doc.stock_uom)) {
-        frm.add_child('uoms', {
-            'uom': frm.doc.stock_uom,
-            'conversion_factor': 1
-        })
-        uoms.push(frm.doc.stock_uom)
-        frm.refresh_field('uoms');
-    }
+    let uoms = []
+    let existing_uom = []
+
+    // add first uom
+    frm.add_child('uoms', {
+        'uom': frm.doc.stock_uom,
+        'conversion_factor': 1
+    })
+    uoms.push(frm.doc.stock_uom)
+    frm.refresh_field('uoms');
+
     // update existing_uom
     existing_uom = get_existing_uoms(uoms)
 

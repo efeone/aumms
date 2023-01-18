@@ -9,7 +9,8 @@ frappe.ui.form.on('Purity', {
 
 			// check purity percentage is not between 0 and 100
 			if(0 > frm.doc.purity_percentage || frm.doc.purity_percentage  > 100) {
-
+				// set purity percentage as 0
+				frm.set_value('purity_percentage', 0)
 				// message for user about purity percentage range
 				frappe.throw({
 					title: __('ALERT !!'),
