@@ -24,9 +24,6 @@ frappe.ui.form.on('Purchase Receipt', {
   }
 });
 
-//declare board_rate
-let board_rate;
-
 frappe.ui.form.on('Purchase Receipt Item', {
   items_add(frm, cdt, cdn) {
     let child = locals[cdt][cdn]
@@ -40,7 +37,6 @@ frappe.ui.form.on('Purchase Receipt Item', {
     let child = locals[cdt][cdn]
 
     if (child.item_code) {
-      board_rate = 0
       //to make delay in board_rate entry
       setTimeout(function () {
         //call to get board_rate
@@ -56,13 +52,8 @@ frappe.ui.form.on('Purchase Receipt Item', {
           callback: function (r) {
             if (r.message) {
 
-                board_rate = r.message
-                if (child.conversion_factor) {
-                  //change rate in accordance with conversion_factor
-                  board_rate = board_rate * child.conversion_factor
-                }
-                //set value to rate field
-                frappe.model.set_value(child.doctype, child.name, 'rate', board_rate)
+              //set value to rate field
+              frappe.model.set_value(child.doctype, child.name, 'board_rate', r.message)
 
             }
           }
@@ -71,23 +62,31 @@ frappe.ui.form.on('Purchase Receipt Item', {
     }
 
   },
+  board_rate (frm, cdt, cdn) {
+    let child = locals[cdt][cdn]
+
+    if (child.board_rate){
+      // declare rate value as board rate
+      let rate = child.board_rate
+      if (child.conversion_factor) {
+        // multiply rate with conversion factor
+        rate = rate * child.conversion_factor
+      }
+      // set value to the rate field
+      frappe.model.set_value(child.doctype, child.name, 'rate', rate)
+    }
+
+  },
   conversion_factor (frm, cdt, cdn) {
     let child = locals[cdt][cdn]
 
-    if (!board_rate) {
-      // change board rate as rate
-      board_rate = child.rate
-    }
     if (child.conversion_factor) {
-
-      let rate = board_rate * child.conversion_factor
-      //set value to rate field
-      frappe.model.set_value(child.doctype, child.name, 'rate', rate)
-
+      // trigger board rate field
+      frm.script_manager.trigger('board_rate', cdt, cdn);
     }
+
   }
 })
-
 
 let change_is_metal_transaction = function (frm, value) {
   /*
