@@ -53,7 +53,7 @@ frappe.ui.form.on('Item', {
         if(frm.doc.making_charge_based_on){
           frappe.call({
             // set making_charge_percentage and making_charge while change of making_charge_based_on
-            method:'aumms.aumms.doc_events.item.making_charge_to_item_1',
+            method:'aumms.aumms.doc_events.item.making_charge_to_item_chaning_of_making_charge_based_on',
             args:{
               'item_group':frm.doc.item_group,
               'charge_based_on':frm.doc.making_charge_based_on,
