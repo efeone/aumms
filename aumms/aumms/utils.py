@@ -111,3 +111,15 @@ def cancel_metal_ledger_entries(doc, method=None):
         ml_doc.amount = -ml_doc.amount # updating amount value to minus of existing amount
         # insert new metal ledger entry doc
         ml_doc.insert(ignore_permissions = 1)
+
+frappe.whitelist()
+def enable_common_party_accounting():
+    """
+        method to enable common party accounting on Accounts Settings after install
+    """
+    if frappe.db.exists('Accounts Settings'):
+        accounts_settings_doc = frappe.get_doc('Accounts Settings')
+        #set enable_common_party_accounting value as 1
+        accounts_settings_doc.enable_common_party_accounting = 1
+        accounts_settings_doc.save()
+        frappe.db.commit()
