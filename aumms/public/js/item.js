@@ -24,6 +24,7 @@ frappe.ui.form.on('Item', {
         callback:function(r){
           if (r.message){
             frm.set_value('making_charge_percentage', r.message)
+            frm.refresh_field('making_charge_percentage')
           }
           else {
             frm.set_value('making_charge_percentage', 0)
@@ -45,6 +46,27 @@ frappe.ui.form.on('Item', {
               else{
                 frm.set_value('is_sales_item', 0)
                 frm.set_value('is_purchase_item', 0)
+              }
+            }
+          })
+        }
+        if(frm.doc.making_charge_based_on){
+          frappe.call({
+            // set making_charge_percentage and making_charge while change of making_charge_based_on
+            method:'aumms.aumms.doc_events.item.fetch_making_charge_from_item_group_to_item',
+            args:{
+              'item_group':frm.doc.item_group,
+              'charge_based_on':frm.doc.making_charge_based_on,
+              'type':frm.doc.item_type
+            },
+            callback:function(r){
+              if (r.message){
+                d.making_charge_percentage = r.message['percentage']
+                d.making_charge = r.message['currency']
+              }
+              else {
+                frm.set_value('making_charge_percentage', 0)
+                frm.set_value('making_charge', 0)
               }
             }
           })

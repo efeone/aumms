@@ -68,6 +68,20 @@ def making_charge_to_item(item_group, charge_based_on, type):
     return percentage
 
 @frappe.whitelist()
+def fetch_making_charge_from_item_group_to_item(item_group, charge_based_on, type):
+    '''set making_charge_percentage and currency while the change of making_charge_based_on'''
+    item_group_details = {'percentage': 0, 'currency':0}
+    if charge_based_on == 'Percentage':
+        if frappe.db.exists('Item Group', {'name':item_group , 'item_type':type}):
+            item_group_doc = frappe.get_last_doc('Item Group', filters = {'name':item_group , 'item_type':type})
+            item_group_details['percentage'] = item_group_doc.percentage
+    if charge_based_on == 'Fixed':
+        if frappe.db.exists('Item Group', {'name':item_group , 'item_type':type}):
+            item_group_doc = frappe.get_last_doc('Item Group', filters = {'name':item_group , 'item_type':type})
+            item_group_details['currency'] = item_group_doc.currency
+    return item_group_details
+
+@frappe.whitelist()
 def check_is_sales_or_purchase(item_group):
     ''' Method to differentiate item group into sales item or purchase item '''
     item_details = { 'is_sales_item':0, 'is_purchase_item':0 }

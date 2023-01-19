@@ -15,6 +15,16 @@ frappe.ui.form.on('Item Group', {
                     }
                 })
         }
+    },
+    making_charge_based_on(frm) {
+      if(frm.doc.making_charge_based_on == 'Fixed'){// set currency = 0 while the change of making_charge_based_on
+        frm.refresh_field('currency')
+        frm.set_value('currency', 0)
+      }
+      if(frm.doc.making_charge_based_on == 'Percentage'){// set percentage = 0 while the change of making_charge_based_on
+        frm.refresh_field('percentage')
+        frm.set_value('percentage', 0)
+      }
     }
 
 })
