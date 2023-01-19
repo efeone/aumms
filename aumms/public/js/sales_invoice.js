@@ -1,5 +1,27 @@
+frappe.ui.form.on('Sales Invoice', {
+  keep_metal_ledger(frm) {
+    //Checking the keep metal ledger
+    if (frm.doc.keep_metal_ledger) {
+      change_keep_metal_ledger(frm, 1)
+    }
+    else {
+      change_keep_metal_ledger(frm, 0)
+    }
+    frm.refresh_field('items')
+  }
+});
+
+
 frappe.ui.form.on('Sales Invoice Item', {
-  item_code: function(frm, cdt, cdn){
+  items_add(frm, cdt, cdn) {
+    //Checking the keep metal ledger
+   let child = locals[cdt][cdn]
+   if(frm.doc.keep_metal_ledger) {
+     //set value to the field is keep_metal_ledger as 1
+     frappe.model.set_value(child.doctype, child.name, 'keep_metal_ledger', 1)
+   }
+ },
+ item_code: function(frm, cdt, cdn){
     let d = locals[cdt][cdn];
     if (d.item_code){
       frappe.call({
@@ -91,3 +113,10 @@ frappe.ui.form.on('Sales Invoice Item', {
     }
   }
 })
+
+let change_keep_metal_ledger = function (frm, value){
+    //function to iterate item table and set value to the field keep_metal_ledger
+    frm.doc.items.forEach((item) => {
+      item.keep_metal_ledger = value
+  });
+}
