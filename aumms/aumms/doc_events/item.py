@@ -68,7 +68,7 @@ def making_charge_to_item(item_group, charge_based_on, type):
     return percentage
 
 @frappe.whitelist()
-def making_charge_to_item_1(item_group, charge_based_on, type):
+def fetch_making_charge_from_item_group_to_item(item_group, charge_based_on, type):
     '''set making_charge_percentage and currency while the change of making_charge_based_on'''
     item_group_details = {'percentage': 0, 'currency':0}
     if charge_based_on == 'Percentage':
