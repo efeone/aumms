@@ -48,7 +48,7 @@ def create_metal_ledger_entries(doc, method=None):
     ledger_created = 0
     for item in doc.items:
         # check item is a metal transaction
-        if item.is_metal_transaction:
+        if item.keep_metal_ledger:
 
             # set item details in fields
             fields['item_code'] = item.item_code
