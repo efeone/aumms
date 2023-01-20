@@ -20,8 +20,8 @@ def create_metal_ledger_entries(doc, method=None):
     """
         method to create metal ledger entries
         args:
-            doc: object of purchase Receipt doctype
-            method: on submit of purchase reciept
+            doc: object of purchase Receipt doctype and Sales Invoice doctype
+            method: on submit of purchase reciept and Sales Invoice
         output:
             new metal ledger entry doc
     """
@@ -44,10 +44,15 @@ def create_metal_ledger_entries(doc, method=None):
         fields['party_type'] = 'Supplier'
         fields['party'] = doc.supplier
 
+    # set party type and party in fields if doctype is Sales Invoice
+    if doc.doctype == 'Sales Invoice':
+        fields['party_type'] = 'Customer'
+        fields['party'] = doc.customer
+
     # declare ledger_created as false
     ledger_created = 0
     for item in doc.items:
-        # check item is a metal transaction
+        # check item is keep_metal_ledger
         if item.keep_metal_ledger:
 
             # set item details in fields
@@ -55,7 +60,8 @@ def create_metal_ledger_entries(doc, method=None):
             fields['item_name'] = item.item_name
             fields['stock_uom'] = item.stock_uom
             fields['purity'] = item.purity
-            fields['purity_percentage'] = item.purity_percentage
+            if doc.doctype == 'Purchase Receipt':
+                fields['purity_percentage'] = item.purity_percentage
             fields['qty'] = item.stock_qty
             fields['board_rate'] = item.rate
             fields['outgoing_rate'] = item.rate
@@ -81,8 +87,8 @@ def cancel_metal_ledger_entries(doc, method=None):
     """
         method to cancel metal ledger entries of this voucher and create new entries
         args:
-            doc: object of purchase receipt
-            method: on cancel of purchase receipt
+            doc: object of purchase receipt and Sales Invoice
+            method: on cancel of purchase receipt and Sales Invoice
     """
     # get all Metal Ledger Entry linked with this doctype
     ml_entries = frappe.db.get_all('Metal Ledger Entry', {

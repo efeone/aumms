@@ -122,6 +122,12 @@ doc_events = {
 			  'aumms.aumms.doc_events.purchase_receipt.create_purchase_invoice'
 		],
 		'on_cancel': 'aumms.aumms.utils.cancel_metal_ledger_entries'
+	},
+	'Sales Invoice': {
+		'on_submit': [
+			  'aumms.aumms.utils.create_metal_ledger_entries'
+		],
+		'on_cancel': 'aumms.aumms.utils.cancel_metal_ledger_entries'
 	}
 }
 
