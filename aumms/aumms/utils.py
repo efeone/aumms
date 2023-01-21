@@ -129,3 +129,56 @@ def enable_common_party_accounting():
         accounts_settings_doc.enable_common_party_accounting = 1
         accounts_settings_doc.save()
         frappe.db.commit()
+
+@frappe.whitelist()
+def validate_party_for_metal_transaction(doc, method=None):
+    """
+        method to validate party link if the transaction is metal transaction
+        args:
+            doc: object instance of the sales invoice/ purchase receipt document
+    """
+    # check_party_link_exist if doctype is Purchase Receipt
+    if doc.doctype == 'Purchase Receipt':
+        if doc.keep_metal_ledger:
+            # check supplier is linked
+            check_party_link_exist(
+                "(primary_role = 'Supplier' AND primary_party = '{0}')".format(doc.supplier),
+                "(secondary_role = 'Supplier' AND secondary_party = '{0}')".format(doc.supplier),
+                doc.supplier
+            )
+
+    # check_party_link_exist if doctype is Sales Invoice
+    if doc.doctype == 'Sales Invoice':
+        if doc.keep_metal_ledger:
+            # check customer is linked
+            check_party_link_exist(
+                "(primary_role = 'Customer' AND primary_party = '{0}')".format(doc.customer),
+                "(secondary_role = 'Customer' AND secondary_party = '{0}')".format(doc.customer),
+                doc.customer
+            )
+
+
+def check_party_link_exist(filters, or_filters, party):
+    """
+        function to check party link exist for party and throw a message if not exists
+        args:
+            filters, or_filters = conditions used in sql query
+            party : name of customer/ supplier
+        output:
+            message to the user if the party is not linked
+    """
+    query = """
+        SELECT
+            name
+        FROM
+            `tabParty Link`
+        WHERE
+            {0} OR {1}
+    """.format(filters, or_filters)
+    party_link = frappe.db.sql(query)
+
+    if not party_link:
+        # message to the user if party link is not set
+        frappe.throw(
+            _("{0} doesn't have a common party account to conduct metal transaction".format(party))
+            )

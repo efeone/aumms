@@ -117,6 +117,7 @@ doc_events = {
 		'autoname': 'aumms.aumms.doc_events.item_group.autoname_item_group'
     },
 	'Purchase Receipt': {
+		'before_submit': 'aumms.aumms.utils.validate_party_for_metal_transaction',
 		'on_submit': [
 			  'aumms.aumms.utils.create_metal_ledger_entries',
 			  'aumms.aumms.doc_events.purchase_receipt.create_purchase_invoice'
@@ -124,6 +125,7 @@ doc_events = {
 		'on_cancel': 'aumms.aumms.utils.cancel_metal_ledger_entries'
 	},
 	'Sales Invoice': {
+		'before_submit': 'aumms.aumms.utils.validate_party_for_metal_transaction',
 		'on_submit': [
 			  'aumms.aumms.utils.create_metal_ledger_entries'
 		],
