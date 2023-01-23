@@ -21,7 +21,27 @@ frappe.ui.form.on('Purchase Receipt', {
 
     }
 
+  },
+
+  posting_date(frm){
+    //Changing the board rate on the changing of posting_date
+    if(frm.doc.posting_date && frm.doc.posting_time) {
+      frm.doc.items.forEach((child) => {
+        //call to get board_rate
+        set_board_rate(child)
+    });
   }
+},
+
+posting_time(frm){
+  //Changing the board rate on the changing of posting_time
+  if(frm.doc.posting_date && frm.doc.posting_time) {
+    frm.doc.items.forEach((child) => {
+      //call to get board_rate
+      set_board_rate(child)
+   });
+ }
+}
 });
 
 frappe.ui.form.on('Purchase Receipt Item', {
@@ -40,24 +60,7 @@ frappe.ui.form.on('Purchase Receipt Item', {
       //to make delay in board_rate entry
       setTimeout(function () {
         //call to get board_rate
-        frappe.call({
-          method: 'aumms.aumms.utils.get_board_rate',
-          args: {
-            item_code: child.item_code,
-            item_type: child.item_type,
-            date: frm.doc.posting_date,
-            time: frm.doc.posting_time,
-            purity: child.purity
-          },
-          callback: function (r) {
-            if (r.message) {
-
-              //set value to rate field
-              frappe.model.set_value(child.doctype, child.name, 'board_rate', r.message)
-
-            }
-          }
-        })
+        set_board_rate(child)
       }, 500);
     }
 
@@ -98,4 +101,26 @@ let change_keep_metal_ledger = function (frm, value) {
   frm.doc.items.forEach((item) => {
     item.keep_metal_ledger = value
   });
+}
+
+
+let set_board_rate = function (child) {
+  //function to set board rate
+  if (child.item_type){
+    frappe.call({
+        method : 'aumms.aumms.utils.get_board_rate',
+        args: {
+          item_code: child.item_code,
+          item_type: child.item_type,
+          date: cur_frm.doc.posting_date,
+          time: cur_frm.doc.posting_time,
+          purity: child.purity
+        },
+        callback : function(r) {
+          if (r.message) {
+            frappe.model.set_value(child.doctype, child.name, 'board_rate', r.message)
+          }
+        }
+    })
+ }
 }

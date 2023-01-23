@@ -8,7 +8,24 @@ frappe.ui.form.on('Sales Invoice', {
       change_keep_metal_ledger(frm, 0)
     }
     frm.refresh_field('items')
+  },
+
+  posting_date(frm) {
+    if (frm.doc.posting_date && frm.doc.posting_time) {
+          frm.doc.items.forEach((child) => {
+            set_item_details(child)
+    })
+   }
+ },
+
+ posting_time(frm) {
+   if (frm.doc.posting_date && frm.doc.posting_time) {
+         frm.doc.items.forEach((child) => {
+           set_item_details(child)
+   })
   }
+},
+
 });
 
 
@@ -119,4 +136,27 @@ let change_keep_metal_ledger = function (frm, value){
     frm.doc.items.forEach((item) => {
       item.keep_metal_ledger = value
   });
+}
+
+let set_item_details = function (child) {
+  //function to get item get_item_details
+  if(child.item_type){
+    frappe.call({
+        method : 'aumms.aumms.utils.get_board_rate',
+        args: {
+          item_code: child.item_code,
+          item_type: child.item_type,
+          date: cur_frm.doc.posting_date,
+          time: cur_frm.doc.posting_time,
+          purity: child.purity
+        },
+        callback : function(r) {
+          if (r.message) {
+            frappe.model.set_value(child.doctype, child.name, 'board_rate', r.message)
+            frappe.model.set_value(child.doctype, child.name, 'amount_with_out_making_charge', (child.qty * r.message))
+            frappe.model.set_value(child.doctype, child.name, 'rate', (child.amount_with_out_making_charge + child.making_charge)/child.qty)
+          }
+        }
+    })
+  }
 }
