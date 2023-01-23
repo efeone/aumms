@@ -8,14 +8,17 @@
  "field_order": [
   "item_code",
   "item_name",
-  "gold_in_hand_weight",
   "gold_in_hand_purity",
+  "gold_in_hand_weight",
+  "column_break_5",
+  "stock_uom",
   "purity_to_be_obtained",
   "alloy_weight",
   "gold_weight_to_be_obtained_for_the_purity"
  ],
  "fields": [
   {
+   "columns": 2,
    "fieldname": "item_code",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -25,10 +28,10 @@
   {
    "fieldname": "item_name",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Item Name"
   },
   {
+   "columns": 2,
    "default": "0",
    "fieldname": "gold_in_hand_weight",
    "fieldtype": "Float",
@@ -37,15 +40,17 @@
    "precision": "3"
   },
   {
+   "columns": 2,
    "fieldname": "gold_in_hand_purity",
-   "fieldtype": "Float",
+   "fieldtype": "Percent",
    "in_list_view": 1,
    "label": "Gold in Hand Purity",
    "precision": "3"
   },
   {
+   "columns": 1,
    "fieldname": "purity_to_be_obtained",
-   "fieldtype": "Float",
+   "fieldtype": "Percent",
    "in_list_view": 1,
    "label": "Purity to be obtained",
    "precision": "3"
@@ -57,17 +62,31 @@
    "precision": "3"
   },
   {
+   "columns": 2,
    "fieldname": "gold_weight_to_be_obtained_for_the_purity",
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Gold Weight to be obtained for the purity",
    "precision": "3"
+  },
+  {
+   "columns": 1,
+   "fieldname": "stock_uom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Stock UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-01-19 16:48:14.849727",
+ "modified": "2023-01-23 16:44:37.586036",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Conversion Chart",
