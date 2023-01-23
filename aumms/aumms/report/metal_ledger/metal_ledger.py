@@ -13,26 +13,22 @@ def execute(filters=None):
 def get_columns():
 	''' Method to get columns in report '''
 	columns = [
-	    {'label': _('Item Code'), 'fieldtype': 'Link', 'options': 'Item', 'width': 200},
-		{'label': _('Item Name'), 'fieldtype': 'Data', 'width': 150},
-		{'label': _('Posting Date'), 'fieldtype': 'Date', 'width': 200},
-		{'label': _('Posting Time'), 'fieldtype': 'Time', 'width': 200},
-		{'label': _('Voucher Type'), 'fieldtype': 'Link', 'options': 'DocType', 'fieldname': 'voucher_type', 'width': 200},
+	    {'label': _('Item Code'), 'fieldtype': 'Link', 'options': 'Item', 'width': 100},
+		{'label': _('Posting Date'), 'fieldtype': 'Date', 'width': 110},
+		{'label': _('Posting Time'), 'fieldtype': 'Time', 'width': 110},
+		{'label': _('Voucher Type'), 'fieldtype': 'Link', 'options': 'DocType', 'fieldname': 'voucher_type', 'hidden': 1},
 		{'label': _('Voucher No'), 'fieldtype': 'Dynamic Link', 'options': 'voucher_type', 'width': 200},
-		{'label': _('Party Type'), 'fieldtype': 'Link', 'options': 'DocType', 'width': 200},
-		{'label': _('Party'), 'fieldtype': 'Link', 'options': 'DocType', 'width': 200},
-		{'label': _('Stock UOM'), 'fieldtype': 'Link', 'options': 'UOM', 'width': 200},
-		{'label': _('Item Type'), 'fieldtype': 'Link', 'options': 'Item Type', 'width': 200},
-		{'label': _('Purity'), 'fieldtype': 'Link', 'options': 'Purity', 'width': 200},
-		{'label': _('Purity Percentage'), 'fieldtype': 'Data', 'width': 150},
-		{'label': _('Quantity'), 'fieldtype': 'Data', 'width': 150},
-		{'label': _('Board Rate'), 'fieldtype': 'Data', 'width': 150},
-		{'label': _('Incoming Rate'), 'fieldtype': 'Data', 'width': 150},
-		{'label': _('Outgoing Rate'), 'fieldtype': 'Data', 'width': 150},
-		{'label': _('Amount'), 'fieldtype': 'Data', 'width': 150},
-		{'label': _('Company'), 'fieldtype': 'Link', 'options': 'Company', 'width': 200},
-		{'label': _('Batch No'), 'fieldtype': 'Data', 'width': 150},
-		{'label': _('Is Cancelled'), 'fieldtype': 'Check', 'width': 150}
+		{'label': _('Party Type'), 'fieldtype': 'Link', 'options': 'DocType', 'hidden': 1 },
+		{'label': _('Party'), 'fieldtype': 'Link', 'options': 'DocType', 'width': 130},
+		{'label': _('Item Type'), 'fieldtype': 'Link', 'options': 'Item Type', 'width': 100},
+		{'label': _('Purity'), 'fieldtype': 'Link', 'options': 'Purity', 'width': 75},
+		{'label': _('Quantity'), 'fieldtype': 'Data', 'width': 80},
+		{'label': _('Stock UOM'), 'fieldtype': 'Link', 'options': 'UOM', 'width': 100},
+		{'label': _('Board Rate'), 'fieldtype': 'Data', 'width': 100},
+		{'label': _('Incoming Rate'), 'fieldtype': 'Data', 'width': 120},
+		{'label': _('Outgoing Rate'), 'fieldtype': 'Data', 'width': 120},
+		{'label': _('Amount'), 'fieldtype': 'Data', 'width': 110},
+		{'label': _('Cancelled'), 'fieldtype': 'Check', 'width': 100}
 		]
 	return columns
 
@@ -45,24 +41,20 @@ def get_data(filters):
 		doc = frappe.get_doc('Metal Ledger Entry', metal_ledger_entry.name)
 		row = [
 			doc.item_code,
-			doc.item_name,
 			doc.posting_date,
 			doc.posting_time,
 			doc.voucher_type,
 			doc.voucher_no,
 			doc.party_type,
 			doc.party,
-			doc.stock_uom,
 			doc.item_type,
 			doc.purity,
-			doc.purity_percentage,
 			doc.qty,
+			doc.stock_uom,
 			doc.board_rate,
 			doc.incoming_rate,
 			doc.outgoing_rate,
 			doc.amount,
-			doc.company,
-			doc.batch_no,
 			doc.is_cancelled
 		]
 		data.append(row)
