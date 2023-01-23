@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">AuMMS</span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Board Rate\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Group\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Type\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity\",\"col\":3}}]",
+ "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">AuMMS</span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Board Rate\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Group\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Type\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity Conversion Tool\",\"col\":3}}]",
  "creation": "2023-01-06 12:02:34.084523",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -8,9 +8,10 @@
  "hide_custom": 0,
  "icon": "shortcut",
  "idx": 0,
+ "is_hidden": 0,
  "label": "AuMMS",
  "links": [],
- "modified": "2023-01-06 12:06:39.014760",
+ "modified": "2023-01-23 10:11:56.179760",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS",
@@ -28,6 +29,13 @@
    "label": "Board Rate",
    "link_to": "Board Rate",
    "stats_filter": "{\"docstatus\":[\"=\",\"1\"]}",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Purity Conversion Tool",
+   "link_to": "Purity Conversion Tool",
    "type": "DocType"
   },
   {
