@@ -49,29 +49,29 @@ def create_metal_ledger_entries(doc, method=None):
         fields['party_type'] = 'Customer'
         fields['party'] = doc.customer
 
+    # check items is keep_metal_ledger
+    if doc.keep_metal_ledger:
     # declare ledger_created as false
-    ledger_created = 0
-    for item in doc.items:
-        # check item is keep_metal_ledger
-        if item.keep_metal_ledger:
+        ledger_created = 0
+        for item in doc.items:
 
-            # set item details in fields
-            fields['item_code'] = item.item_code
-            fields['item_name'] = item.item_name
-            fields['stock_uom'] = item.stock_uom
-            fields['purity'] = item.purity
-            if doc.doctype == 'Purchase Receipt':
-                fields['purity_percentage'] = item.purity_percentage
-            fields['qty'] = item.stock_qty
-            fields['board_rate'] = item.rate
-            fields['outgoing_rate'] = item.rate
-            fields['batch_no'] = item.batch_no
-            fields['item_type'] = item.item_type
-            fields['amount'] = -item.amount
+                # set item details in fields
+                fields['item_code'] = item.item_code
+                fields['item_name'] = item.item_name
+                fields['stock_uom'] = item.stock_uom
+                fields['purity'] = item.purity
+                if doc.doctype == 'Purchase Receipt':
+                    fields['purity_percentage'] = item.purity_percentage
+                fields['qty'] = item.stock_qty
+                fields['board_rate'] = item.rate
+                fields['outgoing_rate'] = item.rate
+                fields['batch_no'] = item.batch_no
+                fields['item_type'] = item.item_type
+                fields['amount'] = -item.amount
 
-            # create metal ledger entry doc with fields
-            frappe.get_doc(fields).insert(ignore_permissions = 1)
-            ledger_created = 1
+                # create metal ledger entry doc with fields
+                frappe.get_doc(fields).insert(ignore_permissions = 1)
+                ledger_created = 1
 
     # alert message if metal ledger is created
     if ledger_created:

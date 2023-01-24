@@ -1,14 +1,4 @@
 frappe.ui.form.on('Purchase Receipt', {
-  keep_metal_ledger(frm) {
-    //Checking the keep metal ledger
-    if (frm.doc.keep_metal_ledger) {
-      change_keep_metal_ledger(frm, 1)
-    }
-    else {
-      change_keep_metal_ledger(frm, 0)
-    }
-    frm.refresh_field('items')
-  },
   refresh (frm) {
 
     if ([1, 2].includes(frm.doc.docstatus)) {
@@ -90,18 +80,6 @@ frappe.ui.form.on('Purchase Receipt Item', {
 
   }
 })
-
-let change_keep_metal_ledger = function (frm, value) {
-  /*
-    function to iterate item table and set value to the field keep_metal_ledger
-    args:
-      frm: current form of purchase Receipt
-      value: Boolean
-  */
-  frm.doc.items.forEach((item) => {
-    item.keep_metal_ledger = value
-  });
-}
 
 
 let set_board_rate = function (child) {
