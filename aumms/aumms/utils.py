@@ -3,17 +3,45 @@ from frappe.utils import *
 from frappe import _
 
 @frappe.whitelist()
-def get_board_rate(date, time, item_type, purity=None):
+def get_board_rate(item_type, purity, stock_uom, date, time):
     ''' Method to get Board Rate '''
-    board_rate = 0
-    if purity:
-        filters = { 'docstatus': '1', 'item_type': item_type, 'date':[ '<=', getdate(date) ], 'time': [ '<=', time ], 'purity': purity }
+
+    # add filters to get board rate
+    filters = { 'docstatus': '1', 'item_type': item_type, 'purity': purity, 'date': getdate(date), 'time': ['<=', time]}
+
+    if frappe.db.exists('Board Rate', filters):
+        # get board rate and board rate uom (bruom)
+        board_rate, bruom = frappe.db.get_value('Board Rate', filters, ['board_rate', 'uom'])
+        # return board rate if board rate uom is same as stock uom
+        if bruom == stock_uom:
+            return board_rate
+        # else multiply the board rate with conversion factor
+        else:
+            # get conversion factor value using stock_uom as from_uom and bruom as to_uom
+            conversion_factor = get_conversion_factor(stock_uom, bruom)
+            if conversion_factor:
+                board_rate *= conversion_factor
+                return board_rate
+            else:
+                # message to user about set conversion factor value
+                frappe.throw(
+                    _('Please set Conversion Factor for {0} {1}'.format(stock_uom, bruom))
+                )
     else:
-        filters = { 'docstatus': '1', 'item_type': item_type, 'date':getdate(date), 'time': [ '<=', time ] }
-    if frappe.db.get_all('Board Rate', filters=filters):
-        board_rate_doc = frappe.get_last_doc('Board Rate', filters=filters)
-        board_rate = board_rate_doc.board_rate
-    return board_rate
+        # message to user about set Today's Board Rate value
+        frappe.throw(
+            _("Today's Board Rate is not updated for {0} {1}".format(purity, item_type))
+        )
+
+@frappe.whitelist()
+def get_conversion_factor(from_uom, to_uom):
+    """
+        method to get conversion factor value using from uom and to uom
+        output:
+            return conversion factor value if exists else None
+    """
+    filters = {'from_uom': from_uom, 'to_uom': to_uom}
+    return frappe.db.get_value('UOM Conversion Factor', filters, 'value')
 
 @frappe.whitelist()
 def create_metal_ledger_entries(doc, method=None):

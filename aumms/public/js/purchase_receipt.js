@@ -88,8 +88,8 @@ let set_board_rate = function (child) {
     frappe.call({
         method : 'aumms.aumms.utils.get_board_rate',
         args: {
-          item_code: child.item_code,
           item_type: child.item_type,
+          stock_uom: child.stock_uom,
           date: cur_frm.doc.posting_date,
           time: cur_frm.doc.posting_time,
           purity: child.purity
