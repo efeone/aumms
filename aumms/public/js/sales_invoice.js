@@ -1,14 +1,4 @@
 frappe.ui.form.on('Sales Invoice', {
-  keep_metal_ledger(frm) {
-    //Checking the keep metal ledger
-    if (frm.doc.keep_metal_ledger) {
-      change_keep_metal_ledger(frm, 1)
-    }
-    else {
-      change_keep_metal_ledger(frm, 0)
-    }
-    frm.refresh_field('items')
-  },
 
   posting_date(frm) {
     if (frm.doc.posting_date && frm.doc.posting_time) {
@@ -130,13 +120,6 @@ frappe.ui.form.on('Sales Invoice Item', {
     }
   }
 })
-
-let change_keep_metal_ledger = function (frm, value){
-    //function to iterate item table and set value to the field keep_metal_ledger
-    frm.doc.items.forEach((item) => {
-      item.keep_metal_ledger = value
-  });
-}
 
 let set_item_details = function (child) {
   //function to get item get_item_details
