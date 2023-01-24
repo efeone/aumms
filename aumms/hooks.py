@@ -34,7 +34,8 @@ doctype_js = {
 	'Sales Invoice':'public/js/sales_invoice.js',
 	'Item Group': 'public/js/item_group.js',
 	'Purchase Receipt': 'public/js/purchase_receipt.js',
-	'Purchase Invoice': 'public/js/purchase_invoice.js'
+	'Purchase Invoice': 'public/js/purchase_invoice.js',
+	'Stock Settings': 'public/js/stock_settings.js'
 	}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -130,6 +131,9 @@ doc_events = {
 			  'aumms.aumms.utils.create_metal_ledger_entries'
 		],
 		'on_cancel': 'aumms.aumms.utils.cancel_metal_ledger_entries'
+	},
+	'Stock Settings' : {
+		'validate': 'aumms.aumms.doc_events.stock_settings.disable_price_list_default'
 	}
 }
 
