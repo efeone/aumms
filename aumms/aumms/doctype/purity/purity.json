@@ -51,7 +51,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-10 11:36:25.500214",
+ "modified": "2023-01-23 10:21:33.586669",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Purity",
@@ -75,6 +75,7 @@
    "write": 1
   }
  ],
+ "search_fields": "purity_percentage",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

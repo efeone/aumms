@@ -7,12 +7,13 @@
  "engine": "InnoDB",
  "field_order": [
   "party_type",
-  "party",
-  "column_break_3",
-  "purity",
   "item_type",
+  "purity_mandatory",
+  "column_break_3",
+  "party",
+  "purity",
   "conversion_chart_section",
-  "conversion_chart"
+  "conversion_charts"
  ],
  "fields": [
   {
@@ -36,20 +37,16 @@
    "label": "Conversion Chart"
   },
   {
-   "fieldname": "conversion_chart",
-   "fieldtype": "Table",
-   "label": "Conversion Chart",
-   "options": "Conversion Chart",
-   "read_only": 1
-  },
-  {
+   "depends_on": "eval: (doc.party && doc.item_type)",
+   "description": "Convert to this Purity",
    "fieldname": "purity",
    "fieldtype": "Link",
    "label": "Purity",
-   "options": "Purity",
-   "reqd": 1
+   "mandatory_depends_on": "purity_mandatory",
+   "options": "Purity"
   },
   {
+   "depends_on": "party",
    "fieldname": "item_type",
    "fieldtype": "Link",
    "label": "Item Type",
@@ -59,12 +56,29 @@
   {
    "fieldname": "column_break_3",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fetch_from": "item_type.purity_mandatory",
+   "fieldname": "purity_mandatory",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Purity Mandatory",
+   "read_only": 1
+  },
+  {
+   "fieldname": "conversion_charts",
+   "fieldtype": "Table",
+   "label": "Conversion Charts",
+   "options": "Conversion Chart",
+   "read_only": 1
   }
  ],
+ "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-01-19 17:09:08.039213",
+ "modified": "2023-01-23 16:46:42.632776",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Purity Conversion Tool",
