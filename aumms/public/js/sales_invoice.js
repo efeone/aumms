@@ -41,36 +41,37 @@ frappe.ui.form.on('Sales Invoice Item', {
  item_code: function(frm, cdt, cdn){
     let d = locals[cdt][cdn];
     if (d.item_code){
-      frappe.call({
-        // Method for fetching  qty, making_charge_percentage, making_charge & board_rate
-        method: 'aumms.aumms.doc_events.sales_invoice.get_item_details',
-        args: {
-          'item_code': d.item_code,
-          'item_type': d.item_type,
-          'date': frm.doc.posting_date,
-          'time': frm.doc.posting_time,
-          'purity': d.purity
-        },
-        callback: function(r) {
-          if (r.message){
-            d.qty = r.message['qty']
-            d.making_charge_percentage = r.message['making_charge_percentage']
-            d.is_fixed_making_charge = r.message['making_charge']
-            d.board_rate = r.message['board_rate']
-            d.making_charge_based_on = r.message ['making_charge_based_on']
-            d.amount_with_out_making_charge = r.message['qty'] * r.message['board_rate']
-            setTimeout(() => {
-             frappe.model.set_value(d.doctype, d.name, 'rate', (d.amount_with_out_making_charge + d.making_charge)/d.qty)// set time out of 500 ms for  rate
-           }, 500);
-            if (r.message['making_charge']){
-              d.making_charge = r.message['making_charge']
-            }
-            else {
-                d.making_charge = (d.amount_with_out_making_charge)*(d.making_charge_percentage * 0.01)//set making_charge if it's percentage
+      setTimeout(() => {
+        frappe.call({
+          // Method for fetching  qty, making_charge_percentage, making_charge & board_rate
+          method: 'aumms.aumms.doc_events.sales_invoice.get_item_details',
+          args: {
+            'item_code': d.item_code,
+            'item_type': d.item_type,
+            'date': frm.doc.posting_date,
+            'time': frm.doc.posting_time,
+            'purity': d.purity,
+            'stock_uom': d.stock_uom
+          },
+          callback: function(r) {
+            if (r.message){
+              d.qty = r.message['qty']
+              d.making_charge_percentage = r.message['making_charge_percentage']
+              d.is_fixed_making_charge = r.message['making_charge']
+              d.board_rate = r.message['board_rate']
+              d.making_charge_based_on = r.message ['making_charge_based_on']
+              d.amount_with_out_making_charge = r.message['qty'] * r.message['board_rate']
+              frappe.model.set_value(d.doctype, d.name, 'rate', (d.amount_with_out_making_charge + d.making_charge)/d.qty)// set time out of 500 ms for  rate
+              if (r.message['making_charge']){
+                d.making_charge = r.message['making_charge']
               }
+              else {
+                  d.making_charge = (d.amount_with_out_making_charge)*(d.making_charge_percentage * 0.01)//set making_charge if it's percentage
+                }
+            }
           }
-        }
-      })
+        })
+      }, 500);
     }
   },
   qty: function(frm, cdt, cdn){
