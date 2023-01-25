@@ -112,7 +112,8 @@ after_install = 'aumms.aumms.utils.enable_common_party_accounting'
 doc_events = {
 	'Item': {
         'validate': 'aumms.aumms.doc_events.item.validate_item',
-		'before_save': 'aumms.aumms.doc_events.item.check_conversion_factor_for_uom'
+		'before_save': 'aumms.aumms.doc_events.item.check_conversion_factor_for_uom',
+		'on_update': 'aumms.aumms.doc_events.item.update_uoms_table'
 	},
 	'Item Group':{
 		'autoname': 'aumms.aumms.doc_events.item_group.autoname_item_group'
