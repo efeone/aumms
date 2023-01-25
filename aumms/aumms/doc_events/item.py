@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+from aumms.aumms.utils import get_conversion_factor
 
 @frappe.whitelist()
 def validate_item(doc, method):
@@ -96,3 +97,44 @@ def check_is_sales_or_purchase(item_group):
         item_group_doc = frappe.get_last_doc('Item Group', filters = {'name':item_group, 'is_purchase_item': 1})
         item_details['is_purchase_item'] = item_group_doc.is_purchase_item
     return item_details
+
+@frappe.whitelist()
+def update_uoms_table(doc, method=None):
+    """
+        method to update uoms table on update of item doc
+        args:
+            doc: item doc
+    """
+    # get list of existing uom
+    existing_uoms = get_existing_uoms(doc.uoms)
+    # get purity uoms to append
+    purity_uoms = get_purity_uom()
+
+    for uom in purity_uoms:
+
+        # check uom is not in existing uoms
+        if uom.name not in existing_uoms:
+
+            # get conversion factor of appending uom to stock uom
+            conversion_factor = get_conversion_factor(uom.name, doc.stock_uom)
+
+            # if appending uom is equal to stock uom consider conversion factor as 1
+            if uom.name == doc.stock_uom:
+                 conversion_factor = 1
+
+            # append uoms table
+            doc.append('uoms', {
+                'uom': uom.name,
+                'conversion_factor': conversion_factor if conversion_factor else 0
+            })
+
+def get_existing_uoms(uoms):
+    """
+        function to get existing uoms list
+        uoms: object of uoms in item
+        output: list of existing uom's
+    """
+    uoms_list = []
+    for uom in uoms:
+        uoms_list.append(uom.uom)
+    return uoms_list
