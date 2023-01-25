@@ -14,7 +14,7 @@ class PurityConversionTool(Document):
 def get_metal_ledger_entries(party_type, party, item_type, purity):
 	''' Method to get Metal Ledger Entries '''
 	field_list = ['name', 'item_code', 'item_name', 'qty', 'stock_uom', 'purity', 'purity_percentage']
-	metal_ledger_entries = frappe.db.get_all('Metal Ledger Entry', filters = { 'party_type': party_type, 'party':party, 'item_type':item_type }, fields = field_list )
+	metal_ledger_entries = frappe.db.get_all('Metal Ledger Entry', filters = { 'party_type': party_type, 'party':party, 'item_type':item_type , 'is_cancelled': 0 }, fields = field_list )
 	for ml_entry in metal_ledger_entries:
 		ml_entry['purity_to_be_obtained'] = frappe.db.get_value('Purity', purity, 'purity_percentage')
 		if ml_entry.purity:

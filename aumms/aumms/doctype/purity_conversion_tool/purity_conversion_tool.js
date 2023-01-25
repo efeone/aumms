@@ -4,16 +4,31 @@
 frappe.ui.form.on('Purity Conversion Tool', {
 	refresh: function(frm) {
 		frm.disable_save();
-    set_filters(frm);
+		clear_values(frm);
+		set_filters(frm);
 	},
 	purity: function(frm){
-		if(validate_mandatory_fields(frm) && frm.doc.purity){
+		if(frm.doc.purity && validate_mandatory_fields(frm)){
 			prepare_conversion_chart(frm);
 		}
 		else{
-			frm.clear_table('conversion_charts');
-			frm.refresh_field('conversion_charts');
+			clear_values(frm);
 		}
+	},
+	party (frm) {
+		if (frm.doc.party && frm.doc.purity && frm.doc.item_type) {
+			frm.trigger('purity')
+		} else {
+			clear_values(frm);
+		}
+	},
+	item_type (frm) {
+		if (!frm.doc.item_type) {
+			frm.set_value('purity', '')
+		}
+	},
+	party_type (frm) {
+		frm.set_value('party', '')
 	}
 });
 
@@ -59,6 +74,8 @@ function prepare_conversion_chart(frm){
 			callback: (r) => {
 				if(r && r.message){
 					frm.clear_table('conversion_charts');
+					let total_gw = 0;
+					let total_aw = 0;
 					r.message.forEach(conversion_chart => {
 						console.log(conversion_chart);
 						let conversion_charts = frm.add_child('conversion_charts');
@@ -70,8 +87,13 @@ function prepare_conversion_chart(frm){
 						conversion_charts.purity_to_be_obtained = conversion_chart.purity_to_be_obtained;
 						conversion_charts.gold_weight_to_be_obtained_for_the_purity = conversion_chart.gold_weight;
 						conversion_charts.alloy_weight = conversion_chart.alloy_weight;
+						total_gw += conversion_chart.gold_weight
+						total_aw += conversion_chart.alloy_weight
 					});
 					frm.refresh_field('conversion_charts');
+					// set total GW and AW
+					frm.set_value('total_gold_weight_to_be_obtained_for_the_purity', total_gw)
+					frm.set_value('total_alloy_weight', total_aw)
 				}
 			},
 			error: (r) => {
@@ -79,4 +101,12 @@ function prepare_conversion_chart(frm){
 			}
 		})
 	}
+}
+
+let clear_values = function (frm) {
+	// clear field values
+	frm.set_value('total_gold_weight_to_be_obtained_for_the_purity', 0)
+	frm.set_value('total_alloy_weight', 0)
+	frm.clear_table('conversion_charts');
+	frm.refresh_field('conversion_charts');
 }
