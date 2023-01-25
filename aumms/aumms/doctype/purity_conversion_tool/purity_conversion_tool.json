@@ -13,7 +13,11 @@
   "party",
   "purity",
   "conversion_chart_section",
-  "conversion_charts"
+  "conversion_charts",
+  "section_break_9",
+  "total_gold_weight_to_be_obtained_for_the_purity",
+  "column_break_10",
+  "total_alloy_weight"
  ],
  "fields": [
   {
@@ -72,13 +76,35 @@
    "label": "Conversion Charts",
    "options": "Conversion Chart",
    "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.total_gold_weight_to_be_obtained_for_the_purity",
+   "fieldname": "total_gold_weight_to_be_obtained_for_the_purity",
+   "fieldtype": "Float",
+   "label": "Total Gold Weight to be obtained for the purity",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.total_alloy_weight;",
+   "fieldname": "total_alloy_weight",
+   "fieldtype": "Float",
+   "label": "Total Alloy Weight",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_9",
+   "fieldtype": "Section Break"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-01-23 16:46:42.632776",
+ "modified": "2023-01-24 19:29:56.196410",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Purity Conversion Tool",
