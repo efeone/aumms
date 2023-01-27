@@ -88,8 +88,7 @@ def create_metal_ledger_entries(doc, method=None):
                 fields['item_name'] = item.item_name
                 fields['stock_uom'] = item.stock_uom
                 fields['purity'] = item.purity
-                if doc.doctype == 'Purchase Receipt':
-                    fields['purity_percentage'] = item.purity_percentage
+                fields['purity_percentage'] = item.purity_percentage
                 fields['qty'] = item.stock_qty
                 fields['board_rate'] = item.rate
                 fields['outgoing_rate'] = item.rate
