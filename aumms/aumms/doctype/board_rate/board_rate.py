@@ -13,7 +13,7 @@ class BoardRate(Document):
 			uom_is_a_purity_uom(self.uom)
 
 		# check validation over date
-		time_validation_for_boardrate(self.date, self.time, self.item_type)
+		time_validation_for_boardrate(self.date, self.time, self.item_type, self.purity)
 
 def uom_is_a_purity_uom(uom):
 	"""
@@ -25,10 +25,10 @@ def uom_is_a_purity_uom(uom):
 	if not frappe.db.exists('UOM', {'name': uom, 'is_purity_uom': 1}):
 		frappe.throw(_('{} is not a purity uom'.format(uom)))
 
-def time_validation_for_boardrate(date, time, item_type):
+def time_validation_for_boardrate(date, time, item_type, purity):
 	"""
 	function to validate date for board rate over item type
 	"""
 
-	if frappe.db.exists('Board Rate', {'date': date, 'time': time, 'item_type': item_type, 'docstatus': 1}):
-		frappe.throw(_("{0}'s board rate is already set on {1} at {2} ".format(item_type, date, time)))
+	if frappe.db.exists('Board Rate', {'date': date, 'time': time, 'item_type': item_type,'purity': purity, 'docstatus': 1}):
+		frappe.throw(_("{0} {1}'s  board rate is already set on {2} at {3} ".format(purity,item_type,  date, time)))
