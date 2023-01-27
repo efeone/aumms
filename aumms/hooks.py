@@ -72,7 +72,7 @@ doctype_js = {
 
 # before_install = "aumms.install.before_install"
 after_install = 'aumms.aumms.utils.enable_common_party_accounting'
-
+after_migrate = 'aumms.aumms.utils.increase_precision'
 # Uninstallation
 # ------------
 

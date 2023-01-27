@@ -145,7 +145,7 @@ def cancel_metal_ledger_entries(doc, method=None):
         # insert new metal ledger entry doc
         ml_doc.insert(ignore_permissions = 1)
 
-frappe.whitelist()
+@frappe.whitelist()
 def enable_common_party_accounting():
     """
         method to enable common party accounting on Accounts Settings after install
@@ -209,3 +209,12 @@ def check_party_link_exist(filters, or_filters, party):
         frappe.throw(
             _("{0} doesn't have a common party account to conduct metal transaction".format(party))
             )
+
+@frappe.whitelist()
+def increase_precision():
+    ''' Method to increase precision on System Settings after migrate '''
+    if frappe.db.exists('System Settings'):
+        system_settings_doc = frappe.get_doc('System Settings')
+        system_settings_doc.float_precision = 6
+        system_settings_doc.save()
+        frappe.db.commit()
