@@ -57,7 +57,7 @@ frappe.query_reports['Metal Ledger'] = {
 			'get_query': function() {
 				return {
 					'filters': {
-						"name": ['in',['Sales Invoice', 'Purchase Receipt']]
+						'name': ['in',['Sales Invoice', 'Purchase Receipt']]
 					}
 				}
 			}
@@ -81,7 +81,7 @@ frappe.query_reports['Metal Ledger'] = {
 			'get_query': function() {
 				return {
 					'filters': {
-						"name": ['in',['Supplier', 'Customer']]
+						'name': ['in',['Supplier', 'Customer']]
 					}
 				}
 			}
@@ -93,9 +93,28 @@ frappe.query_reports['Metal Ledger'] = {
 			'options': 'party_type'
 		},
 		{
-			'fieldname': 'is_cancelled',
-			'label': __('Is cancelled'),
-			'fieldtype': 'Check'
+			'fieldname': 'common_party',
+			'label': __('Common Party Account'),
+			'fieldtype': 'Check',
+			'default': 1,
+			'depends_on': 'party'
 		}
-	]
+	],
+	'formatter': function (value, row, column, data, default_formatter) {
+		value = default_formatter(value, row, column, data);
+
+		if ((column.fieldname == 'out_rate' && data && data.out_rate > 0)||(column.fieldname == 'out_qty' && data && data.out_qty > 0)) {
+			value = "<span style='color:red'>" + value + "</span>";
+		}
+		else if ((column.fieldname == 'in_rate' && data && data.in_rate > 0)||(column.fieldname == 'in_qty' && data && data.in_qty > 0)) {
+			value = "<span style='color:green'>" + value + "</span>";
+		}
+		if ((column.fieldname == 'balance_qty' && data && data.balance_qty > 0)||(column.fieldname == 'amount' && data && data.amount > 0)) {
+			value = "<span style='color:green'>" + value + "</span>";
+		}
+		else if ((column.fieldname == 'balance_qty' && data && data.balance_qty < 0)||(column.fieldname == 'amount' && data && data.amount < 0)) {
+			value = "<span style='color:red'>" + value + "</span>";
+		}
+		return value;
+	}
 };

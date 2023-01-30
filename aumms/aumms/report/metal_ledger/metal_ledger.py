@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe.utils import *
 from frappe import _
+from aumms.aumms.utils import get_party_link_if_exist
 
 def execute(filters=None):
 	columns, data = get_columns(), get_data(filters)
@@ -19,16 +20,16 @@ def get_columns():
 		{'label': _('Party'), 'fieldtype': 'Link', 'options': 'DocType', 'width': 130},
 		{'label': _('Item Type'), 'fieldtype': 'Link', 'options': 'Item Type', 'width': 100},
 		{'label': _('Purity'), 'fieldtype': 'Link', 'options': 'Purity', 'width': 75},
-		{'label': _('In Quantity'), 'fieldtype': 'Float', 'width': 100},
-		{'label': _('Out Quantity'), 'fieldtype': 'Float', 'width': 120},
-		{'label': _('Balance Quantity'), 'fieldtype': 'Float', 'width': 150},
+		{'label': _('In Quantity'), 'fieldname': 'in_qty', 'fieldtype': 'Float', 'width': 100},
+		{'label': _('Out Quantity'), 'fieldname': 'out_qty', 'fieldtype': 'Float', 'width': 120},
+		{'label': _('Balance Quantity'), 'fieldname': 'balance_qty', 'fieldtype': 'Float', 'width': 150},
 		{'label': _('Stock UOM'), 'fieldtype': 'Link', 'options': 'UOM', 'width': 100},
-		{'label': _('Board Rate'), 'fieldtype': 'Data', 'width': 100},
+		{'label': _('Board Rate'), 'fieldtype': 'Currency', 'width': 100},
 		{'label': _('Voucher Type'), 'fieldtype': 'Link', 'options': 'DocType', 'fieldname': 'voucher_type', 'hidden': 1},
 		{'label': _('Voucher No'), 'fieldtype': 'Dynamic Link', 'options': 'voucher_type', 'width': 200},
-		{'label': _('Incoming Rate'), 'fieldtype': 'Data', 'width': 120},
-		{'label': _('Outgoing Rate'), 'fieldtype': 'Data', 'width': 120},
-		{'label': _('Amount'), 'fieldtype': 'Data', 'width': 110},
+		{'label': _('Incoming Rate'), 'fieldname': 'in_rate', 'fieldtype': 'Currency', 'width': 120},
+		{'label': _('Outgoing Rate'), 'fieldname': 'out_rate', 'fieldtype': 'Currency', 'width': 120},
+		{'label': _('Amount'), 'fieldname': 'amount', 'fieldtype': 'Currency', 'width': 110},
 		{'label': _('Posting Time'), 'fieldtype': 'Time', 'width': 110},
 		]
 	return columns
@@ -77,10 +78,24 @@ def get_filters(filters):
 		conditions['stock_uom'] = filters.uom
 	if filters.item_type:
 		conditions['item_type'] = filters.item_type
-	if filters.party_type:
+	if filters.party_type and not filters.party:
 		conditions['party_type'] = filters.party_type
 	if filters.party:
-		conditions['party'] = filters.party
+
+		# to show common party accounts
+		if filters.common_party:
+
+			# get party link of this party
+			party_link = get_party_link_if_exist(
+				"(primary_role = '{0}' AND primary_party = '{1}')".format(filters.party_type, filters.party),
+                "(secondary_role = '{0}' AND secondary_party = '{1}')".format(filters.party_type,  filters.party),
+                filters.party)
+			conditions['party_link'] = party_link
+
+		else:
+			# update condition with party
+			conditions['party'] = filters.party
+
 	if filters.voucher_type:
 		conditions['voucher_type'] = filters.voucher_type
 	if filters.voucher_no:
