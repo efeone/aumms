@@ -135,6 +135,9 @@ doc_events = {
 	},
 	'Stock Settings' : {
 		'validate': 'aumms.aumms.doc_events.stock_settings.disable_price_list_default'
+	},
+	'Item Price':{
+	'validate': 'aumms.aumms.doc_events.item_price.check_is_purity'
 	}
 }
 
