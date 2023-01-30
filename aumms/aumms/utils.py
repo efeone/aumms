@@ -64,7 +64,8 @@ def create_metal_ledger_entries(doc, method=None):
         'posting_time': doc.posting_time,
         'voucher_type': doc.doctype,
         'voucher_no': doc.name,
-        'company': company
+        'company': company,
+        'party_link': doc.party_link
     }
 
     # set party type and party in fields if doctype is Purchase Receipt
@@ -79,7 +80,7 @@ def create_metal_ledger_entries(doc, method=None):
 
     # check items is keep_metal_ledger
     if doc.keep_metal_ledger:
-    # declare ledger_created as false
+        # declare ledger_created as false
         ledger_created = 0
         for item in doc.items:
 
@@ -89,25 +90,45 @@ def create_metal_ledger_entries(doc, method=None):
                 fields['stock_uom'] = item.stock_uom
                 fields['purity'] = item.purity
                 fields['purity_percentage'] = item.purity_percentage
-                fields['qty'] = item.stock_qty
                 fields['board_rate'] = item.rate
-                fields['outgoing_rate'] = item.rate
                 fields['batch_no'] = item.batch_no
                 fields['item_type'] = item.item_type
                 fields['amount'] = -item.amount
+                # get balance qty of the item for this party
+                filters = {
+                    'item_type': item.item_type,
+                    'purity': item.purity,
+                    'stock_uom': item.stock_uom,
+                    'party_link': doc.party_link
+                    }
+                balance_qty = frappe.db.get_value('Metal Ledger Entry', filters, 'balance_qty')
+
+                if doc.doctype == 'Purchase Receipt':
+                    # update balance_qty
+                    balance_qty = balance_qty+item.stock_qty if balance_qty else item.stock_qty
+                    fields['in_qty'] = item.stock_qty
+                    fields['outgoing_rate'] = item.rate
+                    fields['balance_qty'] = balance_qty
+
+                if doc.doctype == 'Sales Invoice':
+                    # update balance_qty
+                    balance_qty = balance_qty-item.stock_qty if balance_qty else -item.stock_qty
+                    fields['incoming_rate'] = item.rate
+                    fields['out_qty'] = item.stock_qty
+                    fields['balance_qty'] = balance_qty
 
                 # create metal ledger entry doc with fields
                 frappe.get_doc(fields).insert(ignore_permissions = 1)
                 ledger_created = 1
 
-    # alert message if metal ledger is created
-    if ledger_created:
-        frappe.msgprint(
-            msg = _(
-                'Metal Ledger Entry is created.'
-            ),
-            alert = 1
-        )
+        # alert message if metal ledger is created
+        if ledger_created:
+            frappe.msgprint(
+                msg = _(
+                    'Metal Ledger Entry is created.'
+                ),
+                alert = 1
+            )
 
 @frappe.whitelist()
 def cancel_metal_ledger_entries(doc, method=None):
@@ -168,21 +189,23 @@ def validate_party_for_metal_transaction(doc, method=None):
     if doc.doctype == 'Purchase Receipt':
         if doc.keep_metal_ledger:
             # check supplier is linked
-            check_party_link_exist(
+            party_link = check_party_link_exist(
                 "(primary_role = 'Supplier' AND primary_party = '{0}')".format(doc.supplier),
                 "(secondary_role = 'Supplier' AND secondary_party = '{0}')".format(doc.supplier),
                 doc.supplier
             )
+            doc.party_link = party_link
 
     # check_party_link_exist if doctype is Sales Invoice
     if doc.doctype == 'Sales Invoice':
         if doc.keep_metal_ledger:
             # check customer is linked
-            check_party_link_exist(
+            party_link =  check_party_link_exist(
                 "(primary_role = 'Customer' AND primary_party = '{0}')".format(doc.customer),
                 "(secondary_role = 'Customer' AND secondary_party = '{0}')".format(doc.customer),
                 doc.customer
             )
+            doc.party_link = party_link
 
 
 def check_party_link_exist(filters, or_filters, party):
@@ -192,7 +215,7 @@ def check_party_link_exist(filters, or_filters, party):
             filters, or_filters = conditions used in sql query
             party : name of customer/ supplier
         output:
-            message to the user if the party is not linked
+            party link or message to the user if the party is not linked
     """
     query = """
         SELECT
@@ -202,13 +225,15 @@ def check_party_link_exist(filters, or_filters, party):
         WHERE
             {0} OR {1}
     """.format(filters, or_filters)
-    party_link = frappe.db.sql(query)
+    party_link = frappe.db.sql(query, as_dict = 1)
 
     if not party_link:
         # message to the user if party link is not set
         frappe.throw(
             _("{0} doesn't have a common party account to conduct metal transaction".format(party))
             )
+    else:
+        return party_link[0].name
 
 @frappe.whitelist()
 def increase_precision():

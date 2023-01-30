@@ -23,15 +23,20 @@
   "purity",
   "purity_percentage",
   "column_break_14",
-  "qty",
-  "board_rate",
+  "in_qty",
+  "out_qty",
+  "balance_qty",
+  "section_break_19",
   "incoming_rate",
   "outgoing_rate",
+  "column_break_22",
+  "board_rate",
   "amount",
   "section_break_11",
   "company",
   "batch_no",
-  "is_cancelled"
+  "is_cancelled",
+  "party_link"
  ],
  "fields": [
   {
@@ -155,12 +160,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "qty",
-   "fieldtype": "Float",
-   "label": "Quantity",
-   "read_only": 1
-  },
-  {
    "fieldname": "board_rate",
    "fieldtype": "Currency",
    "label": "Board Rate",
@@ -197,13 +196,47 @@
    "label": "Amount",
    "options": "Company:company:default_currency",
    "read_only": 1
+  },
+  {
+   "fieldname": "in_qty",
+   "fieldtype": "Float",
+   "label": "Incoming Quantity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "out_qty",
+   "fieldtype": "Float",
+   "label": "Outgoing Quantity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_19",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_22",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "balance_qty",
+   "fieldtype": "Float",
+   "label": "Balance Quantity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "party_link",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Party Link",
+   "options": "Party Link",
+   "read_only": 1
   }
  ],
  "hide_toolbar": 1,
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-01-13 15:49:02.292000",
+ "modified": "2023-01-30 11:15:57.676058",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Metal Ledger Entry",
