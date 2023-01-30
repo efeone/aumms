@@ -220,7 +220,7 @@
   {
    "fieldname": "balance_qty",
    "fieldtype": "Float",
-   "label": "Balance Quanity",
+   "label": "Balance Quantity",
    "read_only": 1
   },
   {
@@ -236,7 +236,7 @@
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-01-27 16:48:34.329505",
+ "modified": "2023-01-30 11:15:57.676058",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Metal Ledger Entry",
