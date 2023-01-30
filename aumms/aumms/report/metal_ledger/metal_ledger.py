@@ -13,22 +13,23 @@ def execute(filters=None):
 def get_columns():
 	''' Method to get columns in report '''
 	columns = [
-	    {'label': _('Item Code'), 'fieldtype': 'Link', 'options': 'Item', 'width': 100},
 		{'label': _('Posting Date'), 'fieldtype': 'Date', 'width': 110},
-		{'label': _('Posting Time'), 'fieldtype': 'Time', 'width': 110},
-		{'label': _('Voucher Type'), 'fieldtype': 'Link', 'options': 'DocType', 'fieldname': 'voucher_type', 'hidden': 1},
-		{'label': _('Voucher No'), 'fieldtype': 'Dynamic Link', 'options': 'voucher_type', 'width': 200},
+	    {'label': _('Item Code'), 'fieldtype': 'Link', 'options': 'Item', 'width': 110},
 		{'label': _('Party Type'), 'fieldtype': 'Link', 'options': 'DocType', 'hidden': 1 },
 		{'label': _('Party'), 'fieldtype': 'Link', 'options': 'DocType', 'width': 130},
 		{'label': _('Item Type'), 'fieldtype': 'Link', 'options': 'Item Type', 'width': 100},
 		{'label': _('Purity'), 'fieldtype': 'Link', 'options': 'Purity', 'width': 75},
-		{'label': _('Quantity'), 'fieldtype': 'Data', 'width': 80},
+		{'label': _('In Quantity'), 'fieldtype': 'Float', 'width': 100},
+		{'label': _('Out Quantity'), 'fieldtype': 'Float', 'width': 120},
+		{'label': _('Balance Quantity'), 'fieldtype': 'Float', 'width': 150},
 		{'label': _('Stock UOM'), 'fieldtype': 'Link', 'options': 'UOM', 'width': 100},
 		{'label': _('Board Rate'), 'fieldtype': 'Data', 'width': 100},
+		{'label': _('Voucher Type'), 'fieldtype': 'Link', 'options': 'DocType', 'fieldname': 'voucher_type', 'hidden': 1},
+		{'label': _('Voucher No'), 'fieldtype': 'Dynamic Link', 'options': 'voucher_type', 'width': 200},
 		{'label': _('Incoming Rate'), 'fieldtype': 'Data', 'width': 120},
 		{'label': _('Outgoing Rate'), 'fieldtype': 'Data', 'width': 120},
 		{'label': _('Amount'), 'fieldtype': 'Data', 'width': 110},
-		{'label': _('Cancelled'), 'fieldtype': 'Check', 'width': 100}
+		{'label': _('Posting Time'), 'fieldtype': 'Time', 'width': 110},
 		]
 	return columns
 
@@ -40,22 +41,23 @@ def get_data(filters):
 	for metal_ledger_entry in metal_ledger_entry_list:
 		doc = frappe.get_doc('Metal Ledger Entry', metal_ledger_entry.name)
 		row = [
-			doc.item_code,
 			doc.posting_date,
-			doc.posting_time,
-			doc.voucher_type,
-			doc.voucher_no,
+			doc.item_code,
 			doc.party_type,
 			doc.party,
 			doc.item_type,
 			doc.purity,
-			doc.qty,
+			doc.in_qty,
+			doc.out_qty,
+			doc.balance_qty,
 			doc.stock_uom,
 			doc.board_rate,
+			doc.voucher_type,
+			doc.voucher_no,
 			doc.incoming_rate,
 			doc.outgoing_rate,
 			doc.amount,
-			doc.is_cancelled
+			doc.posting_time
 		]
 		data.append(row)
 	return data
@@ -69,8 +71,6 @@ def get_filters(filters):
 		conditions['posting_date'] = [ 'between' , [ getdate(filters.from_date), getdate(filters.to_date) ] ]
 	if filters.item_code:
 		conditions['item_code'] = filters.item_code
-	if filters.is_cancelled:
-		conditions['is_cancelled'] = filters.is_cancelled
 	if filters.purity:
 		conditions['purity'] = filters.purity
 	if filters.uom:

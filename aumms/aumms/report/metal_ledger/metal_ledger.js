@@ -50,6 +50,19 @@ frappe.query_reports['Metal Ledger'] = {
 			'options': 'Batch'
 		},
 		{
+			'fieldname': 'voucher_type',
+			'label': __('Voucher Type'),
+			'fieldtype': 'Link',
+			'options': 'DocType',
+			'get_query': function() {
+				return {
+					'filters': {
+						"name": ['in',['Sales Invoice', 'Purchase Receipt']]
+					}
+				}
+			}
+		},
+		{
 			'fieldname': 'voucher_no',
 			'label': __('Voucher No'),
 			'fieldtype': 'Data',
