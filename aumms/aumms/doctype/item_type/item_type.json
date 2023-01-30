@@ -8,7 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "item_type",
-  "purity_mandatory"
+  "is_purity_item"
  ],
  "fields": [
   {
@@ -21,16 +21,16 @@
   },
   {
    "default": "0",
-   "fieldname": "purity_mandatory",
+   "fieldname": "is_purity_item",
    "fieldtype": "Check",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Purity Mandatory"
+   "label": "Is Purity Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-01-05 11:46:05.611000",
+ "modified": "2023-01-30 10:41:29.563974",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Item Type",

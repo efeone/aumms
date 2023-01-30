@@ -8,7 +8,7 @@
  "field_order": [
   "party_type",
   "item_type",
-  "purity_mandatory",
+  "is_purity_item",
   "column_break_3",
   "party",
   "purity",
@@ -46,7 +46,7 @@
    "fieldname": "purity",
    "fieldtype": "Link",
    "label": "Purity",
-   "mandatory_depends_on": "purity_mandatory",
+   "mandatory_depends_on": "is_purity_item",
    "options": "Purity"
   },
   {
@@ -60,15 +60,6 @@
   {
    "fieldname": "column_break_3",
    "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "fetch_from": "item_type.purity_mandatory",
-   "fieldname": "purity_mandatory",
-   "fieldtype": "Check",
-   "hidden": 1,
-   "label": "Purity Mandatory",
-   "read_only": 1
   },
   {
    "fieldname": "conversion_charts",
@@ -98,13 +89,22 @@
   {
    "fieldname": "section_break_9",
    "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fetch_from": "item_type.is_purity_item",
+   "fieldname": "is_purity_item",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Is Purity Item",
+   "read_only": 1
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-01-24 19:29:56.196410",
+ "modified": "2023-01-30 11:02:31.063218",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Purity Conversion Tool",

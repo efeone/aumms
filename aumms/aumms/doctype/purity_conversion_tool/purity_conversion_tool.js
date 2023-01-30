@@ -36,7 +36,7 @@ function set_filters(frm){
   frm.set_query('item_type', function() {
     return {
       filters: {
-        purity_mandatory : 1
+        is_purity_item : 1
       }
     };
   });
