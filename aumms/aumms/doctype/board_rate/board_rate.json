@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "naming_series",
+  "title",
   "broad_rate_details",
   "item_type",
   "purity",
@@ -100,12 +101,18 @@
    "hidden": 1,
    "label": "Is Purity Item",
    "read_only": 1
+ },
+ {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Title"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-30 10:57:05.077508",
+ "modified": "2023-01-30 16:10:42.595367",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Board Rate",
@@ -125,7 +132,10 @@
    "write": 1
   }
  ],
+ "search_fields": "title",
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "title"
 }
