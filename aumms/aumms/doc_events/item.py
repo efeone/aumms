@@ -11,13 +11,13 @@ def validate_item(doc, method):
             method: validate of item
     """
     # check stock uom is a purity uom
-    if doc.stock_uom:
+    if doc.stock_uom and doc.is_purity_item:
         uom_is_a_purity_uom(doc.stock_uom)
     # check sales uom is a purity uom
-    if doc.sales_uom:
+    if doc.sales_uom and doc.is_purity_item:
         uom_is_a_purity_uom(doc.sales_uom)
     # check purchase uom is a purity uom
-    if doc.purchase_uom:
+    if doc.purchase_uom and doc.is_purity_item:
         uom_is_a_purity_uom(doc.purchase_uom)
      # validate purity field is Mandatory
     if doc.is_purity_item and not doc.purity:
