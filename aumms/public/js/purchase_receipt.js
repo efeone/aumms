@@ -35,6 +35,25 @@ posting_time(frm){
 });
 
 frappe.ui.form.on('Purchase Receipt Item', {
+  item_type(frm, cdt, cdn) {
+    let d = locals[cdt][cdn]
+    if (d.item_type) {
+      frappe.call ({
+        method: 'aumms.aumms.doc_events.purchase_receipt.check_is_purity_item',
+        args: {
+          'item_type': d.item_type
+        },
+        callback: function(r) {
+          if (r.message) {
+            d.is_purity_item = r.message
+          }
+          else {
+            d.is_purity_item = 0
+          }
+        }
+      })
+    }
+  },
   items_add(frm, cdt, cdn) {
     let child = locals[cdt][cdn]
     //Checking the keep metal transaction
