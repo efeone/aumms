@@ -82,7 +82,7 @@ function prepare_conversion_chart(frm){
 						conversion_charts.item_code = conversion_chart.item_code;
 						conversion_charts.item_name = conversion_chart.item_name;
 						conversion_charts.gold_in_hand_purity = conversion_chart.gold_in_hand_purity;
-						conversion_charts.gold_in_hand_weight = conversion_chart.qty;
+						conversion_charts.gold_in_hand_weight = conversion_chart.in_qty;
 						conversion_charts.stock_uom = conversion_chart.stock_uom;
 						conversion_charts.purity_to_be_obtained = conversion_chart.purity_to_be_obtained;
 						conversion_charts.gold_weight_to_be_obtained_for_the_purity = conversion_chart.gold_weight;
