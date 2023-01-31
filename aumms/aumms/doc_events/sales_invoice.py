@@ -13,3 +13,11 @@ def get_item_details(item_code, item_type, date, time, purity, stock_uom):
         item_details['making_charge'] = item_doc.making_charge
         item_details['board_rate'] = get_board_rate(item_type, purity, stock_uom, date, time)
     return item_details
+
+@frappe.whitelist()
+def check_is_purity_item(item_type):
+    ''' Method for fetching items with is_purity_item as 1 '''
+    is_purity = ''
+    if frappe.db.exists('Item Type', {'name': item_type, 'is_purity_item': 1}):
+        is_purity = frappe.db.get_value('Item Type', {'name': item_type , 'is_purity_item': 1}, 'is_purity_item')
+    return is_purity

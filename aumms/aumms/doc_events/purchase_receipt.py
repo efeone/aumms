@@ -15,3 +15,12 @@ def create_purchase_invoice(doc, method=None):
     make_purchase_invoice(doc.name).insert(ignore_permissions = 1)
     # message to user after creation of purchase receipt
     frappe.msgprint(_('Purchase Invoice created for the Supplier {0}'.format(doc.supplier)), alert = 1)
+
+
+@frappe.whitelist()
+def check_is_purity_item(item_type):
+    ''' Method for fetching items with is_purity_item as 1 '''
+    is_purity = ''
+    if frappe.db.exists('Item Type', {'name': item_type, 'is_purity_item': 1}):
+        is_purity = frappe.db.get_value('Item Type', {'name': item_type , 'is_purity_item': 1}, 'is_purity_item')
+    return is_purity
