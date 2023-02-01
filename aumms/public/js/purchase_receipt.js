@@ -103,7 +103,7 @@ frappe.ui.form.on('Purchase Receipt Item', {
 
 let set_board_rate = function (child) {
   //function to set board rate
-  if (child.item_type){
+  if (child.item_type && child.is_purity_item) {
     frappe.call({
         method : 'aumms.aumms.utils.get_board_rate',
         args: {
