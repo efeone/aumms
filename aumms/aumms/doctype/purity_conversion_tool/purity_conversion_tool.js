@@ -2,55 +2,53 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Purity Conversion Tool', {
-	refresh: function(frm) {
+	refresh: function (frm) {
 		frm.disable_save();
 		clear_values(frm);
-		set_filters(frm);
+		// set filter for item_type
+		set_filter('item_type', {is_purity_item: 1});
+		// set filter for uom
+		set_filter('uom', {is_purity_uom: 1});
 	},
-	purity: function(frm){
-		if(frm.doc.purity && validate_mandatory_fields(frm)){
+	purity: function (frm) {
+		if (frm.doc.purity && validate_mandatory_fields(frm)) {
 			prepare_conversion_chart(frm);
 		}
-		else{
+		else {
 			clear_values(frm);
 		}
 	},
-	party (frm) {
+	party(frm) {
 		if (frm.doc.party && frm.doc.purity && frm.doc.item_type) {
 			frm.trigger('purity')
 		} else {
 			clear_values(frm);
 		}
 	},
-	item_type (frm) {
+	item_type(frm) {
 		if (!frm.doc.item_type) {
 			frm.set_value('purity', '')
 		}
 	},
-	party_type (frm) {
+	party_type(frm) {
 		frm.set_value('party', '')
+	},
+	uom(frm) {
+		if (frm.doc.uom) {
+			show_total_gw_and_aw(frm);
+		}
 	}
 });
 
-function set_filters(frm){
-  frm.set_query('item_type', function() {
-    return {
-      filters: {
-        is_purity_item : 1
-      }
-    };
-  });
-}
-
-function validate_mandatory_fields(frm){
+function validate_mandatory_fields(frm) {
 	var validated = 0;
-	if(frm.doc.party && frm.doc.party_type){
+	if (frm.doc.party && frm.doc.party_type) {
 		validated = 1;
 	}
 	else {
 		frappe.throw(__('Party Type and Part is required to do this action.'));
 	}
-	if(frm.doc.item_type){
+	if (frm.doc.item_type) {
 		validated = 1;
 	}
 	else {
@@ -59,8 +57,8 @@ function validate_mandatory_fields(frm){
 	return validated;
 }
 
-function prepare_conversion_chart(frm){
-	if(frm.doc.party_type && frm.doc.party && frm.doc.item_type && frm.doc.purity){
+function prepare_conversion_chart(frm) {
+	if (frm.doc.party_type && frm.doc.party && frm.doc.item_type && frm.doc.purity) {
 		frappe.call({
 			method: 'aumms.aumms.doctype.purity_conversion_tool.purity_conversion_tool.get_metal_ledger_entries',
 			args: {
@@ -72,12 +70,9 @@ function prepare_conversion_chart(frm){
 			freeze: true,
 			freeze_message: __("Preparing Conversion Chart.."),
 			callback: (r) => {
-				if(r && r.message){
+				if (r && r.message) {
 					frm.clear_table('conversion_charts');
-					let total_gw = 0;
-					let total_aw = 0;
 					r.message.forEach(conversion_chart => {
-						console.log(conversion_chart);
 						let conversion_charts = frm.add_child('conversion_charts');
 						conversion_charts.item_code = conversion_chart.item_code;
 						conversion_charts.item_name = conversion_chart.item_name;
@@ -87,13 +82,9 @@ function prepare_conversion_chart(frm){
 						conversion_charts.purity_to_be_obtained = conversion_chart.purity_to_be_obtained;
 						conversion_charts.gold_weight_to_be_obtained_for_the_purity = conversion_chart.gold_weight;
 						conversion_charts.alloy_weight = conversion_chart.alloy_weight;
-						total_gw += conversion_chart.gold_weight
-						total_aw += conversion_chart.alloy_weight
 					});
 					frm.refresh_field('conversion_charts');
-					// set total GW and AW
-					frm.set_value('total_gold_weight_to_be_obtained_for_the_purity', total_gw)
-					frm.set_value('total_alloy_weight', total_aw)
+					frm.trigger('uom')
 				}
 			},
 			error: (r) => {
@@ -109,4 +100,34 @@ let clear_values = function (frm) {
 	frm.set_value('total_alloy_weight', 0)
 	frm.clear_table('conversion_charts');
 	frm.refresh_field('conversion_charts');
+}
+let set_filter = function (field, filters) {
+	/*
+		function to set filter for a specific field
+		args:
+			field: field name
+			filters: set of filters, (eg: {key:value})
+		output: filter applied list for field
+	*/
+	cur_frm.set_query(field, () => {
+		return {
+			filters: filters
+		}
+	})
+}
+
+let show_total_gw_and_aw = function (frm) {
+	// call to get total gold weight and alloy weight
+	frm.call('add_gw_and_aw')
+    .then(r => {
+        if (r.message) {
+			// set total GW and AW
+			let gw = 'total_gold_weight_to_be_obtained_for_the_purity'
+			frm.set_value(gw, r.message.gw)
+			frm.set_value('total_alloy_weight', r.message.aw)
+			// set description for total GW and AW
+			frm.set_df_property(gw, 'description', ' In ' + frm.doc.uom);
+			frm.set_df_property('total_alloy_weight', 'description', ' In ' + frm.doc.uom);
+		}
+    })
 }
