@@ -25,10 +25,16 @@ class PurityConversionTool(Document):
 				else:
 					# multiply weight with conversion factor
 					conversion_factor = get_conversion_factor(row.stock_uom, self.uom)
-					gw_after_converted = row.gold_weight_to_be_obtained_for_the_purity * conversion_factor
-					aw_after_converted = row.alloy_weight * conversion_factor
-					gw += gw_after_converted
-					aw += aw_after_converted
+					if conversion_factor:
+						gw_after_converted = row.gold_weight_to_be_obtained_for_the_purity * conversion_factor
+						aw_after_converted = row.alloy_weight * conversion_factor
+						gw += gw_after_converted
+						aw += aw_after_converted
+					else:
+						# message to user about set conversion factor value
+						frappe.throw(
+							_('Please set Conversion Factor for {0} to {1}'.format(row.stock_uom, self.uom))
+						)
 		return {'gw': gw, 'aw': aw}
 
 @frappe.whitelist()
