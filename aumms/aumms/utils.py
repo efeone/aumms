@@ -30,7 +30,7 @@ def get_board_rate(item_type, purity, stock_uom, date, time):
     else:
         # message to user about set Today's Board Rate value
         frappe.throw(
-            _("Today's Board Rate is not updated for {0} {1}".format(purity, item_type))
+            _('No Board Rate found for  <B>{0}</B> <B>{1}</B> on <B>{2}</B>'.format(purity, item_type, date))
         )
 
 @frappe.whitelist()
