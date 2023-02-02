@@ -16,8 +16,8 @@ def get_columns():
 	columns = [
 		{'label': _('Posting Date'), 'fieldtype': 'Date', 'width': 110},
 	    {'label': _('Item Code'), 'fieldtype': 'Link', 'options': 'Item', 'width': 110},
-		{'label': _('Party Type'), 'fieldtype': 'Link', 'options': 'DocType', 'hidden': 1 },
-		{'label': _('Party'), 'fieldtype': 'Link', 'options': 'DocType', 'width': 130},
+		{'label': _('Party Type'), 'fieldname': 'party_type', 'fieldtype': 'Link', 'options': 'DocType', 'hidden': 1 },
+		{'label': _('Party'), 'fieldtype': 'Dynamic Link', 'options': 'party_type', 'width': 130},
 		{'label': _('Item Type'), 'fieldtype': 'Link', 'options': 'Item Type', 'width': 100},
 		{'label': _('Purity'), 'fieldtype': 'Link', 'options': 'Purity', 'width': 75},
 		{'label': _('In Quantity'), 'fieldname': 'in_qty', 'fieldtype': 'Float', 'width': 100},
