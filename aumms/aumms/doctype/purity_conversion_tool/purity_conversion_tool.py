@@ -4,11 +4,38 @@
 import frappe
 from frappe.model.document import Document
 from frappe import _
+from aumms.aumms.utils import *
 
 class PurityConversionTool(Document):
 	def validate(self):
 		frappe.throw(_('No Permision To Save!'))
 
+	@frappe.whitelist()
+	def add_gw_and_aw(self):
+		"""
+			function to add Gold Weight and Alloy Weight
+			output: dict of aw and gw
+		"""
+		gw, aw = 0.0, 0.0
+		if self.uom and self.conversion_charts:
+			for row in self.conversion_charts:
+				if row.stock_uom == self.uom:
+					gw += row.gold_weight_to_be_obtained_for_the_purity
+					aw += row.alloy_weight
+				else:
+					# multiply weight with conversion factor
+					conversion_factor = get_conversion_factor(row.stock_uom, self.uom)
+					if conversion_factor:
+						gw_after_converted = row.gold_weight_to_be_obtained_for_the_purity * conversion_factor
+						aw_after_converted = row.alloy_weight * conversion_factor
+						gw += gw_after_converted
+						aw += aw_after_converted
+					else:
+						# message to user about set conversion factor value
+						frappe.throw(
+							_('Please set Conversion Factor for {0} to {1}'.format(row.stock_uom, self.uom))
+						)
+		return {'gw': gw, 'aw': aw}
 
 @frappe.whitelist()
 def get_metal_ledger_entries(party_type, party, item_type, purity):

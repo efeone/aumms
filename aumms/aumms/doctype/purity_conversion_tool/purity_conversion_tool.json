@@ -12,6 +12,7 @@
   "column_break_3",
   "party",
   "purity",
+  "uom",
   "conversion_chart_section",
   "conversion_charts",
   "section_break_9",
@@ -69,14 +70,14 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval: doc.total_gold_weight_to_be_obtained_for_the_purity",
+   "depends_on": "eval: (doc.uom && doc.total_gold_weight_to_be_obtained_for_the_purity)",
    "fieldname": "total_gold_weight_to_be_obtained_for_the_purity",
    "fieldtype": "Float",
    "label": "Total Gold Weight to be obtained for the purity",
    "read_only": 1
   },
   {
-   "depends_on": "eval: doc.total_alloy_weight;",
+   "depends_on": "eval: (doc.total_alloy_weight && doc.uom)",
    "fieldname": "total_alloy_weight",
    "fieldtype": "Float",
    "label": "Total Alloy Weight",
@@ -98,13 +99,21 @@
    "hidden": 1,
    "label": "Is Purity Item",
    "read_only": 1
+  },
+  {
+   "depends_on": "eval: (doc.party && doc.item_type)",
+   "description": "Convert all GW and AW to this UOM ",
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-01-30 11:02:31.063218",
+ "modified": "2023-02-01 12:45:05.194390",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Purity Conversion Tool",
