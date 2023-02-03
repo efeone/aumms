@@ -189,30 +189,22 @@ def validate_party_for_metal_transaction(doc, method=None):
     if doc.doctype == 'Purchase Receipt':
         if doc.keep_metal_ledger:
             # check supplier is linked
-            party_link = get_party_link_if_exist(
-                "(primary_role = 'Supplier' AND primary_party = '{0}')".format(doc.supplier),
-                "(secondary_role = 'Supplier' AND secondary_party = '{0}')".format(doc.supplier),
-                doc.supplier
-            )
+            party_link = get_party_link_if_exist('Supplier', doc.supplier)
             doc.party_link = party_link
 
     # get_party_link_if_exist if doctype is Sales Invoice
     if doc.doctype == 'Sales Invoice':
         if doc.keep_metal_ledger:
             # check customer is linked
-            party_link =  get_party_link_if_exist(
-                "(primary_role = 'Customer' AND primary_party = '{0}')".format(doc.customer),
-                "(secondary_role = 'Customer' AND secondary_party = '{0}')".format(doc.customer),
-                doc.customer
-            )
+            party_link =  get_party_link_if_exist('Customer', doc.customer)
             doc.party_link = party_link
 
 
-def get_party_link_if_exist(filters, or_filters, party):
+def get_party_link_if_exist(party_type, party):
     """
         function to check party link exist for party and throw a message if not exists
         args:
-            filters, or_filters = conditions used in sql query
+            party_type : "Customer" or "Supplier"
             party : name of customer/ supplier
         output:
             party link or message to the user if the party is not linked
@@ -223,15 +215,13 @@ def get_party_link_if_exist(filters, or_filters, party):
         FROM
             `tabParty Link`
         WHERE
-            {0} OR {1}
-    """.format(filters, or_filters)
-    party_link = frappe.db.sql(query, as_dict = 1)
+            (primary_role = %(party_type)s AND primary_party = %(party)s ) OR (secondary_role = %(party_type)s AND secondary_party = %(party)s )
+    """
+    party_link = frappe.db.sql(query.format(), { 'party_type':party_type, 'party':party }, as_dict = 1)
 
     if not party_link:
         # message to the user if party link is not set
-        frappe.throw(
-            _("{0} doesn't have a common party account to conduct metal transaction".format(party))
-            )
+        frappe.throw( _("{0} doesn't have a common party account to conduct metal transaction".format(party)))
     else:
         return party_link[0].name
 
