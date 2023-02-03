@@ -5,6 +5,8 @@ import frappe
 from frappe.model.document import Document
 from frappe import _
 from aumms.aumms.utils import *
+from aumms.aumms.utils import get_party_link_if_exist
+
 
 class PurityConversionTool(Document):
 	def validate(self):
@@ -41,7 +43,12 @@ class PurityConversionTool(Document):
 def get_metal_ledger_entries(party_type, party, item_type, purity):
 	''' Method to get Metal Ledger Entries '''
 	field_list = ['name', 'item_code', 'item_name', 'in_qty', 'stock_uom', 'purity', 'purity_percentage']
-	metal_ledger_entries = frappe.db.get_all('Metal Ledger Entry', filters = { 'party_type': party_type, 'party':party, 'item_type':item_type , 'is_cancelled': 0 }, fields = field_list )
+	party_link = get_party_link_if_exist(party_type, party)
+	if party_link:
+		filters = { 'party_link': party_link,  'item_type':item_type , 'is_cancelled': 0 }
+	else:
+		filters = { 'party_type': party_type, 'party':party, 'item_type':item_type , 'is_cancelled': 0 }
+	metal_ledger_entries = frappe.db.get_all('Metal Ledger Entry', filters = filters, fields = field_list )
 	for ml_entry in metal_ledger_entries:
 		ml_entry['purity_to_be_obtained'] = frappe.db.get_value('Purity', purity, 'purity_percentage')
 		if ml_entry.purity:
