@@ -86,10 +86,7 @@ def get_filters(filters):
 		if filters.common_party:
 
 			# get party link of this party
-			party_link = get_party_link_if_exist(
-				"(primary_role = '{0}' AND primary_party = '{1}')".format(filters.party_type, filters.party),
-                "(secondary_role = '{0}' AND secondary_party = '{1}')".format(filters.party_type,  filters.party),
-                filters.party)
+			party_link = get_party_link_if_exist(filters.party_type, filters.party)
 			conditions['party_link'] = party_link
 
 		else:
