@@ -42,7 +42,7 @@ class PurityConversionTool(Document):
 @frappe.whitelist()
 def get_metal_ledger_entries(party_type, party, item_type, purity):
 	''' Method to get Metal Ledger Entries '''
-	field_list = ['name', 'item_code', 'item_name', 'in_qty', 'stock_uom', 'purity', 'purity_percentage']
+	field_list = ['name', 'item_code', 'item_name', 'voucher_type', 'in_qty', 'out_qty', 'stock_uom', 'purity', 'purity_percentage']
 	party_link = get_party_link_if_exist(party_type, party)
 	if party_link:
 		filters = { 'party_link': party_link,  'item_type':item_type , 'is_cancelled': 0 }
@@ -53,8 +53,10 @@ def get_metal_ledger_entries(party_type, party, item_type, purity):
 		ml_entry['purity_to_be_obtained'] = frappe.db.get_value('Purity', purity, 'purity_percentage')
 		if ml_entry.purity:
 			ml_entry['gold_in_hand_purity'] = frappe.db.get_value('Purity', ml_entry.purity, 'purity_percentage')
-		if ml_entry.in_qty and ml_entry.purity_percentage:
-			ml_entry['gold_weight'] = get_gold_weight_for_purity(float(ml_entry.in_qty), float(ml_entry.purity_percentage), purity)
+		qty = ml_entry.in_qty if ml_entry.voucher_type == 'Purchase Receipt' else ml_entry.out_qty
+		ml_entry['qty'] = qty
+		if qty and ml_entry.purity_percentage:
+			ml_entry['gold_weight'] = get_gold_weight_for_purity(float(qty), float(ml_entry.purity_percentage), purity)
 		else:
 			ml_entry['gold_weight'] = 0
 		if ml_entry.gold_weight < ml_entry.in_qty:
