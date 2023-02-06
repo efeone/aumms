@@ -25,7 +25,7 @@ def get_board_rate(item_type, purity, stock_uom, date, time):
             else:
                 # message to user about set conversion factor value
                 frappe.throw(
-                    _('Please set Conversion Factor for {0} {1}'.format(stock_uom, bruom))
+                    _('Please set Conversion Factor for {0} to {1}'.format(stock_uom, bruom))
                 )
     else:
         # message to user about set Today's Board Rate value
