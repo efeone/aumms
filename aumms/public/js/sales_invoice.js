@@ -144,15 +144,15 @@ frappe.ui.form.on('Sales Invoice Item', {
   }
 })
 
-let set_item_details = function (child) {
+let set_item_details = function(child) {
   //function to get item get_item_details
   if(child.item_type){
     frappe.call({
         method : 'aumms.aumms.utils.get_board_rate',
         args: {
-          item_code: child.item_code,
           item_type: child.item_type,
           date: cur_frm.doc.posting_date,
+          stock_uom: child.stock_uom,
           time: cur_frm.doc.posting_time,
           purity: child.purity
         },
