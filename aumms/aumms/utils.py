@@ -156,7 +156,10 @@ def cancel_metal_ledger_entries(doc, method=None):
         ml_doc.save(ignore_permissions = 1)
 
         # creating new document of metal ledger entry
-        ml_doc.qty = -ml_doc.qty # updating value of qty as minus of existing qty
+        if doc.doctype == 'Purchase Receipt':
+            ml_doc.in_qty = -ml_doc.in_qty
+        if doc.doctype == 'Sales Invoice':
+            ml_doc.out_qty = -ml_doc.out_qty # updating value of qty as minus of existing qty
 
         # changing outgoing rate to incoming rate
         ml_doc.incoming_rate = ml_doc.outgoing_rate
