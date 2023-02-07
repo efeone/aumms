@@ -18,7 +18,7 @@
   "party_type",
   "party",
   "section_break_10",
-  "stock_uom",
+  "uom",
   "item_type",
   "purity",
   "purity_percentage",
@@ -118,13 +118,6 @@
    "fieldtype": "Link",
    "label": "Company",
    "options": "Company",
-   "read_only": 1
-  },
-  {
-   "fieldname": "stock_uom",
-   "fieldtype": "Link",
-   "label": "Stock UOM",
-   "options": "UOM",
    "read_only": 1
   },
   {
@@ -230,13 +223,20 @@
    "label": "Party Link",
    "options": "Party Link",
    "read_only": 1
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
   }
  ],
  "hide_toolbar": 1,
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-01-30 11:15:57.676058",
+ "modified": "2023-02-03 16:19:13.311799",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Metal Ledger Entry",

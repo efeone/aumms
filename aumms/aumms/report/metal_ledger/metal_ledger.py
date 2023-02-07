@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe.utils import *
 from frappe import _
-from aumms.aumms.utils import get_party_link_if_exist
+from aumms.aumms.utils import get_party_link_if_exist, get_conversion_factor
 
 def execute(filters=None):
 	columns, data = get_columns(), get_data(filters)

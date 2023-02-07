@@ -57,6 +57,10 @@ def create_metal_ledger_entries(doc, method=None):
     # get default company
     company = frappe.defaults.get_defaults().company
 
+    ledger_uom = frappe.get_doc('Aumms Settings').metal_ledger_purity_uom
+    if not ledger_uom:
+        frappe.throw(_('Please set Metal Ledger UOM from Aumms Settings'))
+
     # set dict of fields for metal ledger entry
     fields = {
         'doctype': 'Metal Ledger Entry',
@@ -83,43 +87,47 @@ def create_metal_ledger_entries(doc, method=None):
         # declare ledger_created as false
         ledger_created = 0
         for item in doc.items:
+            if item.stock_uom != ledger_uom:
+                conversion_factor = get_conversion_factor(item.stock_uom, ledger_uom)
+                if not conversion_factor:
+                    frappe.throw('conversion_factor error {} {}'.format(item.stock_uom, ledger_uom))
+            qty = item.stock_uom if item.stock_uom == ledger_uom else item.stock_qty*conversion_factor
+            rate = item.rate if item.stock_uom == ledger_uom else item.rate/conversion_factor
+            # set item details in fields
+            fields['item_code'] = item.item_code
+            fields['item_name'] = item.item_name
+            fields['uom'] = ledger_uom
+            fields['purity'] = item.purity
+            fields['purity_percentage'] = item.purity_percentage
+            fields['board_rate'] = rate
+            fields['batch_no'] = item.batch_no
+            fields['item_type'] = item.item_type
+            fields['amount'] = -item.amount
+            # get balance qty of the item for this party
+            filters = {
+                'item_type': item.item_type,
+                'purity': item.purity,
+                'party_link': doc.party_link
+                }
+            balance_qty = frappe.db.get_value('Metal Ledger Entry', filters, 'balance_qty')
 
-                # set item details in fields
-                fields['item_code'] = item.item_code
-                fields['item_name'] = item.item_name
-                fields['stock_uom'] = item.stock_uom
-                fields['purity'] = item.purity
-                fields['purity_percentage'] = item.purity_percentage
-                fields['board_rate'] = item.rate
-                fields['batch_no'] = item.batch_no
-                fields['item_type'] = item.item_type
-                fields['amount'] = -item.amount
-                # get balance qty of the item for this party
-                filters = {
-                    'item_type': item.item_type,
-                    'purity': item.purity,
-                    'stock_uom': item.stock_uom,
-                    'party_link': doc.party_link
-                    }
-                balance_qty = frappe.db.get_value('Metal Ledger Entry', filters, 'balance_qty')
+            if doc.doctype == 'Purchase Receipt':
+                # update balance_qty
+                balance_qty = balance_qty+qty if balance_qty else qty
+                fields['in_qty'] = qty
+                fields['outgoing_rate'] = rate
+                fields['balance_qty'] = balance_qty
 
-                if doc.doctype == 'Purchase Receipt':
-                    # update balance_qty
-                    balance_qty = balance_qty+item.stock_qty if balance_qty else item.stock_qty
-                    fields['in_qty'] = item.stock_qty
-                    fields['outgoing_rate'] = item.rate
-                    fields['balance_qty'] = balance_qty
+            if doc.doctype == 'Sales Invoice':
+                # update balance_qty
+                balance_qty = balance_qty-qty if balance_qty else -qty
+                fields['incoming_rate'] = rate
+                fields['out_qty'] = qty
+                fields['balance_qty'] = balance_qty
 
-                if doc.doctype == 'Sales Invoice':
-                    # update balance_qty
-                    balance_qty = balance_qty-item.stock_qty if balance_qty else -item.stock_qty
-                    fields['incoming_rate'] = item.rate
-                    fields['out_qty'] = item.stock_qty
-                    fields['balance_qty'] = balance_qty
-
-                # create metal ledger entry doc with fields
-                frappe.get_doc(fields).insert(ignore_permissions = 1)
-                ledger_created = 1
+            # create metal ledger entry doc with fields
+            frappe.get_doc(fields).insert(ignore_permissions = 1)
+            ledger_created = 1
 
         # alert message if metal ledger is created
         if ledger_created:
