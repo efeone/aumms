@@ -93,13 +93,13 @@ def create_metal_ledger_entries(doc, method=None):
                 fields['board_rate'] = item.rate
                 fields['batch_no'] = item.batch_no
                 fields['item_type'] = item.item_type
-                fields['amount'] = -item.amount
                 # get balance qty of the item for this party
                 filters = {
                     'item_type': item.item_type,
                     'purity': item.purity,
                     'stock_uom': item.stock_uom,
-                    'party_link': doc.party_link
+                    'party_link': doc.party_link,
+                    'is_cancelled': 0
                     }
                 balance_qty = frappe.db.get_value('Metal Ledger Entry', filters, 'balance_qty')
 
@@ -109,6 +109,7 @@ def create_metal_ledger_entries(doc, method=None):
                     fields['in_qty'] = item.stock_qty
                     fields['outgoing_rate'] = item.rate
                     fields['balance_qty'] = balance_qty
+                    fields['amount'] = -item.amount
 
                 if doc.doctype == 'Sales Invoice':
                     # update balance_qty
@@ -116,6 +117,7 @@ def create_metal_ledger_entries(doc, method=None):
                     fields['incoming_rate'] = item.rate
                     fields['out_qty'] = item.stock_qty
                     fields['balance_qty'] = balance_qty
+                    fields['amount'] = item.amount
 
                 # create metal ledger entry doc with fields
                 frappe.get_doc(fields).insert(ignore_permissions = 1)
