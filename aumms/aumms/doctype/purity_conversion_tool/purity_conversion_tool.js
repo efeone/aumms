@@ -82,6 +82,7 @@ function prepare_conversion_chart(frm) {
 						conversion_charts.purity_to_be_obtained = conversion_chart.purity_to_be_obtained;
 						conversion_charts.gold_weight_to_be_obtained_for_the_purity = conversion_chart.gold_weight;
 						conversion_charts.alloy_weight = conversion_chart.alloy_weight;
+						conversion_charts.voucher_type = conversion_chart.voucher_type;
 					});
 					frm.refresh_field('conversion_charts');
 					frm.trigger('uom')
@@ -125,9 +126,9 @@ let show_total_gw_and_aw = function (frm) {
 			let gw = 'total_gold_weight_to_be_obtained_for_the_purity'
 			frm.set_value(gw, r.message.gw)
 			frm.set_value('total_alloy_weight', r.message.aw)
-			// set description for total GW and AW
-			frm.set_df_property(gw, 'description', ' In ' + frm.doc.uom);
-			frm.set_df_property('total_alloy_weight', 'description', ' In ' + frm.doc.uom);
+			// set label for total GW and AW
+			frm.set_df_property(gw, 'label','Total Gold Weight to be obtained for the purity '+ frm.doc.purity+' In ' + frm.doc.uom);
+			frm.set_df_property('total_alloy_weight', 'label', 'Total Alloy Weight to be obtained for the purity '+ frm.doc.purity+' In ' + frm.doc.uom);
 		}
     })
 }
