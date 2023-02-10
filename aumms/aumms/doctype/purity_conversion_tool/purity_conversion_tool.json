@@ -8,11 +8,11 @@
  "field_order": [
   "party_type",
   "item_type",
-  "uom",
+  "is_purity_item",
   "column_break_3",
   "party",
   "purity",
-  "uom_for_balance_qty",
+  "uom",
   "section_break_8",
   "purity_in_hand",
   "purity_percentage_in_hand",
@@ -106,15 +106,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "default": "0",
-   "fetch_from": "item_type.is_purity_item",
-   "fieldname": "uom",
-   "fieldtype": "Check",
-   "hidden": 1,
-   "label": "Is Purity Item",
-   "read_only": 1
-  },
-  {
    "fieldname": "section_break_8",
    "fieldtype": "Section Break"
   },
@@ -131,14 +122,6 @@
    "fieldtype": "Link",
    "label": "Purity to be obtained",
    "options": "Purity"
-  },
-  {
-   "depends_on": "eval: (doc.party && doc.item_type)",
-   "description": "Convert all GW and AW to this UOM ",
-   "fieldname": "uom_for_balance_qty",
-   "fieldtype": "Link",
-   "label": "UOM",
-   "options": "UOM"
   },
   {
    "depends_on": "eval: !doc.party_type",
@@ -197,13 +180,30 @@
   {
    "fieldname": "column_break_19",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fetch_from": "item_type.is_purity_item",
+   "fieldname": "is_purity_item",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Is Purity Item",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: (doc.party && doc.item_type)",
+   "description": "Convert all GW and AW to this UOM ",
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-02-09 17:50:17.701333",
+ "modified": "2023-02-10 17:12:57.005720",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Purity Conversion Tool",
