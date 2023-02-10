@@ -3,11 +3,14 @@ from frappe.utils import *
 from frappe import _
 
 @frappe.whitelist()
-def get_board_rate(item_type, purity, stock_uom, date, time):
+def get_board_rate(item_type, purity, stock_uom, date, time=None):
     ''' Method to get Board Rate '''
 
     # add filters to get board rate
-    filters = { 'docstatus': '1', 'item_type': item_type, 'purity': purity, 'date': getdate(date), 'time': ['<=', time]}
+    if time:
+        filters = { 'docstatus': '1', 'item_type': item_type, 'purity': purity, 'date': getdate(date), 'time': ['<=', time] }
+    else:
+        filters = { 'docstatus': '1', 'item_type': item_type, 'purity': purity, 'date': getdate(date) }
 
     if frappe.db.exists('Board Rate', filters):
         # get board rate and board rate uom (bruom)
