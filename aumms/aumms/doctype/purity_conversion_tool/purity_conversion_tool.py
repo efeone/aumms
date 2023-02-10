@@ -45,6 +45,38 @@ class PurityConversionTool(Document):
 						)
 		return {'gw': gw, 'aw': aw}
 
+	@frappe.whitelist()
+	def get_gold_to_be_obtained(self):
+		"""
+			method to get gold weight by multiplying gold in hand weight
+			with the division of gold purity and needed purity
+			output: gold weight and alloy weight
+		"""
+
+		hand_gold = self.gold_in_hand
+		hand_purity = self.purity_percentage_in_hand
+		need_purity = self.purity_percentage_to_be_obtained
+		hand_uom = self.uom_of_gold_in_hand
+		need_uom = self.uom_of_gold_to_be_obtained
+
+		if hand_gold and hand_gold and need_purity and hand_uom and need_uom:
+			gold_weight = hand_gold * (hand_purity/need_purity)
+			alloy_weight = hand_gold - gold_weight
+
+			# converting gold weight and alloy weight by conversion factor if uom differs
+			if hand_uom != need_uom:
+				conversion_factor = get_conversion_factor(hand_uom, need_uom)
+				if conversion_factor:
+					gold_weight *= conversion_factor
+					alloy_weight *= conversion_factor
+				else:
+					# message to user about set conversion factor value
+					frappe.throw(
+						_('Please set Conversion Factor for {0} to {1}'.format(hand_uom, need_uom))
+					)
+
+			return {'gold_weight': gold_weight, 'alloy_weight': alloy_weight}
+
 @frappe.whitelist()
 def get_metal_ledger_entries(party_type, party, item_type, purity):
 	''' Method to get Metal Ledger Entries '''
@@ -78,3 +110,8 @@ def get_gold_weight_for_purity(gold_in_hand_weight, gold_in_hand_purity, purity)
 		purity_percentage = frappe.db.get_value('Purity', purity, 'purity_percentage')
 		gold_weight = gold_in_hand_weight * (gold_in_hand_purity/purity_percentage)
 	return gold_weight;
+
+@frappe.whitelist()
+def get_purity_percentage(purity):
+	" function to get purity percentage of a purity"
+	return frappe.db.get_value('Purity', purity, 'purity_percentage')

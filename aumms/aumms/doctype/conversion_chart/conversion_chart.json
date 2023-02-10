@@ -22,7 +22,6 @@
    "columns": 2,
    "fieldname": "item_code",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Item Code",
    "options": "Item"
   },
@@ -86,7 +85,6 @@
   {
    "fieldname": "voucher_type",
    "fieldtype": "Link",
-   "hidden": 1,
    "label": "Voucher Type",
    "options": "DocType",
    "read_only": 1
@@ -95,7 +93,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-02-08 16:01:10.713089",
+ "modified": "2023-02-09 12:21:34.542061",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Conversion Chart",

@@ -6,9 +6,15 @@ frappe.ui.form.on('Purity Conversion Tool', {
 		frm.disable_save();
 		clear_values(frm);
 		// set filter for item_type
-		set_filter('item_type', {is_purity_item: 1});
+		set_filter('item_type', { is_purity_item: 1 });
 		// set filter for uom
-		set_filter('uom', {is_purity_uom: 1});
+		set_filter('uom', { is_purity_uom: 1 });
+		// set filter for uom_of_gold_in_hand
+		set_filter('uom_of_gold_in_hand', { is_purity_uom: 1 });
+		// set filter for uom_of_gold_to_be_obtained
+		set_filter('uom_of_gold_to_be_obtained', { is_purity_uom: 1 });
+		frm.set_value('party_type', '')
+
 	},
 	purity: function (frm) {
 		if (frm.doc.purity && validate_mandatory_fields(frm)) {
@@ -36,6 +42,59 @@ frappe.ui.form.on('Purity Conversion Tool', {
 	uom(frm) {
 		if (frm.doc.uom) {
 			show_total_gw_and_aw(frm);
+		}
+	},
+	uom_of_gold_in_hand(frm) {
+		if (frm.doc.uom_of_gold_in_hand) {
+			if (!frm.doc.uom_of_gold_to_be_obtained) {
+				frm.set_value('uom_of_gold_to_be_obtained', frm.doc.uom_of_gold_in_hand)
+			}
+		}
+		frm.trigger('gold_in_hand')
+	},
+	uom_of_gold_to_be_obtained(frm) {
+		frm.trigger('gold_in_hand')
+	},
+	purity_percentage_in_hand(frm) {
+		if (0 > frm.doc.purity_percentage_in_hand || frm.doc.purity_percentage_in_hand  > 100) {
+			frappe.throw(__('Purity Percentage must range from 0 to 100'));
+		}
+		frm.trigger('gold_in_hand')
+	},
+	purity_percentage_to_be_obtained(frm) {
+		if (0 > frm.doc.purity_percentage_to_be_obtained || frm.doc.purity_percentage_to_be_obtained  > 100) {
+			frappe.throw(__('Purity Percentage must range from 0 to 100'));
+		}
+		frm.trigger('gold_in_hand')
+	},
+	purity_in_hand(frm){
+		if (frm.doc.purity_in_hand) {
+			set_purity_percentage(frm.doc.purity_in_hand, 'purity_percentage_in_hand')
+		}
+	},
+	purity_to_be_obtained(frm) {
+		if (frm.doc.purity_to_be_obtained) {
+			set_purity_percentage(frm.doc.purity_to_be_obtained, 'purity_percentage_to_be_obtained')
+		}
+	},
+	gold_in_hand(frm) {
+		if (frm.doc.gold_in_hand) {
+			frm.call('get_gold_to_be_obtained')
+				.then(r => {
+					if (r.message) {
+						frm.set_df_property('alloy_obtained', 'label', 'Alloy obtained From the Conversion in '+ frm.doc.uom_of_gold_to_be_obtained)
+						frm.set_df_property('gold_obtained', 'label',
+						'Gold obtained from '+frm.doc.gold_in_hand+' '
+						+frm.doc.uom_of_gold_in_hand +' of '+frm.doc.purity_percentage_in_hand+'% purity '+
+						' to '+frm.doc.purity_percentage_to_be_obtained+ '% purity in '+frm.doc.uom_of_gold_to_be_obtained)
+						frm.set_value('gold_obtained', r.message.gold_weight)
+						frm.set_value('alloy_obtained', r.message.alloy_weight)
+					} else {
+						clear_values(frm)
+					}
+				})
+		} else {
+			clear_values(frm)
 		}
 	}
 });
@@ -101,6 +160,8 @@ let clear_values = function (frm) {
 	frm.set_value('total_alloy_weight', 0)
 	frm.clear_table('conversion_charts');
 	frm.refresh_field('conversion_charts');
+	frm.set_value('alloy_obtained', '')
+	frm.set_value('gold_obtained', '')
 }
 let set_filter = function (field, filters) {
 	/*
@@ -120,15 +181,29 @@ let set_filter = function (field, filters) {
 let show_total_gw_and_aw = function (frm) {
 	// call to get total gold weight and alloy weight
 	frm.call('add_gw_and_aw')
-    .then(r => {
-        if (r.message) {
-			// set total GW and AW
-			let gw = 'total_gold_weight_to_be_obtained_for_the_purity'
-			frm.set_value(gw, r.message.gw)
-			frm.set_value('total_alloy_weight', r.message.aw)
-			// set label for total GW and AW
-			frm.set_df_property(gw, 'label','Total Gold Weight to be obtained for the purity '+ frm.doc.purity+' In ' + frm.doc.uom);
-			frm.set_df_property('total_alloy_weight', 'label', 'Total Alloy Weight to be obtained for the purity '+ frm.doc.purity+' In ' + frm.doc.uom);
+		.then(r => {
+			if (r.message) {
+				// set total GW and AW
+				let gw = 'total_gold_weight_to_be_obtained_for_the_purity'
+				frm.set_value(gw, r.message.gw)
+				frm.set_value('total_alloy_weight', r.message.aw)
+				// set label for total GW and AW
+				frm.set_df_property(gw, 'label', 'Total Gold Weight to be obtained for the purity ' + frm.doc.purity + ' In ' + frm.doc.uom);
+				frm.set_df_property('total_alloy_weight', 'label', 'Total Alloy Weight to be obtained for the purity ' + frm.doc.purity + ' In ' + frm.doc.uom);
+			}
+		})
+}
+
+let set_purity_percentage = function(purity, field) {
+	frappe.call({
+		method: 'aumms.aumms.doctype.purity_conversion_tool.purity_conversion_tool.get_purity_percentage',
+		args: {
+			purity: purity
+		},
+		callback: (r) => {
+			if (r.message) {
+				cur_frm.set_value(field, r.message)
+			}
 		}
-    })
+	})
 }
