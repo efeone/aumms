@@ -3,6 +3,19 @@
 /* eslint-disable */
 
 frappe.query_reports['Metal Ledger'] = {
+	onload () {
+		// fetch metal ledger uom from aumms setting and set to uom
+		frappe.db.get_single_value('Aumms Settings', 'metal_ledger_uom')
+		.then(uom => {
+			frappe.query_report.set_filter_value('uom', uom)
+		})
+		// fetch metal ledger purity from aumms setting and set to purity
+		frappe.db.get_single_value('Aumms Settings', 'metal_ledger_purity')
+		.then(purity => {
+			frappe.query_report.set_filter_value('purity', purity)
+		})
+		frappe.query_report.refresh();
+	},
 	'filters': [
 		{
 			'fieldname': 'company',
@@ -71,7 +84,21 @@ frappe.query_reports['Metal Ledger'] = {
 			'fieldname': 'uom',
 			'label': __('UOM'),
 			'fieldtype': 'Link',
-			'options': 'UOM'
+			'options': 'UOM',
+			'get_query': function() {
+				return {
+					'filters': {
+						is_purity_uom: 1,
+						enabled: 1
+					}
+				}
+			}
+		},
+		{
+			'fieldname': 'purity',
+			'label': __('Purity'),
+			'fieldtype': 'Link',
+			'options': 'Purity'
 		},
 		{
 			'fieldname': 'party_type',
