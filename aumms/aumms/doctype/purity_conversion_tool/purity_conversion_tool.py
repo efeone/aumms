@@ -22,16 +22,22 @@ class PurityConversionTool(Document):
 		if self.uom and self.conversion_charts:
 			for row in self.conversion_charts:
 				if row.stock_uom == self.uom:
-					gw += row.gold_weight_to_be_obtained_for_the_purity
 					aw += row.alloy_weight
+					if row.voucher_type == 'Purchase Receipt':
+						gw += row.gold_weight_to_be_obtained_for_the_purity
+					else:
+						gw -= row.gold_weight_to_be_obtained_for_the_purity
 				else:
 					# multiply weight with conversion factor
 					conversion_factor = get_conversion_factor(row.stock_uom, self.uom)
 					if conversion_factor:
 						gw_after_converted = row.gold_weight_to_be_obtained_for_the_purity * conversion_factor
 						aw_after_converted = row.alloy_weight * conversion_factor
-						gw += gw_after_converted
 						aw += aw_after_converted
+						if row.voucher_type == 'Purchase Receipt':
+							gw += gw_after_converted
+						else:
+							gw -= gw_after_converted
 					else:
 						# message to user about set conversion factor value
 						frappe.throw(
@@ -42,7 +48,7 @@ class PurityConversionTool(Document):
 @frappe.whitelist()
 def get_metal_ledger_entries(party_type, party, item_type, purity):
 	''' Method to get Metal Ledger Entries '''
-	field_list = ['name', 'item_code', 'item_name', 'voucher_type', 'in_qty', 'out_qty', 'stock_uom', 'purity', 'purity_percentage']
+	field_list = ['name', 'voucher_type', 'item_code', 'item_name', 'voucher_type', 'in_qty', 'out_qty', 'stock_uom', 'purity', 'purity_percentage']
 	party_link = get_party_link_if_exist(party_type, party)
 	if party_link:
 		filters = { 'party_link': party_link,  'item_type':item_type , 'is_cancelled': 0 }
@@ -59,10 +65,7 @@ def get_metal_ledger_entries(party_type, party, item_type, purity):
 			ml_entry['gold_weight'] = get_gold_weight_for_purity(float(qty), float(ml_entry.purity_percentage), purity)
 		else:
 			ml_entry['gold_weight'] = 0
-		if ml_entry.gold_weight < ml_entry.in_qty:
-			ml_entry['alloy_weight'] = ml_entry.in_qty - ml_entry.gold_weight
-		else:
-			ml_entry['alloy_weight'] = ml_entry.gold_weight - ml_entry.in_qty
+		ml_entry['alloy_weight'] = qty - ml_entry.gold_weight
 	return metal_ledger_entries
 
 
