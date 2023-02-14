@@ -65,11 +65,11 @@ frappe.ui.form.on('Purchase Receipt Item', {
         if (frm.doc.keep_metal_ledger) {
           //set value to the field is keep_metal_ledger as 1
           frappe.model.set_value(child.doctype, child.name, 'keep_metal_ledger', 1)
-
+}
         if(frm.doc.supplier) {
+          console.log('in');
             set_board_rate_read_only(frm, cdt, cdn)
           }
-        }
       },
     board_rate (frm, cdt, cdn) {
       let child = locals[cdt][cdn]
@@ -126,7 +126,7 @@ let set_board_rate_read_only = function (frm, cdt, cdn) {
       },
       callback : function(r) {
         if (r.message) {
-          child.customer_type = r.message
+            frappe.model.set_value(child.doctype, child.name, 'supplier_type', r.message)
         }
       }
     })

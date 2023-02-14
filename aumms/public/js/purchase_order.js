@@ -10,7 +10,7 @@ frappe.ui.form.on('Purchase Order', {
     },
 
     supplier(frm) {
-      //set the supplier type 
+      //set the supplier type
       if(frm.doc.supplier) {
         frappe.call({
           method : 'aumms.aumms.doc_events.purchase_order.set_supplier_type',
@@ -100,7 +100,7 @@ let set_board_rate_read_only = function (frm, cdt, cdn) {
       },
       callback : function(r) {
         if (r.message) {
-          child.customer_type = r.message
+          child.supplier_type = r.message
         }
       }
     })
