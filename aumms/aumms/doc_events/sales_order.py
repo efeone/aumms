@@ -13,3 +13,10 @@ def get_item_details(item_code, item_type, date, purity, stock_uom):
         item_details['making_charge'] = item_doc.making_charge
         item_details['board_rate'] = get_board_rate(item_type, purity, stock_uom, date,)
     return item_details
+
+@frappe.whitelist()
+def set_customer_type (customer):
+    ''' Method for setting customer type in sales order item'''
+    if frappe.db.exists('Customer', customer, 'customer_type'):
+        customer_type = frappe.db.get_value('Customer', customer, 'customer_type')
+    return customer_type

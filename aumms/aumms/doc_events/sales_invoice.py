@@ -21,3 +21,10 @@ def check_is_purity_item(item_type):
     if frappe.db.exists('Item Type', {'name': item_type, 'is_purity_item': 1}):
         is_purity = frappe.db.get_value('Item Type', {'name': item_type , 'is_purity_item': 1}, 'is_purity_item')
     return is_purity
+
+@frappe.whitelist()
+def set_customer_type (customer):
+    ''' Method for setting customer type in sales invoice item'''
+    if frappe.db.exists('Customer', customer, 'customer_type'):
+        customer_type = frappe.db.get_value('Customer', customer, 'customer_type')
+    return customer_type

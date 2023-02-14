@@ -7,6 +7,25 @@ frappe.ui.form.on('Purchase Order', {
           set_board_rate(child)
         });
       }
+    },
+
+    supplier(frm) {
+      //set the supplier type 
+      if(frm.doc.supplier) {
+        frappe.call({
+          method : 'aumms.aumms.doc_events.purchase_order.set_supplier_type',
+          args : {
+            supplier: frm.doc.supplier
+          },
+          callback : function(r) {
+            if (r.message) {
+              frm.doc.items.forEach((child) => {
+                child.supplier_type = r.message
+              })
+            }
+          }
+        })
+      }
     }
 });
 
@@ -42,7 +61,13 @@ frappe.ui.form.on('Purchase Order Item', {
       // trigger board rate field
       frm.script_manager.trigger('board_rate', cdt, cdn);
     }
+  },
+items_add(frm, cdt, cdn) {
+  if(frm.doc.supplier) {
+      set_board_rate_read_only(frm, cdt, cdn)
+    }
   }
+
 })
 
 let set_board_rate = function (child) {
@@ -63,4 +88,20 @@ let set_board_rate = function (child) {
         }
     })
    }
+}
+
+let set_board_rate_read_only = function (frm, cdt, cdn) {
+  //function for setting supplier type
+  let child = locals[cdt][cdn]
+    frappe.call({
+      method : 'aumms.aumms.doc_events.purchase_order.set_supplier_type',
+      args : {
+        supplier: frm.doc.supplier
+      },
+      callback : function(r) {
+        if (r.message) {
+          child.customer_type = r.message
+        }
+      }
+    })
 }

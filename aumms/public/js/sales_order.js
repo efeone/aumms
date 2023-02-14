@@ -5,7 +5,26 @@ frappe.ui.form.on('Sales Order', {
             set_item_details(child)
     })
    }
+ },
+ customer(frm) {
+   //method for setting the customer type
+   if (frm.doc.customer) {
+     frappe.call({
+       method : 'aumms.aumms.doc_events.sales_order.set_customer_type',
+       args : {
+         customer: frm.doc.customer
+       },
+       callback : function(r) {
+         if (r.message) {
+           frm.doc.items.forEach((child) => {
+             child.customer_type = r.message
+           })
+         }
+       }
+     })
+   }
  }
+
 });
 
 frappe.ui.form.on('Sales Order Item', {
@@ -101,7 +120,15 @@ frappe.ui.form.on('Sales Order Item', {
       var rate = d.board_rate * d.conversion_factor
       frappe.model.set_value(d.doctype, d.name, 'rate', rate);//set rate by the change of conversion_factor
     }
+  },
+
+  items_add(frm, cdt, cdn) {
+    let child = locals[cdt][cdn]
+    if(frm.doc.customer) {
+      set_board_rate_read_only(frm, cdt, cdn)
+    }
   }
+
 })
 
 let set_item_details = function(child) {
@@ -124,4 +151,20 @@ let set_item_details = function(child) {
         }
     })
   }
+}
+
+let set_board_rate_read_only = function (frm, cdt, cdn) {
+  //method for setting the customer type 
+  let child = locals[cdt][cdn]
+    frappe.call({
+        method : 'aumms.aumms.doc_events.sales_order.set_customer_type',
+        args : {
+          customer: frm.doc.customer
+        },
+        callback : function(r) {
+          if (r.message) {
+            child.customer_type = r.message
+          }
+        }
+    })
 }

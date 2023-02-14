@@ -16,6 +16,24 @@ frappe.ui.form.on('Sales Invoice', {
   }
 },
 
+  customer(frm) {
+    //Method for setting the customer type
+    if (frm.doc.customer) {
+      frappe.call({
+        method : 'aumms.aumms.doc_events.sales_invoice.set_customer_type',
+        args : {
+          customer: frm.doc.customer
+        },
+        callback : function(r) {
+          if (r.message) {
+            frm.doc.items.forEach((child) => {
+              child.customer_type = r.message
+            })
+          }
+        }
+      })
+    }
+  }
 });
 
 
@@ -46,6 +64,9 @@ frappe.ui.form.on('Sales Invoice Item', {
    if(frm.doc.keep_metal_ledger) {
      //set value to the field is keep_metal_ledger as 1
      frappe.model.set_value(child.doctype, child.name, 'keep_metal_ledger', 1)
+   }
+   if(frm.doc.customer) {
+     set_board_rate_read_only(frm, cdt, cdn)
    }
  },
  item_code: function(frm, cdt, cdn){
@@ -165,4 +186,21 @@ let set_item_details = function(child) {
         }
     })
   }
+}
+
+
+let set_board_rate_read_only = function (frm, cdt, cdn) {
+  //Function for setting the customer type
+  let child = locals[cdt][cdn]
+    frappe.call({
+        method : 'aumms.aumms.doc_events.sales_invoice.set_customer_type',
+        args : {
+          customer: frm.doc.customer
+        },
+        callback : function(r) {
+          if (r.message) {
+            child.customer_type = r.message
+          }
+        }
+    })
 }
