@@ -10,7 +10,7 @@ frappe.ui.form.on('Purchase Receipt', {
     }
   },
 
-    posting_date(frm){
+    posting_date(frm) {
     //Changing the board rate on the changing of posting_date
     if(frm.doc.posting_date && frm.doc.posting_time) {
       frm.doc.items.forEach((child) => {
@@ -19,7 +19,7 @@ frappe.ui.form.on('Purchase Receipt', {
     });
   }
 },
-    posting_time(frm){
+    posting_time(frm) {
       //Changing the board rate on the changing of posting_time
       if(frm.doc.posting_date && frm.doc.posting_time) {
         frm.doc.items.forEach((child) => {
@@ -27,7 +27,25 @@ frappe.ui.form.on('Purchase Receipt', {
           set_board_rate(child)
        });
      }
-    }
+   },
+   supplier(frm) {
+     //set the supplier type
+     if(frm.doc.supplier) {
+       frappe.call({
+         method : 'aumms.aumms.doc_events.purchase_receipt.set_supplier_type',
+         args : {
+           supplier: frm.doc.supplier
+         },
+         callback : function(r) {
+           if (r.message) {
+             frm.doc.items.forEach((child) => {
+               child.supplier_type = r.message
+             })
+           }
+         }
+       })
+     }
+   }
 });
 
 frappe.ui.form.on('Purchase Receipt Item', {
@@ -47,6 +65,10 @@ frappe.ui.form.on('Purchase Receipt Item', {
         if (frm.doc.keep_metal_ledger) {
           //set value to the field is keep_metal_ledger as 1
           frappe.model.set_value(child.doctype, child.name, 'keep_metal_ledger', 1)
+
+        if(frm.doc.supplier) {
+            set_board_rate_read_only(frm, cdt, cdn)
+          }
         }
       },
     board_rate (frm, cdt, cdn) {
@@ -93,3 +115,19 @@ let set_board_rate = function (child) {
        }
       }
   }
+
+let set_board_rate_read_only = function (frm, cdt, cdn) {
+  //function for setting supplier type
+  let child = locals[cdt][cdn]
+    frappe.call({
+      method : 'aumms.aumms.doc_events.purchase_receipt.set_supplier_type',
+      args : {
+        supplier: frm.doc.supplier
+      },
+      callback : function(r) {
+        if (r.message) {
+          child.customer_type = r.message
+        }
+      }
+    })
+}
