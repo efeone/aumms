@@ -54,7 +54,14 @@ frappe.query_reports['Metal Ledger'] = {
 			'fieldname': 'item_type',
 			'label': __('Item Type'),
 			'fieldtype': 'Link',
-			'options': 'Item Type'
+			'options': 'Item Type',
+			'get_query': function() {
+				return {
+					'filters': {
+						'is_purity_item': 1
+					}
+				}
+			}
 		},
 		{
 			'fieldname': 'batch_no',
