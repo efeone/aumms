@@ -241,3 +241,13 @@ def increase_precision():
         system_settings_doc.float_precision = 6
         system_settings_doc.save()
         frappe.db.commit()
+
+@frappe.whitelist()
+def create_default_aumms_item_group():
+    ''' Method to create default AuMMS Item Group on after install '''
+    if not frappe.db.exists('AuMMS Item Group', 'All AuMMS Item Group'):
+        aumms_item_group_doc = frappe.new_doc('AuMMS Item Group')
+        aumms_item_group_doc.item_group_name = 'All AuMMS Item Group'
+        aumms_item_group_doc.is_group = 1
+        aumms_item_group_doc.insert(ignore_permissions = True)
+        frappe.db.commit()

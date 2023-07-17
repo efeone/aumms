@@ -1,7 +1,8 @@
 {
  "charts": [],
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">AuMMS</span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Board Rate\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Group\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Type\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity Conversion Tool\",\"col\":3}}]",
+ "content": "[{\"id\":\"xytMzcNTlF\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">AuMMS</span>\",\"col\":12}},{\"id\":\"gi-NMLZp61\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Board Rate\",\"col\":3}},{\"id\":\"UlF0vIuW_h\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"id\":\"hYF_ghyeVA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"AuMMS Item Group\",\"col\":3}},{\"id\":\"w1BWPSMDmh\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Type\",\"col\":3}},{\"id\":\"u6adwmpaJ0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity\",\"col\":3}},{\"id\":\"UWuMllqZ2H\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity Conversion Tool\",\"col\":3}}]",
  "creation": "2023-01-06 12:02:34.084523",
+ "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
@@ -11,10 +12,11 @@
  "is_hidden": 0,
  "label": "AuMMS",
  "links": [],
- "modified": "2023-01-23 10:11:56.179760",
+ "modified": "2023-07-17 14:33:35.690999",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS",
+ "number_cards": [],
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
@@ -22,6 +24,13 @@
  "roles": [],
  "sequence_id": 1.0,
  "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "AuMMS Item Group",
+   "link_to": "AuMMS Item Group",
+   "type": "DocType"
+  },
   {
    "color": "Green",
    "doc_view": "List",
@@ -43,13 +52,6 @@
    "doc_view": "List",
    "label": "Item",
    "link_to": "Item",
-   "type": "DocType"
-  },
-  {
-   "color": "Grey",
-   "doc_view": "List",
-   "label": "Item Group",
-   "link_to": "Item Group",
    "type": "DocType"
   },
   {

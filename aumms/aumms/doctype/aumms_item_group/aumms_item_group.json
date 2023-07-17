@@ -1,0 +1,162 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:item_group_name",
+ "creation": "2023-07-17 09:53:30.579073",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_group_name",
+  "parent_aumms_item_group",
+  "is_group",
+  "old_parent",
+  "lft",
+  "rgt",
+  "item_group",
+  "column_break_d6xpe",
+  "item_type",
+  "making_charge_based_on",
+  "percentage",
+  "currency",
+  "is_purity_item",
+  "is_sales_item",
+  "is_purchase_item"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_group_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Group Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "lft",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Left",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "rgt",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Right",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group"
+  },
+  {
+   "fieldname": "old_parent",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "ignore_user_permissions": 1,
+   "label": "Old Parent",
+   "no_copy": 1,
+   "options": "AuMMS Item Group",
+   "report_hide": 1
+  },
+  {
+   "fieldname": "parent_aumms_item_group",
+   "fieldtype": "Link",
+   "label": "Parent AuMMS Item Group",
+   "options": "AuMMS Item Group"
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type"
+  },
+  {
+   "default": "0",
+   "fetch_from": "item_type.is_purity_item",
+   "fieldname": "is_purity_item",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Is Purity Item",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.is_purity_item",
+   "fieldname": "making_charge_based_on",
+   "fieldtype": "Select",
+   "label": "Making Charge Based On",
+   "options": "\nFixed\nPercentage"
+  },
+  {
+   "depends_on": "eval: doc.making_charge_based_on == 'Percentage'",
+   "fieldname": "percentage",
+   "fieldtype": "Percent",
+   "label": "Percentage",
+   "mandatory_depends_on": "eval: doc.making_charge_based_on == 'Percentage'"
+  },
+  {
+   "depends_on": "eval: doc.making_charge_based_on == 'Fixed'",
+   "fieldname": "currency",
+   "fieldtype": "Currency",
+   "label": "Currency",
+   "mandatory_depends_on": "eval: doc.making_charge_based_on == 'Fixed'"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_sales_item",
+   "fieldtype": "Check",
+   "label": "Is Sales Item"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_purchase_item",
+   "fieldtype": "Check",
+   "label": "Is Purchase Item"
+  },
+  {
+   "fieldname": "column_break_d6xpe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Item Group",
+   "options": "Item Group",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_tree": 1,
+ "links": [],
+ "modified": "2023-07-17 15:33:16.499223",
+ "modified_by": "Administrator",
+ "module": "AuMMS",
+ "name": "AuMMS Item Group",
+ "naming_rule": "By fieldname",
+ "nsm_parent_field": "parent_aumms_item_group",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

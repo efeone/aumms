@@ -73,7 +73,11 @@ doctype_js = {
 # ------------
 
 # before_install = "aumms.install.before_install"
-after_install = 'aumms.aumms.utils.enable_common_party_accounting'
+after_install = [
+		'aumms.aumms.utils.enable_common_party_accounting',
+		'aumms.aumms.utils.create_default_aumms_item_group'
+	]
+
 after_migrate = 'aumms.aumms.utils.increase_precision'
 # Uninstallation
 # ------------
@@ -117,9 +121,6 @@ doc_events = {
 		'before_save': 'aumms.aumms.doc_events.item.check_conversion_factor_for_uom',
 		'on_update': 'aumms.aumms.doc_events.item.update_uoms_table'
 	},
-	'Item Group':{
-		'autoname': 'aumms.aumms.doc_events.item_group.autoname_item_group'
-    },
 	'Purchase Receipt': {
 		'before_submit': 'aumms.aumms.utils.validate_party_for_metal_transaction',
 		'on_submit': [
@@ -139,7 +140,7 @@ doc_events = {
 		'validate': 'aumms.aumms.doc_events.stock_settings.disable_price_list_default'
 	},
 	'Item Price':{
-	'validate': 'aumms.aumms.doc_events.item_price.check_is_purity'
+		'validate': 'aumms.aumms.doc_events.item_price.check_is_purity'
 	}
 }
 
