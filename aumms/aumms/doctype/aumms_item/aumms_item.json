@@ -1,0 +1,273 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:item_code",
+ "creation": "2023-07-15 13:29:36.519669",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "details_tab",
+  "item_code",
+  "item_name",
+  "item_group",
+  "item_type",
+  "stock_uom",
+  "column_break_36khf",
+  "disabled",
+  "is_stock_item",
+  "making_charge_based_on",
+  "making_charge_percentage",
+  "making_charge",
+  "purity",
+  "purity_percentage",
+  "is_purity_item",
+  "description_section",
+  "description",
+  "inventory_tab",
+  "inventory_settings_section",
+  "weight_per_unit",
+  "weight_uom",
+  "column_break_jpqvf",
+  "is_purchase_item",
+  "purchase_uom",
+  "is_sales_item",
+  "sales_uom",
+  "unit_of_measure_conversion",
+  "uoms",
+  "item"
+ ],
+ "fields": [
+  {
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details",
+   "options": "fa fa-flag"
+  },
+  {
+   "bold": 1,
+   "fieldname": "item_code",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "label": "Item Code",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "bold": 1,
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "label": "Item Name"
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Item Group",
+   "options": "AuMMS Item Group",
+   "reqd": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fetch_from": "item_group.item_type",
+   "fetch_if_empty": 1,
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type"
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
+  },
+  {
+   "depends_on": "eval:doc.is_purity_item",
+   "fetch_from": "item_group.making_charge_based_on",
+   "fetch_if_empty": 1,
+   "fieldname": "making_charge_based_on",
+   "fieldtype": "Select",
+   "label": "Making Charge Based On",
+   "options": "\nFixed\nPercentage"
+  },
+  {
+   "depends_on": "eval: doc.making_charge_based_on == 'Percentage' && doc.is_purity_item",
+   "fetch_from": "item_group.percentage",
+   "fetch_if_empty": 1,
+   "fieldname": "making_charge_percentage",
+   "fieldtype": "Percent",
+   "label": "Making Charge Percentage",
+   "mandatory_depends_on": "eval: doc.making_charge_based_on == 'Percentage'"
+  },
+  {
+   "depends_on": "eval: doc.making_charge_based_on == 'Fixed' && doc.is_purity_item",
+   "fetch_from": "item_group.currency",
+   "fetch_if_empty": 1,
+   "fieldname": "making_charge",
+   "fieldtype": "Currency",
+   "label": "Making Charge",
+   "mandatory_depends_on": "eval: doc.making_charge_based_on == 'Fixed'"
+  },
+  {
+   "default": "0",
+   "fetch_from": "item_group.is_purity_item",
+   "fieldname": "is_purity_item",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Is Purity Item",
+   "read_only": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "depends_on": "eval:doc.item_type && doc.is_purity_item",
+   "fieldname": "purity",
+   "fieldtype": "Link",
+   "label": "Purity",
+   "mandatory_depends_on": "eval:doc.is_purity_item",
+   "options": "Purity"
+  },
+  {
+   "depends_on": "eval:doc.is_purity_item",
+   "fetch_from": "purity.purity_percentage",
+   "fieldname": "purity_percentage",
+   "fieldtype": "Percent",
+   "label": "Purity Percentage",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "description_section",
+   "fieldtype": "Section Break",
+   "label": "Description"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "in_preview": 1,
+   "label": "Description"
+  },
+  {
+   "fieldname": "inventory_tab",
+   "fieldtype": "Tab Break",
+   "label": "Inventory",
+   "options": "fa fa-truck"
+  },
+  {
+   "fieldname": "inventory_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Inventory Settings"
+  },
+  {
+   "fieldname": "weight_per_unit",
+   "fieldtype": "Float",
+   "label": "Weight Per Unit"
+  },
+  {
+   "fieldname": "weight_uom",
+   "fieldtype": "Link",
+   "ignore_user_permissions": 1,
+   "label": "Weight UOM",
+   "options": "UOM"
+  },
+  {
+   "default": "0",
+   "fetch_if_empty": 1,
+   "fieldname": "is_purchase_item",
+   "fieldtype": "Check",
+   "label": "Allow Purchase"
+  },
+  {
+   "default": "0",
+   "fetch_if_empty": 1,
+   "fieldname": "is_sales_item",
+   "fieldtype": "Check",
+   "label": "Allow Sales"
+  },
+  {
+   "depends_on": "is_sales_item",
+   "fieldname": "sales_uom",
+   "fieldtype": "Link",
+   "label": "Default Sales Unit of Measure",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "column_break_jpqvf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "is_purchase_item",
+   "fieldname": "purchase_uom",
+   "fieldtype": "Link",
+   "label": "Default Purchase Unit of Measure",
+   "options": "UOM"
+  },
+  {
+   "depends_on": "is_stock_item",
+   "fieldname": "stock_uom",
+   "fieldtype": "Link",
+   "label": "Default Unit of Measure",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "unit_of_measure_conversion",
+   "fieldtype": "Section Break",
+   "label": "Units of Measure"
+  },
+  {
+   "fieldname": "uoms",
+   "fieldtype": "Table",
+   "label": "UOMs",
+   "options": "UOM Conversion Detail"
+  },
+  {
+   "fieldname": "column_break_36khf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "bold": 1,
+   "default": "1",
+   "fieldname": "is_stock_item",
+   "fieldtype": "Check",
+   "label": "Maintain Stock"
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Item",
+   "options": "Item",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-07-18 15:58:47.541986",
+ "modified_by": "Administrator",
+ "module": "AuMMS",
+ "name": "AuMMS Item",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "item_name"
+}
