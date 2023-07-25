@@ -236,7 +236,7 @@ def get_party_link_if_exist(party_type, party):
 @frappe.whitelist()
 def increase_precision():
     ''' Method to increase precision on System Settings after migrate '''
-    if frappe.db.exists('System Settings'):
+    if cint(frappe.db.get_single_value("System Settings", "setup_complete") or 0):
         system_settings_doc = frappe.get_doc('System Settings')
         system_settings_doc.float_precision = 6
         system_settings_doc.save()
