@@ -1,6 +1,11 @@
 {
- "charts": [],
- "content": "[{\"id\":\"xytMzcNTlF\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">AuMMS</span>\",\"col\":12}},{\"id\":\"gi-NMLZp61\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Board Rate\",\"col\":3}},{\"id\":\"UlF0vIuW_h\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"AuMMS Item\",\"col\":3}},{\"id\":\"hYF_ghyeVA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"AuMMS Item Group\",\"col\":3}},{\"id\":\"w1BWPSMDmh\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Type\",\"col\":3}},{\"id\":\"u6adwmpaJ0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity\",\"col\":3}},{\"id\":\"UWuMllqZ2H\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity Conversion Tool\",\"col\":3}}]",
+ "charts": [
+  {
+   "chart_name": "Last Month Board Rate",
+   "label": "Last Month Board Rate"
+  }
+ ],
+ "content": "[{\"id\":\"xytMzcNTlF\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">AuMMS</span>\",\"col\":12}},{\"id\":\"jB5UHMdjpr\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Last Month Board Rate\",\"col\":12}},{\"id\":\"gi-NMLZp61\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Board Rate\",\"col\":3}},{\"id\":\"UlF0vIuW_h\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"AuMMS Item\",\"col\":3}},{\"id\":\"hYF_ghyeVA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"AuMMS Item Group\",\"col\":3}},{\"id\":\"w1BWPSMDmh\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Type\",\"col\":3}},{\"id\":\"u6adwmpaJ0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity\",\"col\":3}},{\"id\":\"UWuMllqZ2H\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity Conversion Tool\",\"col\":3}},{\"id\":\"aAr2ThZ43S\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Jewellery Invoice\",\"col\":3}}]",
  "creation": "2023-01-06 12:02:34.084523",
  "custom_blocks": [],
  "docstatus": 0,
@@ -12,7 +17,7 @@
  "is_hidden": 0,
  "label": "AuMMS",
  "links": [],
- "modified": "2023-07-19 14:35:07.946395",
+ "modified": "2023-07-29 17:05:27.139439",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS",
@@ -36,6 +41,13 @@
    "doc_view": "List",
    "label": "AuMMS Item Group",
    "link_to": "AuMMS Item Group",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Jewellery Invoice",
+   "link_to": "Jewellery Invoice",
    "type": "DocType"
   },
   {
