@@ -1,0 +1,180 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": ".#####",
+ "creation": "2023-07-25 11:24:23.686694",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "customer_name",
+  "section_break_e6qjh",
+  "contact_no",
+  "status",
+  "analyser",
+  "item_section",
+  "aumms_item",
+  "item",
+  "item_name",
+  "item_type",
+  "column_break_ouojb",
+  "itemp_group",
+  "purity",
+  "weight",
+  "section_break_i0sgg",
+  "notes",
+  "column_break_mf45y",
+  "custome_requirement",
+  "design_attachment_tab",
+  "design_attach"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer ",
+   "options": "Customer"
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Customer Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_e6qjh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "customer.mobile_no",
+   "fieldname": "contact_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Contact No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "\nOpen\nProcess\nHold\nCancel\nOut Of Scope\nPending Approvals",
+   "reqd": 1
+  },
+  {
+   "fieldname": "analyser",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Analyser"
+  },
+  {
+   "fieldname": "item_section",
+   "fieldtype": "Section Break",
+   "label": "Item Details"
+  },
+  {
+   "fieldname": "aumms_item",
+   "fieldtype": "Link",
+   "label": "Item",
+   "options": "AuMMS Item",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "aumms_item.item_code",
+   "fieldname": "item",
+   "fieldtype": "Data",
+   "label": "Item Code"
+  },
+  {
+   "fetch_from": "aumms_item.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name"
+  },
+  {
+   "fetch_from": "aumms_item.item_type",
+   "fieldname": "item_type",
+   "fieldtype": "Data",
+   "label": "Item Type"
+  },
+  {
+   "fieldname": "column_break_ouojb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "aumms_item.item_group",
+   "fieldname": "itemp_group",
+   "fieldtype": "Data",
+   "label": "Itemp Group"
+  },
+  {
+   "fetch_from": "aumms_item.purity",
+   "fieldname": "purity",
+   "fieldtype": "Data",
+   "label": "Purity"
+  },
+  {
+   "fetch_from": "aumms_item.weight_uom",
+   "fieldname": "weight",
+   "fieldtype": "Data",
+   "label": "weight"
+  },
+  {
+   "fieldname": "section_break_i0sgg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "column_break_mf45y",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "custome_requirement",
+   "fieldtype": "Text",
+   "label": "Customer Requirement"
+  },
+  {
+   "fieldname": "design_attachment_tab",
+   "fieldtype": "Tab Break",
+   "label": "Design Attachment"
+  },
+  {
+   "fieldname": "design_attach",
+   "fieldtype": "Attach Image",
+   "label": "Design Attachment"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-07-25 11:24:37.481909",
+ "modified_by": "Administrator",
+ "module": "AuMMS",
+ "name": "Design Request",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
