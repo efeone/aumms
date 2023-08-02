@@ -1,0 +1,138 @@
+{
+ "actions": [],
+ "creation": "2023-07-27 13:59:35.568922",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "customer",
+  "customer_name",
+  "mobile_no",
+  "address",
+  "column_break_ey72q",
+  "design_title",
+  "delivery_date",
+  "section_break_cjewr",
+  "design_details",
+  "comment",
+  "tab_break_gwdao",
+  "attachment",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "customer.mobile_no",
+   "fieldname": "mobile_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Mobile No",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "customer_name.primary_address",
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  },
+  {
+   "fieldname": "design_details",
+   "fieldtype": "Table",
+   "label": "Design Details",
+   "options": "Design Details"
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach Image",
+   "label": "Attachment"
+  },
+  {
+   "fieldname": "section_break_cjewr",
+   "fieldtype": "Tab Break",
+   "label": "Material Details"
+  },
+  {
+   "fieldname": "comment",
+   "fieldtype": "Long Text",
+   "label": "Comment"
+  },
+  {
+   "fieldname": "design_title",
+   "fieldtype": "Data",
+   "label": "Design Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ey72q",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tab_break_gwdao",
+   "fieldtype": "Tab Break",
+   "label": "Reference"
+  },
+  {
+   "fieldname": "delivery_date",
+   "fieldtype": "Date",
+   "label": "Delivery Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Design Request",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Title",
+   "unique": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-07-28 16:27:21.788355",
+ "modified_by": "Administrator",
+ "module": "AuMMS",
+ "name": "Design Request",
+ "name_case": "Title Case",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
