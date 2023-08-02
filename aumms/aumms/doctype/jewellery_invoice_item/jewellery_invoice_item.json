@@ -1,0 +1,230 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-07-19 16:13:20.690690",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_details_section",
+  "item_code",
+  "item_type",
+  "is_purity_item",
+  "delivery_date",
+  "column_break_i6ewa",
+  "item_name",
+  "purity",
+  "customer_type",
+  "quantity_and_rate_section",
+  "qty",
+  "uom",
+  "stock_uom",
+  "uom_conversion_factor",
+  "stock_qty",
+  "column_break_ardsx",
+  "board_rate",
+  "rate",
+  "amount",
+  "amount_with_out_making_charge",
+  "making_charge_section_section",
+  "making_charge_based_on",
+  "is_fixed_making_charge",
+  "column_break_c3w1c",
+  "making_charge_percentage",
+  "making_charge"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "AuMMS Item",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "item_code.item_name",
+   "fetch_if_empty": 1,
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name"
+  },
+  {
+   "fetch_from": "item_code.item_type",
+   "fetch_if_empty": 1,
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type"
+  },
+  {
+   "fetch_from": "item_code.purity",
+   "fieldname": "purity",
+   "fieldtype": "Link",
+   "label": "Purity",
+   "options": "Purity",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fetch_from": "item_code.is_purity_item",
+   "fieldname": "is_purity_item",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Is Purity Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "customer_type",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Customer Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "quantity_and_rate_section",
+   "fieldtype": "Section Break",
+   "label": "Quantity and Rate"
+  },
+  {
+   "depends_on": "eval:doc.is_purity_item",
+   "fieldname": "amount_with_out_making_charge",
+   "fieldtype": "Currency",
+   "label": "Amount With Out Making Charge",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Quantity",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "item_code.stock_uom",
+   "fieldname": "stock_uom",
+   "fieldtype": "Link",
+   "label": "Stock UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "item_code.stock_uom",
+   "fetch_if_empty": 1,
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "depends_on": "eval:doc.is_purity_item",
+   "fieldname": "board_rate",
+   "fieldtype": "Currency",
+   "label": "Board Rate",
+   "read_only_depends_on": "eval:doc.customer_type == 'Individual'"
+  },
+  {
+   "default": "1",
+   "depends_on": "eval:doc.uom != doc.stock_uom",
+   "fieldname": "uom_conversion_factor",
+   "fieldtype": "Float",
+   "label": "UOM Conversion Factor",
+   "read_only": 1
+  },
+  {
+   "fieldname": "making_charge_section_section",
+   "fieldtype": "Section Break",
+   "label": "Making Charge Section"
+  },
+  {
+   "depends_on": "eval:doc.is_purity_item",
+   "fetch_from": "item_code.making_charge_based_on",
+   "fetch_if_empty": 1,
+   "fieldname": "making_charge_based_on",
+   "fieldtype": "Select",
+   "label": "Making Charge Based On",
+   "options": "Fixed\nPercentage"
+  },
+  {
+   "depends_on": "eval: doc.making_charge_based_on == 'Percentage' && doc.is_purity_item",
+   "fetch_from": "item_code.making_charge_percentage",
+   "fieldname": "making_charge_percentage",
+   "fieldtype": "Percent",
+   "label": "Making Charge Percentage"
+  },
+  {
+   "depends_on": "eval: doc.making_charge_based_on == 'Fixed' && doc.is_purity_item",
+   "fetch_from": "item_code.making_charge",
+   "fetch_if_empty": 1,
+   "fieldname": "is_fixed_making_charge",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Is Fixed Making Charge"
+  },
+  {
+   "depends_on": "eval:doc.is_purity_item",
+   "fieldname": "making_charge",
+   "fieldtype": "Currency",
+   "label": "Making Charge",
+   "read_only_depends_on": "eval: doc.making_charge_based_on == 'Percentage'"
+  },
+  {
+   "depends_on": "eval: doc.type != \"\"",
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "label": "Rate",
+   "read_only_depends_on": "eval:doc.customer_type == 'Individual'"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.uom != doc.stock_uom",
+   "fieldname": "stock_qty",
+   "fieldtype": "Float",
+   "label": "Qty as per Stock UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_c3w1c",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "item_details_section",
+   "fieldtype": "Section Break",
+   "label": "Item Details"
+  },
+  {
+   "fieldname": "column_break_i6ewa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ardsx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "delivery_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Delivery Date",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-07-20 10:31:18.170931",
+ "modified_by": "Administrator",
+ "module": "AuMMS",
+ "name": "Jewellery Invoice Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
