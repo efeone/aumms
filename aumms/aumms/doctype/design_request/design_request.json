@@ -38,12 +38,13 @@
    "reqd": 1
   },
   {
-   "fetch_from": "customer_name.primary_address",
+   "fetch_from": "customer.primary_address",
    "fieldname": "address",
    "fieldtype": "Small Text",
    "label": "Address"
   },
   {
+   "fetch_from": "customer.primary_address",
    "fieldname": "design_details",
    "fieldtype": "Table",
    "label": "Design Details",
@@ -112,7 +113,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-07-28 16:27:21.788355",
+ "modified": "2023-07-31 15:51:07.309032",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Request",
