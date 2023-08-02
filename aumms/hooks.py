@@ -141,6 +141,9 @@ doc_events = {
 	},
 	'Item Price':{
 		'validate': 'aumms.aumms.doc_events.item_price.check_is_purity'
+	},
+	'Payment Entry':{
+		'on_submit': 'aumms.aumms.doc_events.payment_entry.payment_entry_on_submit'
 	}
 }
 
