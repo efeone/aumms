@@ -56,7 +56,8 @@
    "report_hide": 0,
    "reqd": 0,
    "search_index": 0,
-   "translatable": 1,
+   "sort_options": 0,
+   "translatable": 0,
    "unique": 0,
    "width": null
   },
@@ -116,6 +117,7 @@
    "report_hide": 0,
    "reqd": 0,
    "search_index": 0,
+   "sort_options": 0,
    "translatable": 0,
    "unique": 0,
    "width": null
@@ -176,6 +178,7 @@
    "report_hide": 0,
    "reqd": 0,
    "search_index": 0,
+   "sort_options": 0,
    "translatable": 0,
    "unique": 0,
    "width": null
@@ -236,6 +239,7 @@
    "report_hide": 0,
    "reqd": 0,
    "search_index": 0,
+   "sort_options": 0,
    "translatable": 0,
    "unique": 0,
    "width": null
@@ -296,6 +300,7 @@
    "report_hide": 0,
    "reqd": 0,
    "search_index": 0,
+   "sort_options": 0,
    "translatable": 0,
    "unique": 0,
    "width": null
@@ -356,6 +361,7 @@
    "report_hide": 0,
    "reqd": 0,
    "search_index": 0,
+   "sort_options": 0,
    "translatable": 0,
    "unique": 0,
    "width": null
@@ -416,6 +422,7 @@
    "report_hide": 0,
    "reqd": 0,
    "search_index": 0,
+   "sort_options": 0,
    "translatable": 0,
    "unique": 0,
    "width": null
@@ -424,53 +431,6 @@
  "custom_perms": [],
  "doctype": "Item Group",
  "links": [],
- "property_setters": [
-  {
-   "_assign": null,
-   "_comments": null,
-   "_liked_by": null,
-   "_user_tags": null,
-   "creation": "2023-01-05 16:22:43.875750",
-   "default_value": null,
-   "doc_type": "Item Group",
-   "docstatus": 0,
-   "doctype_or_field": "DocType",
-   "field_name": null,
-   "idx": 0,
-   "is_system_generated": 0,
-   "modified": "2023-01-05 16:22:43.875750",
-   "modified_by": "Administrator",
-   "module": null,
-   "name": "Item Group-main-autoname",
-   "owner": "Administrator",
-   "property": "autoname",
-   "property_type": "Data",
-   "row_name": null,
-   "value": ""
-  },
-  {
-   "_assign": null,
-   "_comments": null,
-   "_liked_by": null,
-   "_user_tags": null,
-   "creation": "2023-01-05 16:22:43.737269",
-   "default_value": null,
-   "doc_type": "Item Group",
-   "docstatus": 0,
-   "doctype_or_field": "DocType",
-   "field_name": null,
-   "idx": 0,
-   "is_system_generated": 0,
-   "modified": "2023-01-05 16:22:43.737269",
-   "modified_by": "Administrator",
-   "module": null,
-   "name": "Item Group-main-naming_rule",
-   "owner": "Administrator",
-   "property": "naming_rule",
-   "property_type": "Data",
-   "row_name": null,
-   "value": ""
-  }
- ],
+ "property_setters": [],
  "sync_on_migrate": 1
 }

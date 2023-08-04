@@ -175,18 +175,6 @@ def cancel_metal_ledger_entries(doc, method=None):
         ml_doc.insert(ignore_permissions = 1)
 
 @frappe.whitelist()
-def enable_common_party_accounting():
-    """
-        method to enable common party accounting on Accounts Settings after install
-    """
-    if frappe.db.exists('Accounts Settings'):
-        accounts_settings_doc = frappe.get_doc('Accounts Settings')
-        #set enable_common_party_accounting value as 1
-        accounts_settings_doc.enable_common_party_accounting = 1
-        accounts_settings_doc.save()
-        frappe.db.commit()
-
-@frappe.whitelist()
 def validate_party_for_metal_transaction(doc, method=None):
     """
         method to validate party link if the transaction is metal transaction
@@ -207,7 +195,7 @@ def validate_party_for_metal_transaction(doc, method=None):
             party_link =  get_party_link_if_exist('Customer', doc.customer)
             doc.party_link = party_link
 
-
+@frappe.whitelist()
 def get_party_link_if_exist(party_type, party):
     """
         function to check party link exist for party and throw a message if not exists
@@ -229,7 +217,7 @@ def get_party_link_if_exist(party_type, party):
 
     if not party_link:
         # message to the user if party link is not set
-        frappe.throw( _("{0} doesn't have a common party account to conduct metal transaction".format(party)))
+        frappe.throw( _("{0} doesn't have a common party account!".format(party)))
     else:
         return party_link[0].name
 
@@ -240,14 +228,4 @@ def increase_precision():
         system_settings_doc = frappe.get_doc('System Settings')
         system_settings_doc.float_precision = 6
         system_settings_doc.save()
-        frappe.db.commit()
-
-@frappe.whitelist()
-def create_default_aumms_item_group():
-    ''' Method to create default AuMMS Item Group on after install '''
-    if not frappe.db.exists('AuMMS Item Group', 'All AuMMS Item Group'):
-        aumms_item_group_doc = frappe.new_doc('AuMMS Item Group')
-        aumms_item_group_doc.item_group_name = 'All AuMMS Item Group'
-        aumms_item_group_doc.is_group = 1
-        aumms_item_group_doc.insert(ignore_permissions = True)
         frappe.db.commit()
