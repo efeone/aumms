@@ -12,6 +12,9 @@ class AuMMSItemGroup(NestedSet):
 		else:
 			self.name = self.item_group_name
 
+	def validate(self):
+		self.validate_item_group_name()
+
 	def after_insert(self):
 		''' Method to create Item Group from AuMMS Item Group '''
 		if not frappe.db.exists('Item Group', self.name):
@@ -53,3 +56,9 @@ class AuMMSItemGroup(NestedSet):
 					item_group_doc.parent_item_group = self.parent_aumms_item_group
 			item_group_doc.save(ignore_permissions = True)
 			frappe.db.commit()
+
+	def validate_item_group_name(self):
+		''' Method to validate AuMMS Item Group Name wrt to Item Group Name '''
+		if self.item_group_name:
+			if frappe.db.exists('Item Group', self.item_group_name):
+				frappe.throw('Item Group `{0}` already exists.'.format(frappe.bold(self.item_group_name)))
