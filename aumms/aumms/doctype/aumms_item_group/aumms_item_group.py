@@ -9,6 +9,8 @@ class AuMMSItemGroup(NestedSet):
 		''' Method to create Item Group from AuMMS Item Group '''
 		if self.item_type:
 			self.name = self.item_group_name + '-' + self.item_type
+		else:
+			self.name = self.item_group_name
 
 	def after_insert(self):
 		''' Method to create Item Group from AuMMS Item Group '''

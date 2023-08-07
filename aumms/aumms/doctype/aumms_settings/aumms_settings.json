@@ -7,7 +7,9 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "defaults_section",
   "metal_ledger_uom",
+  "old_gold_item",
   "column_break_2",
   "metal_ledger_purity"
  ],
@@ -27,15 +29,26 @@
    "fieldtype": "Link",
    "label": "Metal Ledger Purity",
    "options": "Purity"
+  },
+  {
+   "fieldname": "defaults_section",
+   "fieldtype": "Section Break",
+   "label": "Defaults"
+  },
+  {
+   "fieldname": "old_gold_item",
+   "fieldtype": "Link",
+   "label": "Old Gold Item",
+   "options": "AuMMS Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-02-09 11:17:08.966490",
+ "modified": "2023-08-04 10:11:36.992374",
  "modified_by": "Administrator",
  "module": "AuMMS",
- "name": "Aumms Settings",
+ "name": "AuMMS Settings",
  "owner": "Administrator",
  "permissions": [
   {
