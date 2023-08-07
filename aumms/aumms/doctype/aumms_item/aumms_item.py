@@ -8,6 +8,10 @@ from frappe.model.document import Document
 aumms_item_fields = ['item_code', 'item_name', 'item_type', 'stock_uom', 'disabled', 'is_stock_item', 'making_charge_based_on', 'making_charge_percentage', 'making_charge', 'purity', 'purity_percentage', 'is_purity_item', 'description', 'weight_per_unit', 'weight_uom', 'is_purchase_item', 'purchase_uom', 'is_sales_item', 'sales_uom']
 
 class AuMMSItem(Document):
+	def validate(self):
+		self.validate_item_name()
+		self.validate_item_code()
+
 	def after_insert(self):
 		''' Method to create Item from AuMMS Item '''
 		create_or_update_item(self)
@@ -15,6 +19,18 @@ class AuMMSItem(Document):
 	def on_update(self):
 		''' Method to update created Item on changes of AuMMS Item '''
 		create_or_update_item(self, self.item)
+
+	def validate_item_name(self):
+		''' Method to validate AuMMS Item Name wrt to Item Name '''
+		if self.item_name:
+			if frappe.db.exists('Item', { 'item_name' : self.item_name }):
+				frappe.throw('Item already exists with Item Name `{0}`.'.format(frappe.bold(self.item_name)))
+
+	def validate_item_code(self):
+		''' Method to validate AuMMS Item Code wrt to Item Code '''
+		if self.item_code:
+			if frappe.db.exists('Item', { 'item_code' : self.item_code }):
+				frappe.throw('Item already exists with Item Code `{0}`.'.format(frappe.bold(self.item_code)))
 
 def create_or_update_item(self, item=None):
 	''' Method to create or update Item from AuMMS Item '''
