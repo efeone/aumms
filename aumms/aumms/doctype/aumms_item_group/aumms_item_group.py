@@ -59,6 +59,7 @@ class AuMMSItemGroup(NestedSet):
 
 	def validate_item_group_name(self):
 		''' Method to validate AuMMS Item Group Name wrt to Item Group Name '''
-		if self.item_group_name:
-			if frappe.db.exists('Item Group', self.item_group_name):
-				frappe.throw('Item Group `{0}` already exists.'.format(frappe.bold(self.item_group_name)))
+		if self.is_new():
+			if self.item_group_name:
+				if frappe.db.exists('Item Group', self.item_group_name):
+					frappe.throw('Item Group `{0}` already exists.'.format(frappe.bold(self.item_group_name)))

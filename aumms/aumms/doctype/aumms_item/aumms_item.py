@@ -9,8 +9,10 @@ aumms_item_fields = ['item_code', 'item_name', 'item_type', 'stock_uom', 'disabl
 
 class AuMMSItem(Document):
 	def validate(self):
-		self.validate_item_name()
-		self.validate_item_code()
+		''' Method to validate Item name and Item Code '''
+		if self.is_new():
+			self.validate_item_name()
+			self.validate_item_code()
 
 	def after_insert(self):
 		''' Method to create Item from AuMMS Item '''
