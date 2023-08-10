@@ -26,14 +26,20 @@
   "description_section",
   "description",
   "inventory_tab",
-  "inventory_settings_section",
-  "weight_per_unit",
+  "weight_details_section",
   "weight_uom",
-  "column_break_jpqvf",
+  "gold_weight",
+  "weight_per_unit",
+  "column_break_mjcg9",
+  "has_stone",
+  "stone_weight",
+  "stone_charge",
+  "inventory_settings_section",
   "is_purchase_item",
   "purchase_uom",
-  "is_sales_item",
+  "column_break_jpqvf",
   "sales_uom",
+  "is_sales_item",
   "unit_of_measure_conversion",
   "uoms",
   "item"
@@ -163,9 +169,11 @@
    "label": "Inventory Settings"
   },
   {
+   "default": "0",
    "fieldname": "weight_per_unit",
    "fieldtype": "Float",
-   "label": "Weight Per Unit"
+   "label": "Net Weight",
+   "read_only": 1
   },
   {
    "fieldname": "weight_uom",
@@ -242,11 +250,49 @@
    "label": "Item",
    "options": "Item",
    "read_only": 1
+  },
+  {
+   "fieldname": "weight_details_section",
+   "fieldtype": "Section Break",
+   "label": "Weight Details"
+  },
+  {
+   "default": "0",
+   "depends_on": "has_stone",
+   "fieldname": "stone_weight",
+   "fieldtype": "Float",
+   "label": "Stone Weight",
+   "mandatory_depends_on": "has_stone"
+  },
+  {
+   "default": "0",
+   "fieldname": "gold_weight",
+   "fieldtype": "Float",
+   "label": "Gold Weight",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "column_break_mjcg9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_stone",
+   "fieldtype": "Check",
+   "label": "Has Stone"
+  },
+  {
+   "default": "0",
+   "depends_on": "has_stone",
+   "fieldname": "stone_charge",
+   "fieldtype": "Currency",
+   "label": "Stone Charge",
+   "mandatory_depends_on": "has_stone"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-18 15:58:47.541986",
+ "modified": "2023-08-10 13:43:42.899217",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS Item",
