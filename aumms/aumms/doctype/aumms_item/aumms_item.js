@@ -66,6 +66,22 @@ frappe.ui.form.on('AuMMS Item', {
         }
       })
     }
+  },
+  calculate_weight_per_unit(frm){
+    frm.set_value('weight_per_unit', frm.doc.gold_weight + frm.doc.stone_weight);
+    frm.refresh_field('uoms');
+  },
+  gold_weight(frm){
+    frm.trigger('calculate_weight_per_unit');
+  },
+  stone_weight(frm){
+    frm.trigger('calculate_weight_per_unit');
+  },
+  has_stone(frm){
+    if(!frm.doc.has_stone){
+      frm.set_value('stone_weight', 0);
+      frm.set_value('stone_charge', 0);
+    }
   }
 });
 
