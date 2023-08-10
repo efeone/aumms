@@ -62,6 +62,8 @@ def create_or_update_item(self, item=None):
 	for aumms_item_field in aumms_item_fields:
 		item_doc.set(aumms_item_field, self.get(aumms_item_field))
 
+	item_doc.is_aumms_item = 1
+
 	#Clear and Set UOMs to Item
 	item_doc.uoms = []
 	for uom in self.uoms:
