@@ -29,6 +29,7 @@ class AuMMSItemGroup(NestedSet):
 			item_group_doc.is_sales_item = self.is_sales_item
 			item_group_doc.is_purchase_item = self.is_purchase_item
 			item_group_doc.is_purchase_item = self.is_purchase_item
+			item_group_doc.is_aumms_item_group = 1
 			if self.parent_aumms_item_group:
 				if frappe.db.exists('Item Group', self.parent_aumms_item_group):
 					item_group_doc.parent_item_group = self.parent_aumms_item_group
@@ -41,6 +42,7 @@ class AuMMSItemGroup(NestedSet):
 		''' Method to update created Item Group on changes of AuMMS Item Group '''
 		if self.item_group and frappe.db.exists('Item Group', self.item_group):
 			item_group_doc = frappe.get_doc('Item Group', self.item_group)
+			item_group_doc.is_aumms_item_group = 1
 			item_group_doc.item_group_name = self.item_group_name
 			item_group_doc.is_group = self.is_group
 			item_group_doc.item_type = self.item_type
