@@ -55,6 +55,90 @@ frappe.ui.form.on('Jewellery Invoice', {
   }
 });
 
+frappe.ui.form.on('Old Jewellery Item', {
+  old_item: function(frm, cdt, cdn) {
+    let d = locals[cdt][cdn];
+        if (d.old_item) {
+            if (frm.doc.transaction_date) {
+                frappe.model.set_value(cdt, cdn, 'date', frm.doc.transaction_date);
+            }
+        }
+    if (d.old_item) {
+      frappe.call({
+        method: 'aumms.aumms.utils.get_board_rate',  
+        args: {
+          'old_item': d.old_item,
+            'item_type': d.item_type,
+            'date': frm.doc.transaction_date,
+            'purity': d.purity,
+            'stock_uom': d.stock_uom
+        },
+        callback: function(r) {
+          if (r.message) {
+            let board_rate = r.message
+            frappe.model.set_value(cdt, cdn, 'board_rate', board_rate);
+            frappe.model.set_value(cdt, cdn, 'rate', board_rate)
+            frm.refresh_field('old_jewellery_items');
+          }
+        }
+      });
+    }
+  },
+  qty: function(frm, cdt, cdn){
+    let d = locals[cdt][cdn];
+    if (d.qty){
+      frappe.model.set_value(cdt, cdn, 'amount', d.qty * d.rate);
+      frm.refresh_field('old_jewellery_items');
+    }
+  },
+  rate: function(frm, cdt, cdn){
+    let d = locals[cdt][cdn];
+    if (d.rate){
+      //set amount with rate * qty
+      frappe.model.set_value(cdt, cdn, 'amount', d.qty * d.rate);
+      frm.refresh_field('old_jewellery_items');
+    }
+  },
+  amount: function(frm, cdt, cdn) {
+    // set_totals(frm);
+  },
+  amount_with_out_making_charge:function (frm, cdt, cdn) {
+    let d = locals[cdt][cdn];
+    if(d.amount_with_out_making_charge) {
+      let rate = (d.amount_with_out_making_charge + d.making_charge)/d.qty
+      if (rate)
+      {
+        //set rate by the change of amount_with_out_making_charge
+        frappe.model.set_value(d.doctype, d.name, 'rate', rate);
+        frm.refresh_field('old_jewellery_items');
+      }
+    }
+  },
+  conversion_factor:function(frm, cdt,cdn){
+    let d = locals[cdt][cdn];
+    if(d.conversion_factor){
+      var rate = d.board_rate * d.conversion_factor;
+      //set rate by the change of conversion_factor
+      frappe.model.set_value(d.doctype, d.name, 'rate', rate);
+      frm.refresh_field('items');
+    }
+  },
+  items_add: function(frm, cdt, cdn) {
+    let child = locals[cdt][cdn]
+    if(frm.doc.customer) {
+      set_board_rate_read_only(frm, cdt, cdn);
+    }
+    if(frm.doc.transaction_date){
+      frappe.model.set_value(child.doctype, child.name, 'transaction_date', frm.doc.transaction_date);
+    }
+    frm.refresh_field('old_jewellery_items');
+    set_totals(frm);
+  },
+  items_remove: function(frm, cdt, cdn) {
+    set_totals(frm);
+  }
+});
+
 frappe.ui.form.on('Jewellery Invoice Item', {
  item_code: function(frm, cdt, cdn){
     let d = locals[cdt][cdn];
@@ -184,6 +268,8 @@ frappe.ui.form.on('Jewellery Invoice Item', {
   }
 })
 
+
+
 let set_item_details = function(child) {
   //function to get item get_item_details
   if(child.item_type){
@@ -269,17 +355,27 @@ let create_custom_buttons = function(frm){
       make_payment(frm);
     }, 'Create');
   }
-  if(frm.doc.sales_order && !frm.doc.sales_invoice){
+  if (frm.doc.sales_order && !frm.doc.sales_invoice && frm.doc.purchase_order && !frm.doc.purchase_invoice) {
     frm.add_custom_button('Invoice', () => {
-      //Invoice creation method
-      frappe.call('aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.create_sales_invoice', {
-        source_name: frm.doc.sales_order,
-        jewellery_invoice: frm.doc.name,
-      }).then(r => {
-        frm.reload_doc();
-      });;
+        // Invoice and Purchase Invoice creation methods
+
+        // Create Sales Invoice
+        frappe.call('aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.create_sales_invoice', {
+            source_name: frm.doc.sales_order,
+            jewellery_invoice: frm.doc.name,
+        }).then(r => {
+            // After Sales Invoice is created, create the Purchase Invoice
+            frappe.call('aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.create_purchase_invoice', {
+                source_name: frm.doc.purchase_order,
+                jewellery_invoice: frm.doc.name,
+            }).then(r => {
+                // Reload the form after both invoices are created
+                frm.reload_doc();
+            });
+        });
     }, 'Create');
-  }
+}
+
   if(frm.doc.sales_invoice && !frm.doc.delivery_note){
     frm.add_custom_button('Delivery Note', () => {
       //Delivery Note creation method
