@@ -10,7 +10,6 @@
   "customer",
   "customer_name",
   "mobile_no",
-  "address",
   "column_break_ey72q",
   "design_title",
   "delivery_date",
@@ -19,6 +18,7 @@
   "comment",
   "tab_break_gwdao",
   "attachment",
+  "image",
   "amended_from"
  ],
  "fields": [
@@ -38,12 +38,6 @@
    "reqd": 1
   },
   {
-   "fetch_from": "customer_name.primary_address",
-   "fieldname": "address",
-   "fieldtype": "Small Text",
-   "label": "Address"
-  },
-  {
    "fieldname": "design_details",
    "fieldtype": "Table",
    "label": "Design Details",
@@ -52,7 +46,8 @@
   {
    "fieldname": "attachment",
    "fieldtype": "Attach Image",
-   "label": "Attachment"
+   "label": "Attachment",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_cjewr",
@@ -107,6 +102,12 @@
    "hidden": 1,
    "label": "Title",
    "unique": 1
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Image",
+   "label": "Image",
+   "options": "attachment"
   }
  ],
  "index_web_pages_for_search": 1,
