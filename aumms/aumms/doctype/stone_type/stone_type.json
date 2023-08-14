@@ -1,39 +1,39 @@
 {
  "actions": [],
- "autoname": "field:item_type",
- "creation": "2023-01-05 11:07:06.110537",
+ "autoname": "field:stone_type",
+ "creation": "2023-08-11 15:17:46.503565",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "item_type",
-  "is_purity_item"
+  "stone_type",
+  "is_purity_stone"
  ],
  "fields": [
   {
-   "fieldname": "item_type",
+   "fieldname": "stone_type",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Item Type",
+   "label": "Stone Type",
    "reqd": 1,
    "unique": 1
   },
   {
    "default": "0",
-   "fieldname": "is_purity_item",
+   "fieldname": "is_purity_stone",
    "fieldtype": "Check",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Is Purity Item"
+   "label": "Is Purity Stone"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-11 15:17:37.003816",
+ "modified": "2023-08-11 17:28:59.620246",
  "modified_by": "Administrator",
  "module": "AuMMS",
- "name": "Item Type",
+ "name": "Stone Type",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
