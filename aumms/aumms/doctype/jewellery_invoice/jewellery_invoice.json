@@ -20,6 +20,13 @@
   "old_jewellery_items",
   "items_section",
   "items",
+  "section_break_ypbyf",
+  "total_old_gold_weight",
+  "total_gold_weight",
+  "balance_amount",
+  "column_break_mzcap",
+  "total_old_gold_amount",
+  "total_gold_amount",
   "totals_section",
   "currency",
   "grand_total",
@@ -34,9 +41,9 @@
   "amended_from",
   "sales_order",
   "sales_invoice",
+  "column_break_3nmwo",
   "delivery_note",
-  "purchase_order",
-  "purchase_invoice"
+  "purchase_receipt"
  ],
  "fields": [
   {
@@ -238,24 +245,67 @@
    "options": "Old Jewellery Item"
   },
   {
-   "fieldname": "purchase_order",
+   "fieldname": "column_break_3nmwo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "purchase_receipt",
    "fieldtype": "Link",
-   "label": "Purchase Order",
-   "options": "Purchase Order",
+   "label": "Purchase Receipt",
+   "options": "Purchase Receipt",
    "read_only": 1
   },
   {
-   "fieldname": "purchase_invoice",
-   "fieldtype": "Link",
-   "label": "Purchase Invoice",
-   "options": "Purchase Invoice",
+   "fieldname": "section_break_ypbyf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "depends_on": "aumms_exchange",
+   "fieldname": "total_old_gold_weight",
+   "fieldtype": "Float",
+   "label": "Total Old Gold Weight",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_mzcap",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_gold_weight",
+   "fieldtype": "Float",
+   "label": "Total Gold Weight",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "total_gold_amount",
+   "fieldtype": "Currency",
+   "label": "Total Gold Amount",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "depends_on": "aumms_exchange",
+   "fieldname": "total_old_gold_amount",
+   "fieldtype": "Currency",
+   "label": "Total Old Gold Amount",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "depends_on": "aumms_exchange",
+   "fieldname": "balance_amount",
+   "fieldtype": "Currency",
+   "label": "Balance Amount",
    "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-08-10 16:15:41.809110",
+ "modified": "2023-08-11 17:47:50.145344",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Invoice",
