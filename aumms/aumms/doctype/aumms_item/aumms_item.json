@@ -31,7 +31,7 @@
   "gold_weight",
   "weight_per_unit",
   "column_break_mjcg9",
-  "is_stone",
+  "is_stone_item",
   "stone_type",
   "has_stone",
   "stone_details",
@@ -275,17 +275,11 @@
    "label": "Has Stone"
   },
   {
-   "default": "0",
-   "fieldname": "is_stone",
-   "fieldtype": "Check",
-   "label": "Is Stone"
-  },
-  {
-   "depends_on": "is_stone",
+   "depends_on": "is_stone_item",
    "fieldname": "stone_type",
    "fieldtype": "Link",
    "label": "Stone Type",
-   "mandatory_depends_on": "is_stone",
+   "mandatory_depends_on": "is_stone_item",
    "options": "Stone Type"
   },
   {
@@ -295,11 +289,17 @@
    "label": "Stone Details",
    "mandatory_depends_on": "has_stone",
    "options": "Stone Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_stone_item",
+   "fieldtype": "Check",
+   "label": "Is Stone Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-14 12:12:49.842030",
+ "modified": "2023-08-14 15:00:08.648627",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS Item",
