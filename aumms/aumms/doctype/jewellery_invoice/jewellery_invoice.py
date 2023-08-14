@@ -27,26 +27,26 @@ class JewelleryInvoice(Document):
 			self.reload()
 		else:
 			frappe.throw("Something went wrong while creating Sales Order, Please try again!")
-		
+
 		if self.aumms_exchange and self.customer:
 			supplier = create_common_party_and_supplier(self.customer)
-			purchase_order = create_purchase_order(self.name, supplier)
-			if purchase_order:
-				frappe.db.set_value(self.doctype, self.name, 'purchase_order', purchase_order)
+			if not supplier:
+				frappe.throw("Something went wrong while creating Common Party!")
+			purchase_receipt = create_purchase_receipt(self.name, supplier)
+			if purchase_receipt:
+				frappe.db.set_value(self.doctype, self.name, 'purchase_receipt', purchase_receipt)
 				frappe.db.commit()
 				self.reload()
 			else:
-				frappe.throw("Something went wrong while creating Puchase Order, Please try again!")
-		
+				frappe.throw("Something went wrong while creating Puchase Receipt, Please try again!")
+
 
 	def on_cancel(self):
 		''' On Cancel event of Jewellery Invoice '''
 		self.cancel_delivery_note()
 		self.cancel_sales_invoice()
 		self.cancel_sales_order()
-		self.cancel_purchase_invoice()
-		self.cancel_purchase_order()
-
+		self.cancel_purchase_receipt()
 
 	def set_total_amount(self):
 		''' Method to calculate and set totals '''
@@ -74,15 +74,15 @@ class JewelleryInvoice(Document):
 			else:
 				frappe.throw('Sales Order `{0}` not found!'.format(self.sales_order))
 
-	def cancel_purchase_order(self):
-		''' Method to Cancel Purchase Order linked with Jewellery Invoice '''
-		if self.purchase_order:
-			if frappe.db.exists('Purchase Order', self.purchase_order):
-				purchase_order_doc = frappe.get_doc('Purchase Order', self.purchase_order)
-				if purchase_order_doc.docstatus == 1:
-					purchase_order_doc.cancel()
+	def cancel_purchase_receipt(self):
+		''' Method to Cancel Purchase Receipt linked with Jewellery Invoice '''
+		if self.purchase_receipt:
+			if frappe.db.exists('Purchase Receipt', self.purchase_receipt):
+				purchase_receipt_doc = frappe.get_doc('Purchase Receipt', self.purchase_receipt)
+				if purchase_receipt_doc.docstatus == 1:
+					purchase_receipt_doc.cancel()
 			else:
-				frappe.throw('Purchase Order `{0}` not found!'.format(self.purchase_order))
+				frappe.throw('Purchase Receipt `{0}` not found!'.format(self.purchase_receipt))
 
 	def cancel_sales_invoice(self):
 		''' Method to Cancel Sales Invoice linked with Jewellery Invoice '''
@@ -93,16 +93,6 @@ class JewelleryInvoice(Document):
 					sales_invoice_doc.cancel()
 			else:
 				frappe.throw('Sales Invoice `{0}` not found!'.format(self.sales_invoice))
-
-	def cancel_purchase_invoice(self):
-		''' Method to Cancel Purchase Invoice linked with Jewellery Invoice '''
-		if self.purchase_invoice:
-			if frappe.db.exists('Purchase Invoice', self.purchase_invoice):
-				purchase_invoice_doc = frappe.get_doc('Purchase Invoice', self.purchase_invoice)
-				if purchase_invoice_doc.docstatus == 1:
-					purchase_invoice_doc.cancel()
-			else:
-				frappe.throw('Purchase Invoice `{0}` not found!'.format(self.purchase_invoice))			
 
 	def cancel_delivery_note(self):
 		''' Method to Cancel Delivery Note linked with Jewellery Invoice '''
@@ -138,6 +128,7 @@ def create_sales_order(source_name, target_doc=None):
 	return target_doc.name
 
 def get_party_link_if_exist(party_type, party):
+	''' Method to get Common Party Link if exists '''
 	query = """
 		SELECT
 			CASE
@@ -159,13 +150,16 @@ def get_party_link_if_exist(party_type, party):
 
 
 def create_common_party_and_supplier(customer):
+	''' Method to create Supplier against customer and link as Common Party '''
 	common_party = get_party_link_if_exist('Customer', customer)
 	if not common_party:
-		#create supplier for common party 
+		#create supplier for common party
 		supplier_doc = frappe.new_doc('Supplier')
 		customer_name =  frappe.db.get_value('Customer', customer, 'customer_name')
 		supplier_doc.supplier_name = customer_name
 		supplier_group = frappe.db.get_single_value('Buying Settings','supplier_group')
+		if not supplier_group:
+			frappe.throw('Default Supplier Group is not configured in Buying Settigns!')
 		supplier_doc.supplier_group = supplier_group
 		supplier_doc.insert()
 		#link common party
@@ -173,7 +167,7 @@ def create_common_party_and_supplier(customer):
 			link_doc = frappe.new_doc('Party Link')
 			link_doc.primary_role = 'Customer'
 			link_doc.primary_party = customer
-			link_doc.secondary_role = 'Supplier'	
+			link_doc.secondary_role = 'Supplier'
 			link_doc.secondary_party = supplier_doc.name
 			link_doc.insert()
 		frappe.msgprint(('Common Party and Supplier Created and Link'), indicator="green", alert=1)
@@ -181,28 +175,30 @@ def create_common_party_and_supplier(customer):
 	return common_party
 
 
-def create_purchase_order(source_name, supplier, target_doc=None):
-	''' Method to create Purchase Order from Jewellery Invoice '''
+def create_purchase_receipt(source_name, supplier, target_doc=None):
+	''' Method to create Purchase Receipt from Jewellery Invoice '''
 	def set_missing_values(source, target):
 		target.supplier = supplier
+		target.keep_metal_ledger = 1
 	target_doc = get_mapped_doc("Jewellery Invoice", source_name,
 		{
 			"Jewellery Invoice": {
-				"doctype": "Purchase Order",
+				"doctype": "Purchase Receipt",
 				"field_map":{
-					'delivery_date':'schedule_date'
-				},  
+					'transaction_date':'posting_date'
+				},
 			},
 			"Old Jewellery Item": {
-				"doctype": "Purchase Order Item",
+				"doctype": "Purchase Receipt Item",
 				"field_map": {
-					'date':'schedule_date',
-					'old_item':'item_code',
+					'item_code':'item_code',
+					'qty':'qty',
+					'qty':'received_qty'
 				},
 			},
     	}, target_doc, set_missing_values)
 	target_doc.submit()
-	frappe.msgprint(('Purchase Order created'), indicator="green", alert=1)
+	frappe.msgprint(('Purchase Receipt created'), indicator="green", alert=1)
 	frappe.db.commit()
 	return target_doc.name
 
@@ -358,81 +354,11 @@ def create_sales_invoice(source_name, jewellery_invoice, update_stock=0, target_
 		frappe.msgprint(('Sales Invoice created'), indicator="green", alert=1)
 
 @frappe.whitelist()
-def create_purchase_invoice(source_name, jewellery_invoice, update_stock=0, target_doc=None):
-    ''' Method to create Purchase Invoice from Jewellery Invoice with Purchase Order reference '''
-    def postprocess(source, target):
-        set_missing_values(source, target)
-
-    def set_missing_values(source, target):
-        target.flags.ignore_permissions = True
-        target.run_method("set_missing_values")
-        target.run_method("set_po_nos")
-        target.run_method("calculate_taxes_and_totals")
-        target.credit_to = get_party_account("Supplier", source.supplier, source.company)
-        target.allocate_advances_automatically = 1
-        target.update_stock = update_stock
-
-    def update_item(source, target, source_parent):
-        target.amount = flt(source.amount) - flt(source.billed_amt)
-        target.base_amount = target.amount * flt(source_parent.conversion_rate)
-        target.qty = (
-            target.amount / flt(source.rate)
-            if (source.rate and source.billed_amt)
-            else source.qty - source.returned_qty
-        )
-        # Update cost center, item defaults, etc. for Purchase Invoice items
-
-    doclist = get_mapped_doc(
-        "Purchase Order",
-        source_name,
-        {
-            "Purchase Order": {
-                "doctype": "Purchase Invoice",
-                "field_map": {
-                    "party_account_currency": "party_account_currency",
-                    "payment_terms_template": "payment_terms_template",
-                },
-                "field_no_map": ["payment_terms_template"],
-                "validation": {"docstatus": ["=", 1]},
-            },
-            "Purchase Order Item": {
-                "doctype": "Purchase Invoice Item",
-                "field_map": {
-                    "name": "po_detail",
-                    "parent": "purchase_order",
-                },
-                "postprocess": update_item,
-                "condition": lambda doc: doc.qty
-                and (doc.base_amount == 0 or abs(doc.billed_amt) < abs(doc.amount)),
-            },
-            "Purchase Taxes and Charges": {"doctype": "Purchase Taxes and Charges", "add_if_empty": True},
-            "Purchase Team": {"doctype": "Purchase Team", "add_if_empty": True},
-        },
-        target_doc,
-        postprocess,
-    )
-
-    # Payment terms logic for Purchase Invoices
-
-    doclist.set_onload("ignore_price_list", True)
-    doclist.submit()
-    if doclist:
-        # Update associated Jewellery Invoice status
-        frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'purchase_invoice', doclist.name)
-        if update_stock:
-            frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'status', 'Received')
-        else:
-            frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'status', 'Invoiced')
-        frappe.db.commit()
-        frappe.msgprint(('Purchase Invoice created'), indicator="green", alert=1)
-
-
-@frappe.whitelist()
 def get_board_rate(old_item, transaction_date):
     # Fetch the boardrate from the 'Board Rate' doctype
     board_rate = frappe.db.get_value('Board Rate', {'old_item': old_item, 'valid_from': ('<=', transaction_date)},
                                      'board_rate', order_by='valid_from desc', as_dict=True)
-    
+
     return {'board_rate': board_rate}
 
 @frappe.whitelist()

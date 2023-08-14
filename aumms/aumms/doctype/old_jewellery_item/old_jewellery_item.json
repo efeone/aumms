@@ -8,14 +8,12 @@
  "engine": "InnoDB",
  "field_order": [
   "item_details_section",
-  "old_item",
+  "item_code",
   "item_type",
   "is_purity_item",
-  "date",
   "column_break_ah6td",
   "item_name",
   "purity",
-  "customer_type",
   "quantity_and_rate_section",
   "qty",
   "uom",
@@ -32,24 +30,16 @@
    "label": "Item Details"
   },
   {
-   "fieldname": "old_item",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Item Code",
-   "options": "AuMMS Item",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "old_item.item_type",
-   "fetch_if_empty": 1,
+   "fetch_from": "item_code.item_type",
    "fieldname": "item_type",
    "fieldtype": "Link",
    "label": "Item Type",
-   "options": "Item Type"
+   "options": "Item Type",
+   "read_only": 1
   },
   {
    "default": "0",
-   "fetch_from": "old_item.is_purity_item",
+   "fetch_from": "item_code.is_purity_item",
    "fieldname": "is_purity_item",
    "fieldtype": "Check",
    "hidden": 1,
@@ -57,35 +47,21 @@
    "read_only": 1
   },
   {
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Date",
-   "reqd": 1
-  },
-  {
    "fieldname": "column_break_ah6td",
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "old_item.item_name",
+   "fetch_from": "item_code.item_name",
    "fieldname": "item_name",
    "fieldtype": "Data",
    "label": "Item Name"
   },
   {
-   "fetch_from": "old_item.purity",
+   "fetch_from": "item_code.purity",
    "fieldname": "purity",
    "fieldtype": "Link",
    "label": "Purity",
    "options": "Purity",
-   "read_only": 1
-  },
-  {
-   "fieldname": "customer_type",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Customer Type",
    "read_only": 1
   },
   {
@@ -101,7 +77,7 @@
    "reqd": 1
   },
   {
-   "fetch_from": "old_item.stock_uom",
+   "fetch_from": "item_code.purchase_uom",
    "fetch_if_empty": 1,
    "fieldname": "uom",
    "fieldtype": "Link",
@@ -114,6 +90,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "0",
    "depends_on": "eval:doc.is_purity_item",
    "fieldname": "board_rate",
    "fieldtype": "Currency",
@@ -121,14 +98,13 @@
    "read_only_depends_on": "eval:doc.customer_type == 'Individual'"
   },
   {
-   "depends_on": "eval: doc.type != \"\"",
+   "default": "0",
    "fieldname": "rate",
    "fieldtype": "Currency",
-   "label": "Rate",
-   "read_only_depends_on": "eval:doc.customer_type == 'Individual'"
+   "label": "Rate"
   },
   {
-   "fetch_from": "old_item.stock_uom",
+   "fetch_from": "item_code.stock_uom",
    "fieldname": "stock_uom",
    "fieldtype": "Link",
    "label": "Stock UOM",
@@ -136,17 +112,26 @@
    "read_only": 1
   },
   {
+   "default": "0",
    "fieldname": "amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Amount",
    "read_only": 1
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "AuMMS Item",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-08-08 17:34:26.482028",
+ "modified": "2023-08-11 17:03:12.383289",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Old Jewellery Item",

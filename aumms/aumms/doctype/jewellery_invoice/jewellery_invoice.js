@@ -52,22 +52,22 @@ frappe.ui.form.on('Jewellery Invoice', {
     if(frm.doc.docstatus===1){
       create_custom_buttons(frm);
     }
+  },
+  onload_post_render: function(frm){
+    remove_previous_links(frm);
+  },
+  aumms_exchange: function(frm){
+    set_net_weight_and_amount(frm);
   }
 });
 
 frappe.ui.form.on('Old Jewellery Item', {
-  old_item: function(frm, cdt, cdn) {
+  item_code: function(frm, cdt, cdn) {
     let d = locals[cdt][cdn];
-        if (d.old_item) {
-            if (frm.doc.transaction_date) {
-                frappe.model.set_value(cdt, cdn, 'date', frm.doc.transaction_date);
-            }
-        }
-    if (d.old_item) {
+    if (d.item_code && d.purity && d.stock_uom) {
       frappe.call({
-        method: 'aumms.aumms.utils.get_board_rate',  
+        method: 'aumms.aumms.utils.get_board_rate',
         args: {
-          'old_item': d.old_item,
             'item_type': d.item_type,
             'date': frm.doc.transaction_date,
             'purity': d.purity,
@@ -90,6 +90,7 @@ frappe.ui.form.on('Old Jewellery Item', {
       frappe.model.set_value(cdt, cdn, 'amount', d.qty * d.rate);
       frm.refresh_field('old_jewellery_items');
     }
+    set_net_weight_and_amount(frm);
   },
   rate: function(frm, cdt, cdn){
     let d = locals[cdt][cdn];
@@ -99,43 +100,14 @@ frappe.ui.form.on('Old Jewellery Item', {
       frm.refresh_field('old_jewellery_items');
     }
   },
-  amount: function(frm, cdt, cdn) {
-    // set_totals(frm);
+  amount: function(frm){
+    set_net_weight_and_amount(frm);
   },
-  amount_with_out_making_charge:function (frm, cdt, cdn) {
-    let d = locals[cdt][cdn];
-    if(d.amount_with_out_making_charge) {
-      let rate = (d.amount_with_out_making_charge + d.making_charge)/d.qty
-      if (rate)
-      {
-        //set rate by the change of amount_with_out_making_charge
-        frappe.model.set_value(d.doctype, d.name, 'rate', rate);
-        frm.refresh_field('old_jewellery_items');
-      }
-    }
+  old_jewellery_items_add: function(frm){
+    set_net_weight_and_amount(frm);
   },
-  conversion_factor:function(frm, cdt,cdn){
-    let d = locals[cdt][cdn];
-    if(d.conversion_factor){
-      var rate = d.board_rate * d.conversion_factor;
-      //set rate by the change of conversion_factor
-      frappe.model.set_value(d.doctype, d.name, 'rate', rate);
-      frm.refresh_field('items');
-    }
-  },
-  items_add: function(frm, cdt, cdn) {
-    let child = locals[cdt][cdn]
-    if(frm.doc.customer) {
-      set_board_rate_read_only(frm, cdt, cdn);
-    }
-    if(frm.doc.transaction_date){
-      frappe.model.set_value(child.doctype, child.name, 'transaction_date', frm.doc.transaction_date);
-    }
-    frm.refresh_field('old_jewellery_items');
-    set_totals(frm);
-  },
-  items_remove: function(frm, cdt, cdn) {
-    set_totals(frm);
+  old_jewellery_items_remove: function(frm){
+    set_net_weight_and_amount(frm);
   }
 });
 
@@ -262,9 +234,11 @@ frappe.ui.form.on('Jewellery Invoice Item', {
     }
     frm.refresh_field('items');
     set_totals(frm);
+    set_net_weight_and_amount(frm);
   },
   items_remove: function(frm, cdt, cdn) {
     set_totals(frm);
+    set_net_weight_and_amount(frm);
   }
 })
 
@@ -326,6 +300,14 @@ let set_filters = function(frm){
       }
     }
   });
+  frm.set_query('item_code', 'old_jewellery_items', () => {
+    return {
+      filters: {
+        disabled: 0,
+        item_group: 'AuMMS Old Gold'
+      }
+    }
+  });
 }
 
 let set_totals = function(frm){
@@ -337,6 +319,39 @@ let set_totals = function(frm){
   });
   frm.set_value('grand_total', total);
   frm.set_value('rounded_total', total);
+  frm.refresh_fields();
+}
+
+let set_net_weight_and_amount = function(frm){
+  let total_old_gold_weight = 0;
+  let total_gold_weight = 0;
+  let total_old_gold_amount = 0;
+  let total_gold_amount = 0;
+  let balance_amount = 0;
+  frm.doc.items.forEach((child) => {
+    if(child.qty){
+      total_gold_weight = total_gold_weight + child.qty;
+    }
+    if(child.amount){
+      total_gold_amount = total_gold_amount + child.amount;
+    }
+  });
+  if(frm.doc.aumms_exchange){
+    frm.doc.old_jewellery_items.forEach((child) => {
+      if(child.qty){
+        total_old_gold_weight = total_old_gold_weight + child.qty;
+      }
+      if(child.amount){
+        total_old_gold_amount = total_old_gold_amount + child.amount;
+      }
+    });
+  }
+  balance_amount = total_gold_amount - total_old_gold_amount
+  frm.set_value('total_gold_weight', total_gold_weight);
+  frm.set_value('total_gold_amount', total_gold_amount);
+  frm.set_value('total_old_gold_weight', total_old_gold_weight);
+  frm.set_value('total_old_gold_amount', total_old_gold_amount);
+  frm.set_value('balance_amount', balance_amount);
   frm.refresh_fields();
 }
 
@@ -476,4 +491,14 @@ let make_payment = function(frm){
     }
   });
   d.show();
+}
+
+let remove_previous_links = function(frm){
+  if(frm.is_new()){
+    frm.set_value('sales_order', );
+    frm.set_value('sales_invoice', );
+    frm.set_value('delivery_note', );
+    frm.set_value('purchase_receipt', );
+    frm.refresh_fields();
+  }
 }
