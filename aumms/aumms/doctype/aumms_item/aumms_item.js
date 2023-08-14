@@ -77,17 +77,14 @@ frappe.ui.form.on('AuMMS Item', {
   stone_weight(frm){
     frm.trigger('calculate_weight_per_unit');
   },
-  has_stone(frm) {
-    if (!frm.doc.has_stone) {
-        frm.doc.stone_weight = 0;
-        frm.doc.stone_charge = 0;
-        frm.doc.stone_details = []; 
-        frm.refresh_field('stone_details'); 
+  has_stone(frm){
+    if(!frm.doc.has_stone){
+            frm.clear_table('stone_details');
     }
-    frm.toggle_display('is_stone', !frm.doc.has_stone);
-},
-  is_stone(frm) {
-    frm.toggle_display('has_stone', !frm.doc.is_stone);
+    frm.toggle_display('is_stone_item', !frm.doc.has_stone);
+  },
+  is_stone_item(frm) {
+    frm.toggle_display('has_stone', !frm.doc.is_stone_item);
   }
 });
 
