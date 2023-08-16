@@ -34,6 +34,7 @@
   "is_stone_item",
   "stone_type",
   "has_stone",
+  "section_break_oeidb",
   "stone_details",
   "inventory_settings_section",
   "is_purchase_item",
@@ -295,11 +296,15 @@
    "fieldname": "is_stone_item",
    "fieldtype": "Check",
    "label": "Is Stone Item"
+  },
+  {
+   "fieldname": "section_break_oeidb",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-14 15:00:08.648627",
+ "modified": "2023-08-16 13:06:26.332350",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS Item",
