@@ -2,6 +2,9 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('AuMMS Item', {
+  setup: function(frm) {
+    set_filters(frm);
+  },
   onload(frm) {
     frm.trigger('is_purity_item');
   },
@@ -79,9 +82,12 @@ frappe.ui.form.on('AuMMS Item', {
   },
   has_stone(frm){
     if(!frm.doc.has_stone){
-      frm.set_value('stone_weight', 0);
-      frm.set_value('stone_charge', 0);
+            frm.clear_table('stone_details');
     }
+    frm.toggle_display('is_stone_item', !frm.doc.has_stone);
+  },
+  is_stone_item(frm) {
+    frm.toggle_display('has_stone', !frm.doc.is_stone_item);
   }
 });
 
@@ -177,4 +183,14 @@ let trigger_uoms = function () {
     });
   }
   cur_frm.refresh_field('uoms');
+}
+
+let set_filters = function(frm){
+  frm.set_query('item_name', 'stone_details', () => {
+    return {
+      filters: {
+        is_stone_item: 1,
+      }
+    }
+  });
 }
