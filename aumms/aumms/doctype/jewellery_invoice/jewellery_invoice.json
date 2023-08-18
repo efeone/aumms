@@ -37,7 +37,15 @@
   "paid_amount",
   "outstanding_amount",
   "in_words",
-  "more_information_section",
+  "advances_tab",
+  "customer_advances",
+  "section_break_y6lif",
+  "total_advance_received",
+  "total_qty_obtained",
+  "column_break_yqyhw",
+  "purity",
+  "uom",
+  "more_tab",
   "amended_from",
   "sales_order",
   "sales_invoice",
@@ -187,12 +195,6 @@
    "width": "100px"
   },
   {
-   "collapsible": 1,
-   "fieldname": "more_information_section",
-   "fieldtype": "Section Break",
-   "label": "More Information"
-  },
-  {
    "fieldname": "sales_order",
    "fieldtype": "Link",
    "label": "Sales Order",
@@ -300,12 +302,70 @@
    "fieldtype": "Currency",
    "label": "Balance Amount",
    "read_only": 1
+  },
+  {
+   "fieldname": "advances_tab",
+   "fieldtype": "Tab Break",
+   "label": "Advances"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "customer_advances",
+   "fieldtype": "Table",
+   "label": "Customer Advances",
+   "options": "Customer Advances",
+   "read_only": 1
+  },
+  {
+   "fieldname": "more_tab",
+   "fieldtype": "Tab Break",
+   "label": "More Information"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "total_advance_received",
+   "fieldtype": "Currency",
+   "label": "Total Advance Received",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "total_qty_obtained",
+   "fieldtype": "Float",
+   "label": "Total Qty Obtained",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_y6lif",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_yqyhw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "purity",
+   "fieldtype": "Link",
+   "label": "Purity",
+   "options": "Purity",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-08-11 17:47:50.145344",
+ "modified": "2023-08-14 14:31:43.405802",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Invoice",
