@@ -38,7 +38,7 @@ def create_or_update_item(self, item=None):
 	''' Method to create or update Item from AuMMS Item '''
 	item_group = frappe.db.get_value('AuMMS Item Group', self.item_group, 'item_group')
 	if not item:
-		#Case of new Iteam
+		#Case of new Item
 		if not frappe.db.exists('Item', self.name):
 			#Creating new Item object
 			item_doc = frappe.new_doc('Item')
