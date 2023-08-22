@@ -6,6 +6,25 @@ from frappe.model.document import Document
 
 class DesignAnalysis(Document):
     pass
+@frappe.whitelist()
+def create_aumms_item_from_design_analysis(item_code, item_group, purity):
+    def set_missing_values(item_code, item_group, purity):
+        pass
+    # Create a new Aumms Item document
+    aumms_item = frappe.get_doc({
+        "doctype": "AuMMS Item",
+        "item_name": item_code,
+        "item_code": item_code,  
+        "item_group": item_group,
+         "purity": purity
+    })
+
+    # Save the Aumms Item document
+    aumms_item.insert()
+
+    frappe.msgprint("AuMMS Item Created: {}".format(aumms_item.name), indicator="green", alert=1)
+
+    return aumms_item.name
 
 @frappe.whitelist()
 def fetch_design_details(parent):

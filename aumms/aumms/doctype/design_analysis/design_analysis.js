@@ -116,6 +116,31 @@ frappe.ui.form.on('Design Analysis', {
 
         // Show the dialog
         dia.show();
-        })
+        });
+        // Check if the logged-in user is a supervisor
+        const isSupervisor = frappe.user_roles.includes('Supervisor');
+    if (isSupervisor) {
+        frm.add_custom_button(__('Approve'), () => {
+            const item_code = frm.doc.item_code;
+            const item_group = frm.doc.item_group;
+            const purity = frm.doc.purity;
+
+            frappe.call({
+                method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_aumms_item_from_design_analysis',
+                args: {
+                    item_code: item_code,
+                    item_group: item_group,
+                    purity: purity
+                },
+                callback: (r) => {
+                    if (r.message) {
+                        console.log('AuMMS Item Created:', r.message);
+                    } else {
+                        console.log('Failed to create AuMMS Item');
+                    }
+                }
+            });
+        });
+        }
     }
 });
