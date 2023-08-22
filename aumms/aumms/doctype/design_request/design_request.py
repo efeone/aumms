@@ -3,11 +3,11 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.desk.form.assign_to import add as add_assign
 
 class DesignRequest(Document):
 		
 	def autoname(self):
-		
 		if self.customer_name:
 			self.name = self.customer + '-' + self.design_title + '-' + frappe.utils.today()
 
@@ -26,7 +26,13 @@ def design_analyst_user_query(doctype, txt, searchfield, start, page_len, filter
             u.name like %s
     """, ("%" + txt + "%"))
 
-
-
-
-
+@frappe.whitelist()
+def assign_design_request(doctype, docname, assign_to):
+	assign_to_list = [assign_to]
+	add_assign({
+				"assign_to": assign_to_list,
+				"doctype": doctype,
+				"name": docname
+			})
+	frappe.db.set_value(doctype, docname, 'assigned_person', assign_to)
+	frappe.db.commit()
