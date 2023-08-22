@@ -5,7 +5,7 @@
    "label": "Last Month Board Rate"
   }
  ],
- "content": "[{\"id\":\"xytMzcNTlF\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">AuMMS</span>\",\"col\":12}},{\"id\":\"jB5UHMdjpr\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Last Month Board Rate\",\"col\":12}},{\"id\":\"gi-NMLZp61\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Board Rate\",\"col\":3}},{\"id\":\"UlF0vIuW_h\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"AuMMS Item\",\"col\":3}},{\"id\":\"hYF_ghyeVA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"AuMMS Item Group\",\"col\":3}},{\"id\":\"w1BWPSMDmh\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Type\",\"col\":3}},{\"id\":\"rlhdXeN4wX\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stone Type\",\"col\":3}},{\"id\":\"UWuMllqZ2H\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity Conversion Tool\",\"col\":3}},{\"id\":\"aAr2ThZ43S\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Jewellery Invoice\",\"col\":3}},{\"id\":\"RvEzssIYXw\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Design Request\",\"col\":3}},{\"id\":\"u6adwmpaJ0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity\",\"col\":3}}]",
+ "content": "[{\"id\":\"xytMzcNTlF\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">AuMMS</span>\",\"col\":12}},{\"id\":\"jB5UHMdjpr\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Last Month Board Rate\",\"col\":12}},{\"id\":\"gi-NMLZp61\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Board Rate\",\"col\":3}},{\"id\":\"UlF0vIuW_h\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"AuMMS Item\",\"col\":3}},{\"id\":\"hYF_ghyeVA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"AuMMS Item Group\",\"col\":3}},{\"id\":\"UWuMllqZ2H\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purity Conversion Tool\",\"col\":3}},{\"id\":\"aAr2ThZ43S\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Jewellery Invoice\",\"col\":3}},{\"id\":\"RvEzssIYXw\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Design Request\",\"col\":3}},{\"id\":\"wGYHyDla9N\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Design Analysis\",\"col\":3}},{\"id\":\"9w8SYT0U69\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"cT93WyR0mJ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"HkzazEK-HJ\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"6hfzWxhLly\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"GnDPsk1c5H\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2023-01-06 12:02:34.084523",
  "custom_blocks": [],
  "docstatus": 0,
@@ -16,8 +16,143 @@
  "idx": 0,
  "is_hidden": 0,
  "label": "AuMMS",
- "links": [],
- "modified": "2023-08-11 15:50:50.687190",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "General Ledger",
+   "link_count": 0,
+   "link_to": "General Ledger",
+   "link_type": "Report",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Metal Ledger",
+   "link_count": 0,
+   "link_to": "Metal Ledger",
+   "link_type": "Report",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Stock Ledger",
+   "link_count": 0,
+   "link_to": "Stock Ledger",
+   "link_type": "Report",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Masters",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purity",
+   "link_count": 0,
+   "link_to": "Purity",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item Type",
+   "link_count": 0,
+   "link_to": "Item Type",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stone Type",
+   "link_count": 0,
+   "link_to": "Stone Type",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "AuMMS Item",
+   "link_count": 0,
+   "link_to": "AuMMS Item",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "AuMMS Item Group",
+   "link_count": 0,
+   "link_to": "AuMMS Item Group",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Settings",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Buying Settings",
+   "link_count": 0,
+   "link_to": "Buying Settings",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Selling Settings",
+   "link_count": 0,
+   "link_to": "Selling Settings",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "AuMMS Settings",
+   "link_count": 0,
+   "link_to": "AuMMS Settings",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  }
+ ],
+ "modified": "2023-08-17 11:58:04.361588",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS",
@@ -32,15 +167,15 @@
   {
    "color": "Grey",
    "doc_view": "List",
-   "label": "Design Request",
-   "link_to": "Design Request",
+   "label": "Design Analysis",
+   "link_to": "Design Analysis",
    "type": "DocType"
   },
   {
    "color": "Grey",
    "doc_view": "List",
-   "label": "Stone Type",
-   "link_to": "Stone Type",
+   "label": "Design Request",
+   "link_to": "Design Request",
    "type": "DocType"
   },
   {
@@ -78,20 +213,6 @@
    "doc_view": "List",
    "label": "Purity Conversion Tool",
    "link_to": "Purity Conversion Tool",
-   "type": "DocType"
-  },
-  {
-   "color": "Grey",
-   "doc_view": "List",
-   "label": "Item Type",
-   "link_to": "Item Type",
-   "type": "DocType"
-  },
-  {
-   "color": "Grey",
-   "doc_view": "List",
-   "label": "Purity",
-   "link_to": "Purity",
    "type": "DocType"
   }
  ],

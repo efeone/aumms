@@ -8,7 +8,7 @@ frappe.ui.form.on('Jewellery Invoice', {
   transaction_date: function(frm) {
     if (frm.doc.transaction_date ) {
       frm.doc.items.forEach((child) => {
-        set_item_details(child)
+        set_item_details(frm, child);
       });
     }
   },
@@ -86,11 +86,16 @@ frappe.ui.form.on('Old Jewellery Item', {
   },
   qty: function(frm, cdt, cdn){
     let d = locals[cdt][cdn];
+    let total_old_gold_weight;
     if (d.qty){
       frappe.model.set_value(cdt, cdn, 'amount', d.qty * d.rate);
       frm.refresh_field('old_jewellery_items');
+      if(frm.doc.total_old_gold_weight){
+        total_old_gold_weight = frm.doc.total_old_gold_weight
+      }
+      total_old_gold_weight = total_old_gold_weight + d.qty;
+      frm.set_value('total_old_gold_weight', total_old_gold_weight);
     }
-    set_net_weight_and_amount(frm);
   },
   rate: function(frm, cdt, cdn){
     let d = locals[cdt][cdn];
@@ -155,12 +160,18 @@ frappe.ui.form.on('Jewellery Invoice Item', {
   },
   qty: function(frm, cdt, cdn){
     let d = locals[cdt][cdn];
+    let total_gold_weight;
     if (d.qty){
       //set amount_with_out_making_charge while changing qty
       frappe.model.set_value(d.doctype, d.name, 'amount_with_out_making_charge', d.qty * d.board_rate);
       //set amount with rate * qty
       frappe.model.set_value(d.doctype, d.name, 'amount', d.qty * d.rate);
       frm.refresh_field('items');
+      if(frm.doc.total_gold_weight){
+        total_gold_weight = frm.doc.total_gold_weight
+      }
+      total_gold_weight = total_gold_weight + d.qty;
+      frm.set_value('total_gold_weight', total_gold_weight);
     }
   },
   rate: function(frm, cdt, cdn){
@@ -172,6 +183,7 @@ frappe.ui.form.on('Jewellery Invoice Item', {
     }
   },
   amount: function(frm, cdt, cdn) {
+    set_net_weight_and_amount(frm);
     set_totals(frm);
   },
   making_charge_percentage: function(frm, cdt, cdn){
@@ -244,7 +256,7 @@ frappe.ui.form.on('Jewellery Invoice Item', {
 
 
 
-let set_item_details = function(child) {
+let set_item_details = function(frm, child) {
   //function to get item get_item_details
   if(child.item_type){
     frappe.call({
@@ -414,6 +426,13 @@ let create_custom_buttons = function(frm){
       });;
     }, 'Create');
   }
+
+  if(frm.doc.sales_order && !frm.doc.sales_invoice){
+    frm.add_custom_button('Get Customer Advances', () => {
+      //To get customer advances
+      get_customer_advances(frm);
+    });
+  }
 }
 
 let make_payment = function(frm){
@@ -501,4 +520,44 @@ let remove_previous_links = function(frm){
     frm.set_value('purchase_receipt', );
     frm.refresh_fields();
   }
+}
+
+let get_customer_advances= function(frm){
+  frm.doc.items.forEach((child) => {
+    frappe.call('aumms.aumms.utils.get_advances_payments_against_so_in_gold', {
+      sales_order: frm.doc.sales_order,
+      item_type: child.item_type,
+      purity: child.purity,
+      stock_uom: child.stock_uom
+    }).then(r => {
+      if(r.message){
+        frm.clear_table('customer_advances');
+        let total_advance_received = 0;
+        let total_qty_obtained = 0;
+        let purity = '';
+        let uom = '';
+        r.message.forEach((advance) => {
+          frm.add_child('customer_advances', {
+            'reference': advance.payment_entry,
+            'posting_date': advance.posting_date,
+            'item_type': advance.item_type,
+            'purity': advance.purity,
+            'amount': advance.amount,
+            'board_rate': advance.board_rate,
+            'stock_uom': advance.stock_uom,
+            'qty_obtained': advance.qty_obtained
+          });
+          purity = advance.purity;
+          uom = advance.stock_uom;
+          total_advance_received = total_advance_received + (advance.amount);
+          total_qty_obtained = total_qty_obtained + (advance.qty_obtained);
+        });
+        frm.set_value('total_advance_received', total_advance_received);
+        frm.set_value('total_qty_obtained', total_qty_obtained);
+        frm.set_value('uom', uom);
+        frm.set_value('purity', purity);
+        frm.save_or_update();
+      }
+    });
+  });
 }

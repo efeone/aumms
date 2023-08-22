@@ -229,3 +229,41 @@ def increase_precision():
         system_settings_doc.float_precision = 6
         system_settings_doc.save()
         frappe.db.commit()
+
+@frappe.whitelist()
+def get_advances_payments_against_so(sales_order):
+    ''' Method to get advance payments against SO based on date and Board Rate '''
+    query = '''
+        SELECT
+            pe.name as payment_entry,
+            pe.posting_date as posting_date,
+            per.allocated_amount as amount
+        FROM
+            `tabPayment Entry` as pe,
+            `tabPayment Entry Reference` as per
+        WHERE
+            pe.name = per.parent AND
+            per.reference_doctype = 'Sales Order' AND
+            per.reference_name = '{0}'
+        ORDER BY
+            pe.posting_date asc
+    '''.format(sales_order)
+    advances = frappe.db.sql(query, as_dict = 1)
+    return advances
+
+@frappe.whitelist()
+def get_advances_payments_against_so_in_gold(sales_order, item_type, purity, stock_uom):
+    ''' Method to get cadvance payments against SO in terms of gold '''
+    advances = get_advances_payments_against_so(sales_order)
+    for advance in advances:
+        advance['item_type'] = item_type
+        advance['purity'] = purity
+        advance['stock_uom'] = stock_uom
+        advance['board_rate'] = 0
+        advance['qty_obtained'] = 0
+        board_rate = get_board_rate(item_type, purity, stock_uom, advance.get('posting_date'))
+        if board_rate:
+            advance['board_rate'] = board_rate
+            if advance.get('amount'):
+                advance['qty_obtained'] = float(advance.get('amount'))/float(board_rate)
+    return advances
