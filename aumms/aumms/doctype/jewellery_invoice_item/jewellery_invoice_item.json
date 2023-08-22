@@ -10,18 +10,22 @@
   "item_code",
   "item_type",
   "is_purity_item",
+  "has_stone",
   "delivery_date",
   "column_break_i6ewa",
   "item_name",
   "purity",
   "customer_type",
-  "quantity_and_rate_section",
-  "qty",
+  "weight_and_rate_section",
+  "gold_weight",
+  "stone_weight",
+  "net_weight",
   "uom",
   "stock_uom",
   "uom_conversion_factor",
   "stock_qty",
   "column_break_ardsx",
+  "stone_charge",
   "board_rate",
   "rate",
   "amount",
@@ -35,6 +39,7 @@
  ],
  "fields": [
   {
+   "columns": 2,
    "fieldname": "item_code",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -82,23 +87,11 @@
    "read_only": 1
   },
   {
-   "fieldname": "quantity_and_rate_section",
-   "fieldtype": "Section Break",
-   "label": "Quantity and Rate"
-  },
-  {
    "depends_on": "eval:doc.is_purity_item",
    "fieldname": "amount_with_out_making_charge",
    "fieldtype": "Currency",
    "label": "Amount With Out Making Charge",
    "read_only": 1
-  },
-  {
-   "fieldname": "qty",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Quantity",
-   "reqd": 1
   },
   {
    "fetch_from": "item_code.stock_uom",
@@ -109,6 +102,7 @@
    "read_only": 1
   },
   {
+   "columns": 1,
    "fetch_from": "item_code.stock_uom",
    "fetch_if_empty": 1,
    "fieldname": "uom",
@@ -118,9 +112,11 @@
    "options": "UOM"
   },
   {
+   "columns": 1,
    "depends_on": "eval:doc.is_purity_item",
    "fieldname": "board_rate",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Board Rate",
    "read_only_depends_on": "eval:doc.customer_type == 'Individual'"
   },
@@ -177,6 +173,7 @@
    "read_only_depends_on": "eval:doc.customer_type == 'Individual'"
   },
   {
+   "columns": 1,
    "fieldname": "amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -208,17 +205,75 @@
    "fieldtype": "Column Break"
   },
   {
+   "columns": 2,
    "fieldname": "delivery_date",
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Delivery Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "weight_and_rate_section",
+   "fieldtype": "Section Break",
+   "label": "Weight and Rate"
+  },
+  {
+   "columns": 1,
+   "fetch_from": "item_code.gold_weight",
+   "fetch_if_empty": 1,
+   "fieldname": "gold_weight",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Gold Weight",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "depends_on": "has_stone",
+   "fetch_from": "item_code.stone_weight",
+   "fetch_if_empty": 1,
+   "fieldname": "stone_weight",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Stone Weight",
+   "mandatory_depends_on": "has_stone",
+   "read_only_depends_on": "eval: !doc.has_stone"
+  },
+  {
+   "default": "0",
+   "fetch_from": "item_code.has_stone",
+   "fieldname": "has_stone",
+   "fieldtype": "Check",
+   "label": "Has Stone",
+   "read_only": 1
+  },
+  {
+   "depends_on": "has_stone",
+   "fetch_from": "item_code.stone_charge",
+   "fetch_if_empty": 1,
+   "fieldname": "stone_charge",
+   "fieldtype": "Currency",
+   "label": "Stone Charge",
+   "mandatory_depends_on": "has_stone",
+   "read_only": 1,
+   "read_only_depends_on": "eval: !doc.has_stone"
+  },
+  {
+   "columns": 1,
+   "fetch_from": "item_code.weight_per_unit",
+   "fetch_if_empty": 1,
+   "fieldname": "net_weight",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Net Weight",
+   "read_only": 1,
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-07-20 10:31:18.170931",
+ "modified": "2023-08-22 15:19:01.418165",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Invoice Item",
