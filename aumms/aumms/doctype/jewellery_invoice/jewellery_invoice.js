@@ -84,24 +84,24 @@ frappe.ui.form.on('Old Jewellery Item', {
       });
     }
   },
-  qty: function(frm, cdt, cdn){
+  weight: function(frm, cdt, cdn){
     let d = locals[cdt][cdn];
     let total_old_gold_weight;
-    if (d.qty){
-      frappe.model.set_value(cdt, cdn, 'amount', d.qty * d.rate);
+    if (d.weight){
+      frappe.model.set_value(cdt, cdn, 'amount', d.weight * d.rate);
       frm.refresh_field('old_jewellery_items');
       if(frm.doc.total_old_gold_weight){
         total_old_gold_weight = frm.doc.total_old_gold_weight
       }
-      total_old_gold_weight = total_old_gold_weight + d.qty;
+      total_old_gold_weight = total_old_gold_weight + d.weight;
       frm.set_value('total_old_gold_weight', total_old_gold_weight);
     }
   },
   rate: function(frm, cdt, cdn){
     let d = locals[cdt][cdn];
     if (d.rate){
-      //set amount with rate * qty
-      frappe.model.set_value(cdt, cdn, 'amount', d.qty * d.rate);
+      //set amount with rate * weight
+      frappe.model.set_value(cdt, cdn, 'amount', d.weight * d.rate);
       frm.refresh_field('old_jewellery_items');
     }
   },
@@ -125,7 +125,7 @@ frappe.ui.form.on('Jewellery Invoice Item', {
       }
       if (d.is_purity_item){
         frappe.call({
-          // Method for fetching  qty, making_charge_percentage, making_charge & board_rate
+          // Method for fetching  gold_weight, making_charge_percentage, making_charge & board_rate
           method: 'aumms.aumms.doc_events.sales_order.get_item_details',
           args: {
             'item_code': d.item_code,
@@ -136,13 +136,15 @@ frappe.ui.form.on('Jewellery Invoice Item', {
           },
           callback: function(r) {
             if (r.message){
-              frappe.model.set_value(d.doctype, d.name, 'qty', r.message['qty']);
+              frappe.model.set_value(d.doctype, d.name, 'gold_weight', r.message['gold_weight']);
+              frappe.model.set_value(d.doctype, d.name, 'stone_weight', r.message['stone_weight']);
+              frappe.model.set_value(d.doctype, d.name, 'net_weight', r.message['net_weight']);
               frappe.model.set_value(d.doctype, d.name, 'making_charge_percentage', r.message['making_charge_percentage']);
               frappe.model.set_value(d.doctype, d.name, 'is_fixed_making_charge', r.message['making_charge']);
               frappe.model.set_value(d.doctype, d.name, 'board_rate', r.message['board_rate']);
               frappe.model.set_value(d.doctype, d.name, 'making_charge_based_on', r.message['making_charge_based_on']);
               frappe.model.set_value(d.doctype, d.name, 'making_charge_percentage', r.message['making_charge_percentage']);
-              frappe.model.set_value(d.doctype, d.name, 'amount_with_out_making_charge', r.message['qty'] * r.message['board_rate']);
+              frappe.model.set_value(d.doctype, d.name, 'amount_with_out_making_charge', r.message['gold_weight'] * r.message['board_rate']);
               if (r.message['making_charge']){
                 frappe.model.set_value(d.doctype, d.name, 'making_charge', r.message['making_charge']);
               }
@@ -150,7 +152,7 @@ frappe.ui.form.on('Jewellery Invoice Item', {
                 //set making_charge if it's percentage
                 frappe.model.set_value(d.doctype, d.name, 'making_charge', (d.amount_with_out_making_charge)*(d.making_charge_percentage * 0.01));
               }
-              frappe.model.set_value(d.doctype, d.name, 'rate', (d.amount_with_out_making_charge + d.making_charge)/d.qty);
+              frappe.model.set_value(d.doctype, d.name, 'rate', (d.amount_with_out_making_charge + d.making_charge)/d.gold_weight);
               frm.refresh_field('items');
             }
           }
@@ -158,27 +160,27 @@ frappe.ui.form.on('Jewellery Invoice Item', {
       }
     }
   },
-  qty: function(frm, cdt, cdn){
+  gold_weight: function(frm, cdt, cdn){
     let d = locals[cdt][cdn];
     let total_gold_weight;
-    if (d.qty){
-      //set amount_with_out_making_charge while changing qty
-      frappe.model.set_value(d.doctype, d.name, 'amount_with_out_making_charge', d.qty * d.board_rate);
-      //set amount with rate * qty
-      frappe.model.set_value(d.doctype, d.name, 'amount', d.qty * d.rate);
+    if (d.gold_weight){
+      //set amount_with_out_making_charge while changing gold_weight
+      frappe.model.set_value(d.doctype, d.name, 'amount_with_out_making_charge', d.gold_weight * d.board_rate);
+      //set amount with rate * gold_weight
+      frappe.model.set_value(d.doctype, d.name, 'amount', d.gold_weight * d.rate);
       frm.refresh_field('items');
       if(frm.doc.total_gold_weight){
         total_gold_weight = frm.doc.total_gold_weight
       }
-      total_gold_weight = total_gold_weight + d.qty;
+      total_gold_weight = total_gold_weight + d.gold_weight;
       frm.set_value('total_gold_weight', total_gold_weight);
     }
   },
   rate: function(frm, cdt, cdn){
     let d = locals[cdt][cdn];
     if (d.rate){
-      //set amount with rate * qty
-      frappe.model.set_value(d.doctype, d.name, 'amount', d.qty * d.rate);
+      //set amount with rate * gold_weight
+      frappe.model.set_value(d.doctype, d.name, 'amount', d.gold_weight * d.rate);
       frm.refresh_field('items');
     }
   },
@@ -206,7 +208,7 @@ frappe.ui.form.on('Jewellery Invoice Item', {
   making_charge:function (frm, cdt, cdn) {
     let d = locals[cdt][cdn];
     if(d.making_charge) {
-      let rate = (d.amount_with_out_making_charge + d.making_charge)/d.qty
+      let rate = (d.amount_with_out_making_charge + d.making_charge)/d.gold_weight
       if (rate)
       {
         //set rate by the change of making_charge
@@ -218,7 +220,7 @@ frappe.ui.form.on('Jewellery Invoice Item', {
   amount_with_out_making_charge:function (frm, cdt, cdn) {
     let d = locals[cdt][cdn];
     if(d.amount_with_out_making_charge) {
-      let rate = (d.amount_with_out_making_charge + d.making_charge)/d.qty
+      let rate = (d.amount_with_out_making_charge + d.making_charge)/d.gold_weight
       if (rate)
       {
         //set rate by the change of amount_with_out_making_charge
@@ -270,8 +272,8 @@ let set_item_details = function(frm, child) {
         callback : function(r) {
           if (r.message) {
             frappe.model.set_value(child.doctype, child.name, 'board_rate', r.message)
-            frappe.model.set_value(child.doctype, child.name, 'amount_with_out_making_charge', (child.qty * r.message))
-            frappe.model.set_value(child.doctype, child.name, 'rate', (child.amount_with_out_making_charge + child.making_charge)/child.qty)
+            frappe.model.set_value(child.doctype, child.name, 'amount_with_out_making_charge', (child.gold_weight * r.message))
+            frappe.model.set_value(child.doctype, child.name, 'rate', (child.amount_with_out_making_charge + child.making_charge)/child.gold_weight)
             frm.refresh_field('items');
           }
         }
@@ -300,7 +302,8 @@ let set_filters = function(frm){
   frm.set_query('item_code', 'items', () => {
     return {
       filters: {
-        disabled: 0
+        disabled: 0,
+        is_stone_item: 0
       }
     }
   });
@@ -341,8 +344,8 @@ let set_net_weight_and_amount = function(frm){
   let total_gold_amount = 0;
   let balance_amount = 0;
   frm.doc.items.forEach((child) => {
-    if(child.qty){
-      total_gold_weight = total_gold_weight + child.qty;
+    if(child.gold_weight){
+      total_gold_weight = total_gold_weight + child.gold_weight;
     }
     if(child.amount){
       total_gold_amount = total_gold_amount + child.amount;
@@ -350,8 +353,8 @@ let set_net_weight_and_amount = function(frm){
   });
   if(frm.doc.aumms_exchange){
     frm.doc.old_jewellery_items.forEach((child) => {
-      if(child.qty){
-        total_old_gold_weight = total_old_gold_weight + child.qty;
+      if(child.weight){
+        total_old_gold_weight = total_old_gold_weight + child.weight;
       }
       if(child.amount){
         total_old_gold_amount = total_old_gold_amount + child.amount;
@@ -401,7 +404,7 @@ let create_custom_buttons = function(frm){
             });
         });
     }, 'Create');
-}
+  }
 
   if(frm.doc.sales_invoice && !frm.doc.delivery_note){
     frm.add_custom_button('Delivery Note', () => {

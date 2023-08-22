@@ -119,6 +119,7 @@ def create_sales_order(source_name, target_doc=None):
 				"doctype": "Sales Order Item",
 				"field_map": {
 					'delivery_date':'delivery_date',
+					'gold_weight':'qty',
 				},
 			},
     	}, target_doc, set_missing_values)
@@ -192,8 +193,8 @@ def create_purchase_receipt(source_name, supplier, target_doc=None):
 				"doctype": "Purchase Receipt Item",
 				"field_map": {
 					'item_code':'item_code',
-					'qty':'qty',
-					'qty':'received_qty'
+					'weight':'received_qty',
+					'weight':'qty'
 				},
 			},
     	}, target_doc, set_missing_values)
