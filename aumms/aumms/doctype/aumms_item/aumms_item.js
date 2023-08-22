@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('AuMMS Item', {
-  setup: function(frm) {
+  setup(frm) {
     set_filters(frm);
   },
   onload(frm) {
@@ -72,7 +72,6 @@ frappe.ui.form.on('AuMMS Item', {
   },
   calculate_weight_per_unit(frm){
     frm.set_value('weight_per_unit', frm.doc.gold_weight + frm.doc.stone_weight);
-    frm.refresh_field('uoms');
   },
   gold_weight(frm){
     frm.trigger('calculate_weight_per_unit');
@@ -82,12 +81,23 @@ frappe.ui.form.on('AuMMS Item', {
   },
   has_stone(frm){
     if(!frm.doc.has_stone){
-            frm.clear_table('stone_details');
+      frm.clear_table('stone_details');
+      frm.set_value('stone_weight', 0);
+      frm.set_value('stone_charge', 0);
     }
     frm.toggle_display('is_stone_item', !frm.doc.has_stone);
   },
   is_stone_item(frm) {
     frm.toggle_display('has_stone', !frm.doc.is_stone_item);
+  },
+  triger_checkbox_display(frm){
+    if(frm.doc.is_stone_item || frm.doc.has_stone){
+      frm.toggle_display('has_stone', !frm.doc.is_stone_item);
+      frm.toggle_display('is_stone_item', !frm.doc.has_stone);
+    }
+  },
+  refresh(frm){
+    frm.trigger('triger_checkbox_display');
   }
 });
 
@@ -193,4 +203,34 @@ let set_filters = function(frm){
       }
     }
   });
+}
+
+frappe.ui.form.on("Stone Details", {
+  stone_weight: function(frm, cdt, cdn) {
+    calculate_stone_weight_and_charge(frm);
+  },
+  stone_charge: function(frm, cdt, cdn) {
+    calculate_stone_weight_and_charge(frm);
+  },
+  stone_details_add: function(frm, cdt, cdn) {
+    calculate_stone_weight_and_charge(frm);
+  },
+  stone_details_remove: function(frm, cdt, cdn) {
+    calculate_stone_weight_and_charge(frm);
+  }
+});
+
+let calculate_stone_weight_and_charge = function(frm){
+  let stone_weight = 0;
+  let stone_charge = 0;
+  frm.doc.stone_details.forEach(stone_detail => {
+    if(stone_detail.stone_weight){
+      stone_weight += stone_detail.stone_weight
+    }
+    if(stone_detail.stone_charge){
+      stone_charge += stone_detail.stone_charge
+    }
+  });
+  frm.set_value('stone_weight', stone_weight);
+  frm.set_value('stone_charge', stone_charge);
 }
