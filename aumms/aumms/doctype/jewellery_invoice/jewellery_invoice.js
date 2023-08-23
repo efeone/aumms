@@ -399,33 +399,24 @@ let set_missing_delivery_dates = function(frm){
 }
 
 let create_custom_buttons = function(frm){
-  if(frm.doc.outstanding_amount != 0){
+  if(frm.doc.outstanding_amount > 0){
     frm.add_custom_button('Payment', () => {
       make_payment(frm);
     }, 'Create');
   }
-  if (frm.doc.sales_order && !frm.doc.sales_invoice && frm.doc.purchase_order && !frm.doc.purchase_invoice) {
+  if (frm.doc.sales_order && !frm.doc.sales_invoice) {
     frm.add_custom_button('Invoice', () => {
-        // Invoice and Purchase Invoice creation methods
-
         // Create Sales Invoice
         frappe.call('aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.create_sales_invoice', {
             source_name: frm.doc.sales_order,
             jewellery_invoice: frm.doc.name,
         }).then(r => {
-            // After Sales Invoice is created, create the Purchase Invoice
-            frappe.call('aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.create_purchase_invoice', {
-                source_name: frm.doc.purchase_order,
-                jewellery_invoice: frm.doc.name,
-            }).then(r => {
-                // Reload the form after both invoices are created
-                frm.reload_doc();
-            });
+            frm.reload_doc();
         });
     }, 'Create');
   }
 
-  if(frm.doc.sales_invoice && !frm.doc.delivery_note){
+  if(frm.doc.sales_invoice && !frm.doc.delivery_note && !frm.doc.delivered){
     frm.add_custom_button('Delivery Note', () => {
       //Delivery Note creation method
       frappe.call('aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.create_delivery_note', {

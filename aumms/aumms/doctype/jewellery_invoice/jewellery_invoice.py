@@ -265,6 +265,7 @@ def create_payment_entry(mode_of_payment, amount, docname, posting_date=None, re
 		doc.reload()
 		frappe.db.commit()
 		frappe.msgprint(('Payment Entry created'), indicator="green", alert=1)
+		return True
 
 @frappe.whitelist()
 def create_sales_invoice(source_name, jewellery_invoice, update_stock=0, target_doc=None):
@@ -351,11 +352,13 @@ def create_sales_invoice(source_name, jewellery_invoice, update_stock=0, target_
 	if doclist:
 		frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'sales_invoice', doclist.name)
 		if update_stock:
+			frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'delivered', 1)
 			frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'status', 'Delivered')
 		else:
 			frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'status', 'Invoiced')
 		frappe.db.commit()
 		frappe.msgprint(('Sales Invoice created'), indicator="green", alert=1)
+		return True
 
 @frappe.whitelist()
 def get_board_rate(old_item, transaction_date):
@@ -414,5 +417,7 @@ def create_delivery_note(source_name, jewellery_invoice, target_doc=None):
 	if doclist:
 		frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'delivery_note', doclist.name)
 		frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'status', 'Delivered')
+		frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'delivered', 1)
 		frappe.db.commit()
 		frappe.msgprint(('Delivery Note created'), indicator="green", alert=1)
+		return True
