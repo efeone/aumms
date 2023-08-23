@@ -30,6 +30,7 @@
   "rate",
   "amount",
   "amount_with_out_making_charge",
+  "net_amount_with_out_making_charge",
   "making_charge_section_section",
   "making_charge_based_on",
   "is_fixed_making_charge",
@@ -87,7 +88,7 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval:doc.is_purity_item",
+   "default": "0",
    "fieldname": "amount_with_out_making_charge",
    "fieldtype": "Currency",
    "label": "Amount With Out Making Charge",
@@ -159,6 +160,7 @@
    "label": "Is Fixed Making Charge"
   },
   {
+   "default": "0",
    "depends_on": "eval:doc.is_purity_item",
    "fieldname": "making_charge",
    "fieldtype": "Currency",
@@ -268,12 +270,20 @@
    "label": "Net Weight",
    "read_only": 1,
    "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.is_purity_item",
+   "description": "Amount Including all charges other than Making Charge",
+   "fieldname": "net_amount_with_out_making_charge",
+   "fieldtype": "Currency",
+   "label": "Net Amount With Out Making Charge",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-08-22 15:19:01.418165",
+ "modified": "2023-08-23 14:07:55.017268",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Invoice Item",

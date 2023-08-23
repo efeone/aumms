@@ -127,7 +127,10 @@ doc_events = {
 	},
 	'Purchase Receipt': {
 		'before_submit': 'aumms.aumms.utils.validate_party_for_metal_transaction',
-		'on_submit': 'aumms.aumms.utils.create_metal_ledger_entries',
+		'on_submit': [
+			'aumms.aumms.utils.create_metal_ledger_entries',
+			'aumms.aumms.doc_events.purchase_receipt.purchase_receipt_on_submit'
+			],
 		'on_cancel': 'aumms.aumms.utils.cancel_metal_ledger_entries'
 	},
 	'Sales Invoice': {

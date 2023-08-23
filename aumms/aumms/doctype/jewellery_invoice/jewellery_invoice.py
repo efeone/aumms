@@ -35,11 +35,13 @@ class JewelleryInvoice(Document):
 			purchase_receipt = create_purchase_receipt(self.name, supplier)
 			if purchase_receipt:
 				frappe.db.set_value(self.doctype, self.name, 'purchase_receipt', purchase_receipt)
+				if self.total_old_gold_amount:
+					frappe.db.set_value(self.doctype, self.name, 'paid_amount', self.total_old_gold_amount)
+					frappe.db.set_value(self.doctype, self.name, 'outstanding_amount', self.rounded_total - self.total_old_gold_amount)
 				frappe.db.commit()
 				self.reload()
 			else:
 				frappe.throw("Something went wrong while creating Puchase Receipt, Please try again!")
-
 
 	def on_cancel(self):
 		''' On Cancel event of Jewellery Invoice '''
@@ -107,7 +109,7 @@ class JewelleryInvoice(Document):
 def create_sales_order(source_name, target_doc=None):
 	''' Method to create Sales Order from Jewellery Invoice '''
 	def set_missing_values(source, target):
-		pass
+		target.keep_metal_ledger = frappe.db.get_value('Jewellery Invoice', source_name, 'aumms_exchange')
 	target_doc = get_mapped_doc("Jewellery Invoice", source_name,
 		{
 			"Jewellery Invoice": {
@@ -181,6 +183,7 @@ def create_purchase_receipt(source_name, supplier, target_doc=None):
 	def set_missing_values(source, target):
 		target.supplier = supplier
 		target.keep_metal_ledger = 1
+		target.create_invoice_on_submit = 1
 	target_doc = get_mapped_doc("Jewellery Invoice", source_name,
 		{
 			"Jewellery Invoice": {

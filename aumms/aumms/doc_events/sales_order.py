@@ -10,10 +10,11 @@ def get_item_details(item_code, item_type, date, purity, stock_uom):
         item_details['making_charge_based_on'] = item_doc.making_charge_based_on
         item_details['gold_weight'] = item_doc.gold_weight
         item_details['stone_weight'] = item_doc.stone_weight
+        item_details['stone_charge'] = item_doc.stone_charge
         item_details['net_weight'] = item_doc.weight_per_unit
         item_details['making_charge_percentage'] = item_doc.making_charge_percentage
         item_details['making_charge'] = item_doc.making_charge
-        item_details['board_rate'] = get_board_rate(item_type, purity, stock_uom, date,)
+        item_details['board_rate'] = get_board_rate(item_type, purity, stock_uom, date)
     return item_details
 
 @frappe.whitelist()
