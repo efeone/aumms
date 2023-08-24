@@ -132,6 +132,7 @@ def create_metal_ledger_entries(doc, method=None):
                 msg = _(
                     'Metal Ledger Entry is created.'
                 ),
+                indicator="green",
                 alert = 1
             )
 
