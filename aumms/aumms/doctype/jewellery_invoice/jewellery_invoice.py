@@ -35,11 +35,13 @@ class JewelleryInvoice(Document):
 			purchase_receipt = create_purchase_receipt(self.name, supplier)
 			if purchase_receipt:
 				frappe.db.set_value(self.doctype, self.name, 'purchase_receipt', purchase_receipt)
+				if self.total_old_gold_amount:
+					frappe.db.set_value(self.doctype, self.name, 'paid_amount', self.total_old_gold_amount)
+					frappe.db.set_value(self.doctype, self.name, 'outstanding_amount', self.rounded_total - self.total_old_gold_amount)
 				frappe.db.commit()
 				self.reload()
 			else:
 				frappe.throw("Something went wrong while creating Puchase Receipt, Please try again!")
-
 
 	def on_cancel(self):
 		''' On Cancel event of Jewellery Invoice '''
@@ -107,7 +109,7 @@ class JewelleryInvoice(Document):
 def create_sales_order(source_name, target_doc=None):
 	''' Method to create Sales Order from Jewellery Invoice '''
 	def set_missing_values(source, target):
-		pass
+		target.keep_metal_ledger = frappe.db.get_value('Jewellery Invoice', source_name, 'aumms_exchange')
 	target_doc = get_mapped_doc("Jewellery Invoice", source_name,
 		{
 			"Jewellery Invoice": {
@@ -181,6 +183,7 @@ def create_purchase_receipt(source_name, supplier, target_doc=None):
 	def set_missing_values(source, target):
 		target.supplier = supplier
 		target.keep_metal_ledger = 1
+		target.create_invoice_on_submit = 1
 	target_doc = get_mapped_doc("Jewellery Invoice", source_name,
 		{
 			"Jewellery Invoice": {
@@ -262,6 +265,7 @@ def create_payment_entry(mode_of_payment, amount, docname, posting_date=None, re
 		doc.reload()
 		frappe.db.commit()
 		frappe.msgprint(('Payment Entry created'), indicator="green", alert=1)
+		return True
 
 @frappe.whitelist()
 def create_sales_invoice(source_name, jewellery_invoice, update_stock=0, target_doc=None):
@@ -348,11 +352,13 @@ def create_sales_invoice(source_name, jewellery_invoice, update_stock=0, target_
 	if doclist:
 		frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'sales_invoice', doclist.name)
 		if update_stock:
+			frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'delivered', 1)
 			frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'status', 'Delivered')
 		else:
 			frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'status', 'Invoiced')
 		frappe.db.commit()
 		frappe.msgprint(('Sales Invoice created'), indicator="green", alert=1)
+		return True
 
 @frappe.whitelist()
 def get_board_rate(old_item, transaction_date):
@@ -411,5 +417,7 @@ def create_delivery_note(source_name, jewellery_invoice, target_doc=None):
 	if doclist:
 		frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'delivery_note', doclist.name)
 		frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'status', 'Delivered')
+		frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'delivered', 1)
 		frappe.db.commit()
 		frappe.msgprint(('Delivery Note created'), indicator="green", alert=1)
+		return True
