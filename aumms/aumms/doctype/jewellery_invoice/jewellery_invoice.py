@@ -48,6 +48,7 @@ class JewelleryInvoice(Document):
 		self.cancel_delivery_note()
 		self.cancel_sales_invoice()
 		self.cancel_sales_order()
+		self.cancel_purchase_invoice()
 		self.cancel_purchase_receipt()
 
 	def set_total_amount(self):
@@ -85,6 +86,16 @@ class JewelleryInvoice(Document):
 					purchase_receipt_doc.cancel()
 			else:
 				frappe.throw('Purchase Receipt `{0}` not found!'.format(self.purchase_receipt))
+
+	def cancel_purchase_invoice(self):
+		''' Method to Cancel Purchase Invoice linked with Jewellery Invoice '''
+		if self.purchase_invoice:
+			if frappe.db.exists('Purchase Invoice', self.purchase_invoice):
+				purchase_invoice_doc = frappe.get_doc('Purchase Invoice', self.purchase_invoice)
+				if purchase_invoice_doc.docstatus == 1:
+					purchase_invoice_doc.cancel()
+			else:
+				frappe.throw('Purchase Invoice `{0}` not found!'.format(self.purchase_invoice))
 
 	def cancel_sales_invoice(self):
 		''' Method to Cancel Sales Invoice linked with Jewellery Invoice '''
@@ -201,6 +212,9 @@ def create_purchase_receipt(source_name, supplier, target_doc=None):
 				},
 			},
     	}, target_doc, set_missing_values)
+	target_doc.save()
+	#To set Purchase Receipt link in Jewellery Invoice before submition of Purchase Receipt
+	frappe.db.set_value('Jewellery Invoice', source_name, 'purchase_receipt', target_doc.name)
 	target_doc.submit()
 	frappe.msgprint(('Purchase Receipt created'), indicator="green", alert=1)
 	frappe.db.commit()

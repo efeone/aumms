@@ -19,11 +19,11 @@ def create_purchase_invoice(doc):
     # using purchase invoice creation function from purchase receipt
     purchase_invoice = make_purchase_invoice(doc.name).insert(ignore_permissions = 1)
     # message to user after creation of purchase receipt
-    frappe.msgprint(_('Purchase Invoice created for the Supplier {0}'.format(doc.supplier)), alert = 1)
+    frappe.msgprint(_('Purchase Invoice created for the Supplier {0}'.format(doc.supplier)), indicator="green", alert = 1)
     if purchase_invoice:
-        purchase_invoice_doc = frappe.get_doc('Purchase Invoice', purchase_invoice)
-        if purchase_invoice_doc.docstatus == 0:
-            purchase_invoice_doc.submit()
+        if purchase_invoice.docstatus == 0:
+            purchase_invoice.submit()
+        set_purchase_invoice_link_to_jewellery_invoice(doc.name, purchase_invoice.name)
     return purchase_invoice
 
 
@@ -41,3 +41,9 @@ def set_supplier_type (supplier):
     if frappe.db.exists('Supplier', supplier, 'supplier_type'):
         supplier_type = frappe.db.get_value('Supplier', supplier, 'supplier_type')
     return supplier_type
+
+def set_purchase_invoice_link_to_jewellery_invoice(purchase_receipt, purchase_invoice):
+    if frappe.db.exists('Jewellery Invoice', { 'purchase_receipt':purchase_receipt }):
+        invoice_id = frappe.db.get_value('Jewellery Invoice', { 'purchase_receipt':purchase_receipt })
+        frappe.db.set_value('Jewellery Invoice', invoice_id, 'purchase_invoice', purchase_invoice)
+        frappe.db.commit()
