@@ -9,8 +9,8 @@
  "field_order": [
   "customer",
   "customer_name",
+  "transaction_type",
   "company",
-  "aumms_exchange",
   "column_break_pogd4",
   "transaction_date",
   "delivery_date",
@@ -96,11 +96,12 @@
    "label": "Delivery Date"
   },
   {
+   "depends_on": "eval:in_list([\"Exchange\", \"Sales\"], doc.transaction_type)",
    "fieldname": "items",
    "fieldtype": "Table",
    "label": "Items",
-   "options": "Jewellery Invoice Item",
-   "reqd": 1
+   "mandatory_depends_on": "eval:in_list([\"Exchange\", \"Sales\"], doc.transaction_type)",
+   "options": "Jewellery Invoice Item"
   },
   {
    "default": "Today",
@@ -235,20 +236,15 @@
    "read_only": 1
   },
   {
-   "default": "0",
-   "fieldname": "aumms_exchange",
-   "fieldtype": "Check",
-   "label": "Is Exchange"
-  },
-  {
    "fieldname": "column_break_8fcvh",
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "aumms_exchange",
+   "depends_on": "eval:in_list([\"Exchange\", \"Purchase\"], doc.transaction_type)",
    "fieldname": "old_jewellery_items",
    "fieldtype": "Table",
    "label": "Old Jewellery Items",
+   "mandatory_depends_on": "eval:in_list([\"Exchange\", \"Purchase\"], doc.transaction_type)",
    "options": "Old Jewellery Item"
   },
   {
@@ -269,7 +265,7 @@
   },
   {
    "default": "0",
-   "depends_on": "aumms_exchange",
+   "depends_on": "eval:in_list([\"Exchange\", \"Purchase\"], doc.transaction_type)",
    "fieldname": "total_old_gold_weight",
    "fieldtype": "Float",
    "label": "Total Old Gold Weight",
@@ -281,6 +277,7 @@
   },
   {
    "default": "0",
+   "depends_on": "eval:in_list([\"Exchange\", \"Sales\"], doc.transaction_type)",
    "fieldname": "total_gold_weight",
    "fieldtype": "Float",
    "label": "Total Gold Weight",
@@ -288,6 +285,7 @@
   },
   {
    "default": "0",
+   "depends_on": "eval:in_list([\"Exchange\", \"Sales\"], doc.transaction_type)",
    "fieldname": "total_gold_amount",
    "fieldtype": "Currency",
    "label": "Total Gold Amount",
@@ -295,7 +293,7 @@
   },
   {
    "default": "0",
-   "depends_on": "aumms_exchange",
+   "depends_on": "eval:in_list([\"Exchange\", \"Purchase\"], doc.transaction_type)",
    "fieldname": "total_old_gold_amount",
    "fieldtype": "Currency",
    "label": "Total Old Gold Amount",
@@ -303,13 +301,14 @@
   },
   {
    "default": "0",
-   "depends_on": "aumms_exchange",
+   "depends_on": "eval:!in_list([\"Sales\", \"Purchase\"], doc.transaction_type)",
    "fieldname": "balance_amount",
    "fieldtype": "Currency",
    "label": "Balance Amount",
    "read_only": 1
   },
   {
+   "depends_on": "eval:in_list([\"Exchange\", \"Sales\"], doc.transaction_type)",
    "fieldname": "advances_tab",
    "fieldtype": "Tab Break",
    "label": "Advances"
@@ -383,13 +382,24 @@
    "no_copy": 1,
    "options": "Purchase Invoice",
    "read_only": 1
+  },
+  {
+   "default": "Sales",
+   "fieldname": "transaction_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Transaction Type",
+   "no_copy": 1,
+   "options": "Sales\nExchange\nPurchase",
+   "reqd": 1
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-08-24 10:45:32.515967",
+ "modified": "2023-08-25 12:40:01.237643",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Invoice",

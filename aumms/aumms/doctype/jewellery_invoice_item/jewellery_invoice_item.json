@@ -11,6 +11,7 @@
   "item_type",
   "is_purity_item",
   "has_stone",
+  "under_manufacturing",
   "delivery_date",
   "column_break_i6ewa",
   "item_name",
@@ -229,7 +230,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Gold Weight",
-   "read_only": 1,
+   "read_only_depends_on": "eval: doc.under_manufacturing ===0;",
    "reqd": 1
   },
   {
@@ -280,12 +281,21 @@
    "fieldtype": "Currency",
    "label": "Net Amount With Out Making Charge",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fetch_from": "item_code.under_manufacturing",
+   "fieldname": "under_manufacturing",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Under Manufacturing",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-08-25 11:32:19.512935",
+ "modified": "2023-08-25 17:21:02.528822",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Invoice Item",

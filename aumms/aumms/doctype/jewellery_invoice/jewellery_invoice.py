@@ -19,16 +19,17 @@ class JewelleryInvoice(Document):
 
 	def on_submit(self):
 		''' Method to Create Sales Order & Purchase Order and link them with Jewellery Invoice '''
-		sales_order = create_sales_order(self.name)
-		if sales_order:
-			frappe.db.set_value(self.doctype, self.name, 'sales_order', sales_order)
-			frappe.db.set_value(self.doctype, self.name, 'status', 'Ordered')
-			frappe.db.commit()
-			self.reload()
-		else:
-			frappe.throw("Something went wrong while creating Sales Order, Please try again!")
+		if self.transaction_type in ['Sales', 'Exchange']:
+			sales_order = create_sales_order(self.name)
+			if sales_order:
+				frappe.db.set_value(self.doctype, self.name, 'sales_order', sales_order)
+				frappe.db.set_value(self.doctype, self.name, 'status', 'Ordered')
+				frappe.db.commit()
+				self.reload()
+			else:
+				frappe.throw("Something went wrong while creating Sales Order, Please try again!")
 
-		if self.aumms_exchange and self.customer:
+		if self.transaction_type in ['Purchase', 'Exchange'] and self.customer:
 			supplier = create_common_party_and_supplier(self.customer)
 			if not supplier:
 				frappe.throw("Something went wrong while creating Common Party!")
@@ -120,7 +121,11 @@ class JewelleryInvoice(Document):
 def create_sales_order(source_name, target_doc=None):
 	''' Method to create Sales Order from Jewellery Invoice '''
 	def set_missing_values(source, target):
-		target.keep_metal_ledger = frappe.db.get_value('Jewellery Invoice', source_name, 'aumms_exchange')
+		keep_metal_ledger = 0
+		transaction_type = frappe.db.get_value('Jewellery Invoice', source_name, 'transaction_type')
+		if transaction_type in ['Purchase', 'Exchange']:
+			keep_metal_ledger = 1
+		target.keep_metal_ledger = keep_metal_ledger
 	target_doc = get_mapped_doc("Jewellery Invoice", source_name,
 		{
 			"Jewellery Invoice": {
@@ -215,6 +220,9 @@ def create_purchase_receipt(source_name, supplier, target_doc=None):
 	target_doc.save()
 	#To set Purchase Receipt link in Jewellery Invoice before submition of Purchase Receipt
 	frappe.db.set_value('Jewellery Invoice', source_name, 'purchase_receipt', target_doc.name)
+	transaction_type = frappe.db.get_value('Jewellery Invoice', source_name, 'transaction_type')
+	if transaction_type == 'Purchase':
+		frappe.db.set_value('Jewellery Invoice', source_name, 'status', 'Invoiced')
 	target_doc.submit()
 	frappe.msgprint(('Purchase Receipt created'), indicator="green", alert=1)
 	frappe.db.commit()
