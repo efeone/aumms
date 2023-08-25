@@ -6,6 +6,11 @@ from frappe.model.document import Document
 
 class DesignAnalysis(Document):
     pass
+
+    def autoname(self):
+          if self.customer_name:
+               self.name = self.customer_name + '-' + self.item + '-' + frappe.utils.today()
+
 @frappe.whitelist()
 def create_aumms_item_from_design_analysis(item_code, item_group, purity):
     def set_missing_values(item_code, item_group, purity):
