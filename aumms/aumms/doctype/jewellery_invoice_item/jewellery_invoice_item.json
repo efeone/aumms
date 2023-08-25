@@ -100,17 +100,19 @@
    "fieldtype": "Link",
    "label": "Stock UOM",
    "options": "UOM",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "columns": 1,
    "fetch_from": "item_code.stock_uom",
-   "fetch_if_empty": 1,
    "fieldname": "uom",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "UOM",
-   "options": "UOM"
+   "options": "UOM",
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "columns": 1,
@@ -227,6 +229,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Gold Weight",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -239,7 +242,7 @@
    "in_list_view": 1,
    "label": "Stone Weight",
    "mandatory_depends_on": "has_stone",
-   "read_only_depends_on": "eval: !doc.has_stone"
+   "read_only": 1
   },
   {
    "default": "0",
@@ -257,8 +260,7 @@
    "fieldtype": "Currency",
    "label": "Stone Charge",
    "mandatory_depends_on": "has_stone",
-   "read_only": 1,
-   "read_only_depends_on": "eval: !doc.has_stone"
+   "read_only": 1
   },
   {
    "columns": 1,
@@ -283,7 +285,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-08-23 14:07:55.017268",
+ "modified": "2023-08-25 11:32:19.512935",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Invoice Item",
