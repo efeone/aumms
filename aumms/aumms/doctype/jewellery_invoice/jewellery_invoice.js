@@ -22,9 +22,11 @@ frappe.ui.form.on('Jewellery Invoice', {
         },
         callback : function(r) {
           if (r.message) {
-            frm.doc.items.forEach((child) => {
-              child.customer_type = r.message
-            })
+            if(frm.doc.items){
+              frm.doc.items.forEach((child) => {
+                child.customer_type = r.message
+              });
+            }
           }
         }
       })
@@ -56,7 +58,7 @@ frappe.ui.form.on('Jewellery Invoice', {
   onload_post_render: function(frm){
     remove_previous_links(frm);
   },
-  aumms_exchange: function(frm){
+  transaction_type: function(frm){
     set_net_weight_and_amount(frm);
   }
 });
@@ -273,8 +275,6 @@ frappe.ui.form.on('Jewellery Invoice Item', {
   }
 })
 
-
-
 let set_item_details = function(frm, child) {
   //function to get item get_item_details
   if(child.item_type){
@@ -290,7 +290,8 @@ let set_item_details = function(frm, child) {
           if (r.message) {
             frappe.model.set_value(child.doctype, child.name, 'board_rate', r.message)
             frappe.model.set_value(child.doctype, child.name, 'amount_with_out_making_charge', (child.gold_weight * r.message))
-            frappe.model.set_value(child.doctype, child.name, 'rate', (child.amount_with_out_making_charge + child.making_charge)/child.gold_weight)
+            frappe.model.set_value(child.doctype, child.name, 'net_amount_with_out_making_charge', (child.amount_with_out_making_charge + child.stone_charge))
+            frappe.model.set_value(child.doctype, child.name, 'rate', (child.net_amount_with_out_making_charge + child.making_charge)/child.gold_weight)
             frm.refresh_field('items');
           }
         }
@@ -344,11 +345,13 @@ let set_filters = function(frm){
 
 let set_totals = function(frm){
   let total = 0;
-  frm.doc.items.forEach((child) => {
-    if(child.amount){
-      total = total + child.amount;
-    }
-  });
+  if(frm.doc.items){
+    frm.doc.items.forEach((child) => {
+      if(child.amount){
+        total = total + child.amount;
+      }
+    });
+  }
   frm.set_value('grand_total', total);
   frm.set_value('rounded_total', total);
   frm.refresh_fields();
@@ -370,7 +373,7 @@ let set_net_weight_and_amount = function(frm){
       }
     });
   }
-  if(frm.doc.aumms_exchange && frm.doc.old_jewellery_items){
+  if(frm.doc.transaction_type!='Sales' && frm.doc.old_jewellery_items){
     frm.doc.old_jewellery_items.forEach((child) => {
       if(child.weight){
         total_old_gold_weight = total_old_gold_weight + child.weight;
@@ -390,11 +393,13 @@ let set_net_weight_and_amount = function(frm){
 }
 
 let set_missing_delivery_dates = function(frm){
-  frm.doc.items.forEach((child) => {
-    if(!child.delivery_date){
-      child.delivery_date = frm.doc.delivery_date;
-    }
-  });
+  if(frm.doc.items){
+    frm.doc.items.forEach((child) => {
+      if(!child.delivery_date){
+        child.delivery_date = frm.doc.delivery_date;
+      }
+    });
+  }
   frm.refresh_fields('items');
 }
 
