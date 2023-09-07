@@ -140,6 +140,24 @@ frappe.ui.form.on('Design Analysis', {
                     }
                 }
             });
+
+            frappe.call({
+                method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_design_request_from_design_analysis',
+                args: {
+                    customer_name: customer,
+                    mobile_number: mobile_no,
+                    'self.design_details[0].Material': design_title,
+                    delivery_date: delivery_date,
+                    'self.design_details[0].Attachment': attachment
+                },
+                callback: (r) => {
+                    if (r.message) {
+                        console.log('Design Request Created:', r.message);
+                    } else {
+                        console.log('Failed to Create Design Request');
+                    }
+                }
+            });
         });
         }
     }

@@ -5,7 +5,24 @@ import frappe
 from frappe.model.document import Document
 
 class DesignAnalysis(Document):
-    pass
+
+    def create_design_request_from_design_analysis(customer, mobile_no, design_title, delivery_date, attachment):
+     #def set_design_request_values(customer, mobile_no, design_title, delivery_date, attachment):
+     # Create new Design Request
+        design_request = frappe.new_doc({
+            "doctype": "Design Request",
+            "customer_name": customer,
+            "mobile_number": mobile_no,
+            "self.design_details[0].Material": design_title,
+            "delivery_date": delivery_date,
+            "self.design_details[0].Attachment": attachment
+        })
+
+    #Save the Design Request
+        design_request.insert()
+        frappe.msgprint("Design Request Created: {}".format(design_request.name), indicator="green", alert=1)
+        return design_request.name
+
 
     def autoname(self):
           if self.customer_name:
@@ -30,6 +47,7 @@ def create_aumms_item_from_design_analysis(item_code, item_group, purity):
     frappe.msgprint("AuMMS Item Created: {}".format(aumms_item.name), indicator="green", alert=1)
 
     return aumms_item.name
+
 
 @frappe.whitelist()
 def fetch_design_details(parent):

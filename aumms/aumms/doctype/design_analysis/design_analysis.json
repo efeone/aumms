@@ -10,6 +10,8 @@
  "field_order": [
   "design_request",
   "customer_name",
+  "mobile_number",
+  "delivery_date",
   "column_break_v9qzp",
   "item",
   "item_code",
@@ -105,11 +107,26 @@
    "label": "Purity",
    "options": "Purity",
    "reqd": 1
+  },
+  {
+   "fetch_from": "design_request.mobile_no",
+   "fetch_if_empty": 1,
+   "fieldname": "mobile_number",
+   "fieldtype": "Link",
+   "label": "Mobile Number",
+   "options": "Design Request"
+  },
+  {
+   "fetch_from": "design_request.delivery_date",
+   "fieldname": "delivery_date",
+   "fieldtype": "Link",
+   "label": "Delivery Date",
+   "options": "Design Request"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-22 14:44:40.882408",
+ "modified": "2023-08-30 12:28:29.604138",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Analysis",
