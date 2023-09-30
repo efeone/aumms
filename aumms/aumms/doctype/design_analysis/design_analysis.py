@@ -5,23 +5,37 @@ import frappe
 from frappe.model.document import Document
 
 class DesignAnalysis(Document):
-    pass
-
     def autoname(self):
           if self.customer_name:
-               self.name = self.customer_name + '-' + self.item + '-' + frappe.utils.today()
+               self.name = self.customer_name + '-' + self.item_code + '-' + frappe.utils.today()
 
 @frappe.whitelist()
-def create_aumms_item_from_design_analysis(item_code, item_group, purity):
-    def set_missing_values(item_code, item_group, purity):
-        pass
+def create_bom_function(design_analysis):
+    if frappe.db.exists('Design Analysis', design_analysis):
+        doc = frappe.get_doc('Design Analysis', design_analysis)
+        bom = frappe.new_doc('BOM')
+        bom.item = doc.item
+        for row in doc.verified_item:
+             bom_row = bom.append('items')
+             bom_row.item_code = row.item
+             bom_row.uom = row.unit_of_measure
+             bom_row.qty = row.quantity
+        bom.flags.ignore_mandatory = True
+        bom.save(ignore_permissions=True)
+        return True
+    else:
+        return False
+
+@frappe.whitelist()
+def create_aumms_item_from_design_analysis(item, item_group, purity):
+
     # Create a new Aumms Item document
     aumms_item = frappe.get_doc({
         "doctype": "AuMMS Item",
-        "item_name": item_code,
-        "item_code": item_code,  
+        "item_name": item,
+        "item_code": item,
         "item_group": item_group,
-         "purity": purity
+        "purity": purity
     })
 
     # Save the Aumms Item document

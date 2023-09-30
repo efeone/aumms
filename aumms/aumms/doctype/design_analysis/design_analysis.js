@@ -128,12 +128,14 @@ frappe.ui.form.on('Design Analysis', {
             frappe.call({
                 method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_aumms_item_from_design_analysis',
                 args: {
-                    item_code: item_code,
+                    item: item_code,
                     item_group: item_group,
                     purity: purity
                 },
                 callback: (r) => {
                     if (r.message) {
+                        frm.set_value('aumms_item', r.message);
+                        frm.save();
                         console.log('AuMMS Item Created:', r.message);
                     } else {
                         console.log('Failed to create AuMMS Item');
@@ -142,5 +144,24 @@ frappe.ui.form.on('Design Analysis', {
             });
         });
         }
+        frm.add_custom_button(__('Create BOM'), () => {
+            // Call a function to create the BOM
+            frm.trigger('create_bom');
+        });
+    },
+    create_bom: function(frm) {
+        frappe.call({
+            method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_bom_function',
+            args: {
+                design_analysis: frm.doc.name
+            },
+            callback: (r) => {
+                if (r.message) {
+                    frappe.msgprint(__('BOM created successfully.'));
+                } else {
+                    frappe.throw(__('Failed to create BOM.'));
+                }
+            }
+        });
     }
 });
