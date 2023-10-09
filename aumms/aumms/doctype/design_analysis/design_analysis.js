@@ -148,6 +148,9 @@ frappe.ui.form.on('Design Analysis', {
             // Call a function to create the BOM
             frm.trigger('create_bom');
         });
+        frm.add_custom_button(__('Proceed'), () => {
+            frm.trigger('proceed_action');
+        });
     },
     create_bom: function(frm) {
         frappe.call({
@@ -163,5 +166,31 @@ frappe.ui.form.on('Design Analysis', {
                 }
             }
         });
+    },
+    proceed_action: function(frm){
+        if(frm.is_dirty()){
+            frappe.throw('You have unsaved changed. Please save and continue.')
+        }
+        else{
+            if(frm.doc.dr_required_check){
+                console.log("required");
+            }
+            else{
+                frappe.msgprint("Please fill the verified item table")
+                frm.scroll_to_field('verified_item');
+            }
+        }
+    },
+    check_dr_required:  function(frm){
+        let dr_required = 0;
+        frm.doc.design_details.forEach(function(detail) {
+            if(detail.dr_required == 1){
+                dr_required = 1;
+            }
+        });
+        frm.set_value('dr_required_check', dr_required)
+    },
+    validate: function(frm){
+        frm.trigger('check_dr_required');
     }
 });
