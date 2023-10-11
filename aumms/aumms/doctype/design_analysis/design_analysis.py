@@ -70,5 +70,17 @@ def supervisor_user_query(doctype, txt, searchfield, start, page_len, filters):
             u.name like %s
     """, ("%" + txt + "%"))
 
-
-    
+@frappe.whitelist()
+def create_design_request(design_analysis):
+    doc = frappe.get_doc('Design Analysis', design_analysis)
+    if doc.dr_required_check == 1:
+        for design_detail in doc.design_details:
+            if design_detail.dr_required == 1:
+                design_request = frappe.new_doc('Design Request')
+                design_request.customer = doc.customer_name
+                design_request.mobile_no = doc.mobile_no
+                design_request.design_title = design_detail.material
+                design_request.delivery_date = frappe.utils.today()
+                design_request.flags.ignore_mandatory = True
+                design_request.save(ignore_permissions=True)
+                frappe.msgprint("Design Request Created for the material {}".format(design_request.design_title), indicator="green", alert=1)
