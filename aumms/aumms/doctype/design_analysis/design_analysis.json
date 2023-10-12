@@ -14,7 +14,7 @@
   "item_code",
   "item_group",
   "purity",
-  "phoneno",
+  "mobile_no",
   "section_break_rgobr",
   "column_break_y3jbr",
   "section_break_qqgnh",
@@ -116,23 +116,24 @@
    "read_only": 1
   },
   {
-   "fetch_from": "customer_name.mobile_no",
-   "fetch_if_empty": 1,
-   "fieldname": "phoneno",
-   "fieldtype": "Data",
-   "label": "Phone.No"
-  },
-  {
    "default": "0",
    "fieldname": "dr_required_check",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "DR Required Check",
    "read_only": 1
+  },
+  {
+   "fetch_from": "customer_name.mobile_no",
+   "fetch_if_empty": 1,
+   "fieldname": "mobile_no",
+   "fieldtype": "Data",
+   "label": "Phone.No"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-07 18:20:51.635310",
+ "modified": "2023-10-11 16:50:52.012565",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Analysis",

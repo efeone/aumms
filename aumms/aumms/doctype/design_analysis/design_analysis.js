@@ -15,7 +15,7 @@ frappe.ui.form.on('Design Analysis', {
         filters: {
             "is_purity_uom":1
         }
-      }      
+      }
     });
 	},
     design_request: function(frm) {
@@ -173,11 +173,18 @@ frappe.ui.form.on('Design Analysis', {
         }
         else{
             if(frm.doc.dr_required_check){
-                console.log("required");
+                frappe.call({
+                  method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_design_request',
+                  args: {
+                    design_analysis: frm.doc.name
+                  }
+                })
             }
             else{
-                frappe.msgprint("Please fill the verified item table")
-                frm.scroll_to_field('verified_item');
+              frm.scroll_to_field('verified_item');
+              if(frm.doc.verified_item.length<1){
+                frappe.msgprint("Please fill the verified item table");
+              }
             }
         }
     },
