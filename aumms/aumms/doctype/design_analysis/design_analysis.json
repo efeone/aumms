@@ -133,7 +133,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-11 16:50:52.012565",
+ "modified": "2023-10-13 17:33:19.439206",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Analysis",
@@ -148,6 +148,19 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "if_owner": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Design Analyst",
    "share": 1,
    "write": 1
   }
