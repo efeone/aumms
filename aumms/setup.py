@@ -13,6 +13,7 @@ def setup_aumms_defaults():
         enable_common_party_accounting()
         create_default_aumms_item_group()
         create_old_gold_aumms_item_group()
+        create_all_smith_warehouse()
 
 def enable_common_party_accounting():
     """
@@ -48,4 +49,17 @@ def create_old_gold_aumms_item_group():
         if frappe.db.exists('AuMMS Item Group', 'All AuMMS Item Group'):
             aumms_item_group_doc.parent_aumms_item_group = 'All AuMMS Item Group'
         aumms_item_group_doc.insert(ignore_permissions = True)
+        frappe.db.commit()
+
+def create_all_smith_warehouse():
+    ''' Method to create default All Smith Warehouse on after migrate '''
+    default_company = frappe.db.get_single_value('Global Defaults', 'default_company')
+    warehouse = frappe.get_value('Warehouse',{'warehouse_name': 'All Warehouses'})
+    if not frappe.db.exists('Warehouse', {'warehouse_name': 'All Smith Warehouse'}):
+        warehouse_doc = frappe.new_doc('Warehouse')
+        warehouse_doc.company = default_company
+        warehouse_doc.warehouse_name = 'All smith Warehouse'
+        warehouse_doc.parent_warehouse = warehouse
+        warehouse_doc.is_group = 1
+        warehouse_doc.insert(ignore_permissions = True)
         frappe.db.commit()
