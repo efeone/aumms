@@ -1,0 +1,219 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:S{######}-{first_name} {last_name}",
+ "creation": "2023-10-18 10:02:01.800347",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "first_name",
+  "last_name",
+  "column_break_i26rl",
+  "gender",
+  "dob",
+  "section_break_b0jsf",
+  "is_head",
+  "smith_type",
+  "section_break_gysp2",
+  "department",
+  "head_of_smith",
+  "contact_informations_section",
+  "primary_address",
+  "secondary_address",
+  "country",
+  "state",
+  "column_break_drxqr",
+  "city",
+  "postal_code",
+  "mobile_number",
+  "email",
+  "more_details_section",
+  "date_of_joining",
+  "column_break_mhv5e",
+  "termination_date",
+  "column_break_lcp2e",
+  "years_of_experience",
+  "column_break_behcc",
+  "hourly_rate"
+ ],
+ "fields": [
+  {
+   "fieldname": "contact_informations_section",
+   "fieldtype": "Tab Break",
+   "label": "Contact Informations"
+  },
+  {
+   "fieldname": "primary_address",
+   "fieldtype": "Data",
+   "label": "Primary Address"
+  },
+  {
+   "fieldname": "secondary_address",
+   "fieldtype": "Data",
+   "label": "Secondary Address"
+  },
+  {
+   "fieldname": "postal_code",
+   "fieldtype": "Int",
+   "label": "Postal Code"
+  },
+  {
+   "fieldname": "column_break_drxqr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mobile_number",
+   "fieldtype": "Data",
+   "label": "Mobile Number"
+  },
+  {
+   "fieldname": "column_break_i26rl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Data",
+   "label": "Country"
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Data",
+   "label": "State"
+  },
+  {
+   "default": "Internal",
+   "depends_on": "eval:doc.is_head == 0",
+   "fieldname": "smith_type",
+   "fieldtype": "Select",
+   "label": "Smith Type",
+   "options": "Internal\nExternal"
+  },
+  {
+   "default": "Male",
+   "fieldname": "gender",
+   "fieldtype": "Select",
+   "label": "Gender",
+   "options": "Male\nFemale\nOther"
+  },
+  {
+   "fieldname": "dob",
+   "fieldtype": "Date",
+   "label": "Date of Birth"
+  },
+  {
+   "fieldname": "more_details_section",
+   "fieldtype": "Section Break",
+   "label": "More Details"
+  },
+  {
+   "fieldname": "date_of_joining",
+   "fieldtype": "Date",
+   "label": "Date Of Joining",
+   "reqd": 1
+  },
+  {
+   "fieldname": "termination_date",
+   "fieldtype": "Date",
+   "label": "Termination Date"
+  },
+  {
+   "fieldname": "column_break_mhv5e",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_head",
+   "fieldtype": "Check",
+   "label": "Is Head"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City"
+  },
+  {
+   "fieldname": "years_of_experience",
+   "fieldtype": "Data",
+   "label": "Years of Experience"
+  },
+  {
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "First Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "Last Name"
+  },
+  {
+   "fieldname": "section_break_b0jsf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_lcp2e",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_behcc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hourly_rate",
+   "fieldtype": "Data",
+   "label": "Hourly Rate"
+  },
+  {
+   "fieldname": "section_break_gysp2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.is_head == 0",
+   "fieldname": "head_of_smith",
+   "fieldtype": "Link",
+   "label": "Head of smith",
+   "options": "Smith Details"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-10-19 10:50:19.583780",
+ "modified_by": "Administrator",
+ "module": "AuMMS",
+ "name": "Smith Details",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
