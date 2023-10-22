@@ -148,6 +148,9 @@ doc_events = {
 	},
 	'Payment Entry':{
 		'on_submit': 'aumms.aumms.doc_events.payment_entry.payment_entry_on_submit'
+	},
+    'User':{
+        'on_update': 'aumms.aumms.doc_events.user.create_smith_warehouse'
 	}
 }
 
