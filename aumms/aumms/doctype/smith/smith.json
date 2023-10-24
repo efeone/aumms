@@ -2,7 +2,7 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "format:S{######}",
- "creation": "2023-10-18 10:02:01.800347",
+ "creation": "2023-10-24 09:54:51.116100",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -28,37 +28,6 @@
    "options": "\nInternal\nExternal"
   },
   {
-   "fieldname": "department",
-   "fieldtype": "Link",
-   "label": "Department",
-   "options": "Department"
-  },
-  {
-   "fieldname": "hourly_rate",
-   "fieldtype": "Data",
-   "label": "Hourly Rate"
-  },
-  {
-   "fetch_from": "department.head_of_department",
-   "fieldname": "head_of_smith",
-   "fieldtype": "Link",
-   "label": "Head of smith",
-   "options": "Employee"
-  },
-  {
-   "fieldname": "warehouse",
-   "fieldtype": "Link",
-   "label": "Warehouse",
-   "options": "Warehouse"
-  },
-  {
-   "depends_on": "eval:doc.smith_type == 'External'",
-   "fieldname": "supplier",
-   "fieldtype": "Link",
-   "label": "Supplier",
-   "options": "Supplier"
-  },
-  {
    "depends_on": "eval:doc.smith_type == 'Internal'",
    "fieldname": "employee",
    "fieldtype": "Link",
@@ -66,12 +35,11 @@
    "options": "Employee"
   },
   {
-   "fieldname": "column_break_mhz6m",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "section_break_9mmii",
-   "fieldtype": "Section Break"
+   "depends_on": "eval:doc.smith_type == 'External'",
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier"
   },
   {
    "depends_on": "eval:doc.smith_type == 'External'",
@@ -87,14 +55,46 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Employee Name"
+  },
+  {
+   "fieldname": "column_break_mhz6m",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fetch_from": "department.head_of_department",
+   "fieldname": "head_of_smith",
+   "fieldtype": "Link",
+   "label": "Head of smith",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "section_break_9mmii",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "hourly_rate",
+   "fieldtype": "Data",
+   "label": "Hourly Rate"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-20 16:01:00.222753",
+ "modified": "2023-10-24 09:54:51.116100",
  "modified_by": "Administrator",
  "module": "AuMMS",
- "name": "Smith Details",
+ "name": "Smith",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
