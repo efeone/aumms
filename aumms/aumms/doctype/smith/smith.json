@@ -13,10 +13,12 @@
   "supplier",
   "supplier_name",
   "employee_name",
+  "smith_grade",
   "column_break_mhz6m",
   "warehouse",
   "department",
   "head_of_smith",
+  "category",
   "section_break_9mmii",
   "hourly_rate"
  ],
@@ -87,11 +89,23 @@
    "fieldname": "hourly_rate",
    "fieldtype": "Data",
    "label": "Hourly Rate"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Link",
+   "label": "Category",
+   "options": "Smith Category"
+  },
+  {
+   "fieldname": "smith_grade",
+   "fieldtype": "Link",
+   "label": "Smith Grade",
+   "options": "Smith Grade"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-24 09:54:51.116100",
+ "modified": "2023-10-26 12:11:32.737297",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Smith",
