@@ -12,36 +12,42 @@
   "purity",
   "unit_of_measure",
   "quantity",
-  "is_customer_provided"
+  "is_customer_provided",
+  "gold_wt",
+  "net_wt"
  ],
  "fields": [
   {
+   "fetch_from": "item.item_group",
    "fieldname": "item_group",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Item Group",
-   "options": "AuMMS Item Group"
+   "options": "AuMMS Item"
   },
   {
+   "fetch_from": "item.item_type",
    "fieldname": "item_type",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Item Type",
-   "options": "Item Type"
+   "options": "AuMMS Item"
   },
   {
+   "fetch_from": "item.purity",
    "fieldname": "purity",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Purity",
-   "options": "Purity"
+   "options": "AuMMS Item"
   },
   {
+   "fetch_from": "item.weight_uom",
    "fieldname": "unit_of_measure",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Unit of Measure",
-   "options": "UOM"
+   "options": "AuMMS Item"
   },
   {
    "fieldname": "quantity",
@@ -62,12 +68,28 @@
    "in_list_view": 1,
    "label": "Item",
    "options": "AuMMS Item"
+  },
+  {
+   "fetch_from": "item.gold_weight",
+   "fieldname": "gold_wt",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Gold Wt",
+   "options": "AuMMS Item"
+  },
+  {
+   "fetch_from": "item.weight_per_unit",
+   "fieldname": "net_wt",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Net Wt",
+   "options": "AuMMS Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-09-26 16:45:35.820159",
+ "modified": "2023-10-26 14:50:53.492128",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Verified Item",
