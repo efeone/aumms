@@ -12,6 +12,7 @@
   "mobile_no",
   "column_break_ey72q",
   "design_title",
+  "expected_weight",
   "delivery_date",
   "assigned_person",
   "section_break_cjewr",
@@ -118,12 +119,17 @@
    "hidden": 1,
    "label": "Assigned Person",
    "options": "User"
+  },
+  {
+   "fieldname": "expected_weight",
+   "fieldtype": "Float",
+   "label": "Expected Weight"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-08-22 10:13:55.205052",
+ "modified": "2023-10-27 16:39:53.710967",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Request",
