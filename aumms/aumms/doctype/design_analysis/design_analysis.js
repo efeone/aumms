@@ -201,3 +201,26 @@ frappe.ui.form.on('Design Analysis', {
         frm.trigger('check_dr_required');
     }
 });
+frappe.ui.form.on('Verified Item',{
+    item: function(frm,cdt,cdn){
+        let d = locals[cdt][cdn];
+        var gold_weight = 0
+        var expected_weight = 0
+        frm.doc.verified_item.forEach(function(d){
+            gold_weight += d.gold_wt;
+            expected_weight += d.net_wt;
+        })
+        frm.set_value('gold_weight',gold_weight),
+        frm.set_value('expected_weight',expected_weight)
+    },
+    verified_item_remove: function(frm){
+        var expected_weight = 0
+        var gold_weight = 0
+        frm.doc.verified_item.forEach(function(d){
+            gold_weight += d.gold_wt;
+            expected_weight += d.net_wt;
+        })
+        frm.set_value('gold_weight',gold_weight),
+        frm.set_value('expected_weight',expected_weight)
+    },
+});

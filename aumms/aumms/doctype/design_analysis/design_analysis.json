@@ -22,7 +22,11 @@
   "dr_required_check",
   "comment",
   "verify_section",
-  "verified_item"
+  "verified_item",
+  "section_break_szurh",
+  "gold_weight",
+  "section_break_qpifr",
+  "expected_weight"
  ],
  "fields": [
   {
@@ -129,11 +133,29 @@
    "fieldname": "mobile_no",
    "fieldtype": "Data",
    "label": "Phone.No"
+  },
+  {
+   "fieldname": "gold_weight",
+   "fieldtype": "Data",
+   "label": "Gold Weight"
+  },
+  {
+   "fieldname": "section_break_qpifr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "expected_weight",
+   "fieldtype": "Data",
+   "label": "Expected Weight"
+  },
+  {
+   "fieldname": "section_break_szurh",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-13 17:33:19.439206",
+ "modified": "2023-10-26 15:09:57.089636",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Analysis",
