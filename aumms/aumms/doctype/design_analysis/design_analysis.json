@@ -9,11 +9,11 @@
   "design_request",
   "aumms_item",
   "item",
-  "customer_expected_weight",
   "customer_name",
   "column_break_v9qzp",
   "item_code",
   "item_group",
+  "customer_expected_weight",
   "purity",
   "mobile_no",
   "section_break_rgobr",
@@ -37,6 +37,22 @@
    "options": "Design Request"
   },
   {
+   "fieldname": "aumms_item",
+   "fieldtype": "Link",
+   "label": "AuMMS Item",
+   "options": "AuMMS Item",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "fetch_from": "aumms_item.item",
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "label": "Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
    "fetch_from": "design_request.customer",
    "fieldname": "customer_name",
    "fieldtype": "Link",
@@ -44,36 +60,8 @@
    "options": "Customer"
   },
   {
-   "fieldname": "design_details",
-   "fieldtype": "Table",
-   "label": "Design Details",
-   "options": "Design Details"
-  },
-  {
-   "fieldname": "comment",
-   "fieldtype": "Small Text",
-   "label": "Comment"
-  },
-  {
-   "fieldname": "verify_section",
-   "fieldtype": "Tab Break",
-   "label": "Item Details"
-  },
-  {
    "fieldname": "column_break_v9qzp",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "section_break_rgobr",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "column_break_y3jbr",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "section_break_qqgnh",
-   "fieldtype": "Section Break"
   },
   {
    "fieldname": "item_code",
@@ -92,6 +80,12 @@
    "reqd": 1
   },
   {
+   "fetch_from": "design_request.expected_weight",
+   "fieldname": "customer_expected_weight",
+   "fieldtype": "Float",
+   "label": "Customer Expected Weight"
+  },
+  {
    "fieldname": "purity",
    "fieldtype": "Link",
    "label": "Purity",
@@ -99,27 +93,29 @@
    "reqd": 1
   },
   {
-   "fieldname": "verified_item",
+   "fetch_from": "customer_name.mobile_no",
+   "fetch_if_empty": 1,
+   "fieldname": "mobile_no",
+   "fieldtype": "Data",
+   "label": "Phone.No"
+  },
+  {
+   "fieldname": "section_break_rgobr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_y3jbr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_qqgnh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "design_details",
    "fieldtype": "Table",
-   "label": "Item",
-   "options": "Verified Item"
-  },
-  {
-   "fieldname": "aumms_item",
-   "fieldtype": "Link",
-   "label": "AuMMS Item",
-   "options": "AuMMS Item",
-   "read_only": 1,
-   "unique": 1
-  },
-  {
-   "fetch_from": "aumms_item.item",
-   "fieldname": "item",
-   "fieldtype": "Link",
-   "hidden": 1,
-   "label": "Item",
-   "options": "Item",
-   "read_only": 1
+   "label": "Design Details",
+   "options": "Design Details"
   },
   {
    "default": "0",
@@ -130,14 +126,26 @@
    "read_only": 1
   },
   {
-   "fetch_from": "customer_name.mobile_no",
-   "fetch_if_empty": 1,
-   "fieldname": "mobile_no",
-   "fieldtype": "Data",
-   "label": "Phone.No"
+   "fieldname": "comment",
+   "fieldtype": "Small Text",
+   "label": "Comment"
   },
   {
-<<<<<<< HEAD
+   "fieldname": "verify_section",
+   "fieldtype": "Tab Break",
+   "label": "Item Details"
+  },
+  {
+   "fieldname": "verified_item",
+   "fieldtype": "Table",
+   "label": "Item",
+   "options": "Verified Item"
+  },
+  {
+   "fieldname": "section_break_szurh",
+   "fieldtype": "Section Break"
+  },
+  {
    "fieldname": "gold_weight",
    "fieldtype": "Data",
    "label": "Gold Weight"
@@ -150,24 +158,11 @@
    "fieldname": "expected_weight",
    "fieldtype": "Data",
    "label": "Expected Weight"
-  },
-  {
-   "fieldname": "section_break_szurh",
-   "fieldtype": "Section Break"
-=======
-   "fieldname": "customer_expected_weight",
-   "fieldtype": "Float",
-   "label": "Customer Expected Weight"
->>>>>>> cd73ddf (feat:modified doctype design analysis and design request)
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2023-10-26 15:09:57.089636",
-=======
- "modified": "2023-10-27 16:35:21.681693",
->>>>>>> cd73ddf (feat:modified doctype design analysis and design request)
+ "modified": "2023-10-30 12:04:57.952805",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Analysis",
