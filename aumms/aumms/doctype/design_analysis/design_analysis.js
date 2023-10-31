@@ -150,6 +150,7 @@ frappe.ui.form.on('Design Analysis', {
         });
         frm.add_custom_button(__('Proceed'), () => {
             frm.trigger('proceed_action');
+            hide_proceed_button(frm)
         });
     },
     create_bom: function(frm) {
@@ -161,6 +162,7 @@ frappe.ui.form.on('Design Analysis', {
             callback: (r) => {
                 if (r.message) {
                     frappe.msgprint(__('BOM created successfully.'));
+                    frm.remove_custom_button('Create BOM')
                 } else {
                     frappe.throw(__('Failed to create BOM.'));
                 }
@@ -224,3 +226,17 @@ frappe.ui.form.on('Verified Item',{
         frm.set_value('expected_weight',expected_weight)
     },
 });
+
+let hide_proceed_button = function(frm) {
+	frappe.call({
+		method: 'aumms.aumms.doctype.design_analysis.design_analysis.hide_proceed_button',
+		args: {
+			'customer' : frm.doc.customer_name
+		},
+		callback: (r) => {
+			if(r.message) {
+				frm.remove_custom_button('Proceed')
+			}
+		}
+	})
+}

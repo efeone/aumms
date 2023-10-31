@@ -84,3 +84,9 @@ def create_design_request(design_analysis):
                 design_request.flags.ignore_mandatory = True
                 design_request.save(ignore_permissions=True)
                 frappe.msgprint("Design Request Created for the material {}".format(design_request.design_title), indicator="green", alert=1)
+
+@frappe.whitelist()
+def hide_proceed_button(customer):
+	if frappe.db.exists('Design Request', {'customer' : customer}):
+		design_request_doc = frappe.get_doc('Design Request', {'customer' : customer})
+		return 1
