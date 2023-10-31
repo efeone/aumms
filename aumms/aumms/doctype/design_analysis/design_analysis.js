@@ -124,13 +124,15 @@ frappe.ui.form.on('Design Analysis', {
             const item_code = frm.doc.item_code;
             const item_group = frm.doc.item_group;
             const purity = frm.doc.purity;
+            const customer_expected_weight = frm.doc.customer_expected_weight;
 
             frappe.call({
                 method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_aumms_item_from_design_analysis',
                 args: {
                     item: item_code,
                     item_group: item_group,
-                    purity: purity
+                    purity: purity,
+                    customer_expected_weight: customer_expected_weight,
                 },
                 callback: (r) => {
                     if (r.message) {
