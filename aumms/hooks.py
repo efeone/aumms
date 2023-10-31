@@ -37,7 +37,9 @@ doctype_js = {
 	'Purchase Invoice': 'public/js/purchase_invoice.js',
 	'Stock Settings': 'public/js/stock_settings.js',
 	'Purchase Order': 'public/js/purchase_order.js',
-	'Sales Order' : 'public/js/sales_order.js'
+	'Sales Order' : 'public/js/sales_order.js',
+    'Job Card' : 'public/js/job_card.js'
+    
 	}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -85,6 +87,7 @@ after_migrate = [
 # ------------
 
 fixtures = [{"dt": "Role","filters": [["name", "in", ["Design Analyst", "Supervisor","Smith","Head of Smith"]]]},
+            {"dt":"Department","filters":[["name","in",["Smith"]]]},
 			]
 # before_uninstall = "aumms.uninstall.before_uninstall"
 # after_uninstall = "aumms.uninstall.after_uninstall"
