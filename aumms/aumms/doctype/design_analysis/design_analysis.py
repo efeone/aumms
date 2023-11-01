@@ -27,13 +27,17 @@ def create_bom_function(design_analysis):
         return False
 
 @frappe.whitelist()
-def create_aumms_item_from_design_analysis(item, item_group, purity):
-
+def create_aumms_item_from_design_analysis(customer_expected_weight, item, item_group, purity):
+    #Calculate Item Code to set as docname
+    weight = float(customer_expected_weight)
+    weight = int(weight*1000)
+    weight_with_zero = str(weight).zfill(6)
+    doc_name = item + '-' + weight_with_zero
     # Create a new Aumms Item document
     aumms_item = frappe.get_doc({
         "doctype": "AuMMS Item",
         "item_name": item,
-        "item_code": item,
+        "item_code": doc_name,
         "item_group": item_group,
         "purity": purity
     })
