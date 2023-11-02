@@ -18,9 +18,9 @@
   "warehouse",
   "department",
   "head_of_smith",
-  "category",
+  "hourly_rate",
   "section_break_9mmii",
-  "hourly_rate"
+  "category"
  ],
  "fields": [
   {
@@ -92,9 +92,9 @@
   },
   {
    "fieldname": "category",
-   "fieldtype": "Link",
+   "fieldtype": "Table",
    "label": "Category",
-   "options": "Smith Category"
+   "options": "Smith Categories"
   },
   {
    "fieldname": "smith_grade",
@@ -105,7 +105,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-26 12:11:32.737297",
+ "modified": "2023-11-02 10:57:11.184968",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Smith",
