@@ -4,6 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe.desk.form.assign_to import add as add_assign
+from aumms.aumms.utils import create_notification_log
 
 class DesignRequest(Document):
 		
@@ -36,3 +37,8 @@ def assign_design_request(doctype, docname, assign_to):
 			})
 	frappe.db.set_value(doctype, docname, 'assigned_person', assign_to)
 	frappe.db.commit()
+	
+	#Send system notification and email to assignee
+	subject = "New design request received"
+	content = "You've been assigned a new design request for analysis. Please review it at your earliest convenience."
+	create_notification_log(doctype, docname, assign_to, subject, content)
