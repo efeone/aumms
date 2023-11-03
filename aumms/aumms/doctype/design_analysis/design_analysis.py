@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.desk.form.assign_to import add as add_assign
 
 class DesignAnalysis(Document):
     def autoname(self):
@@ -87,10 +88,19 @@ def create_design_request(design_analysis):
                 design_request.delivery_date = frappe.utils.today()
                 design_request.flags.ignore_mandatory = True
                 design_request.save(ignore_permissions=True)
+            if doc.status == 'Draft':
+                frappe.db.set_value("Design Analysis", design_analysis, 'status', 'Request For Verification')
+                doc.reload()
                 frappe.msgprint("Design Request Created for the material {}".format(design_request.design_title), indicator="green", alert=1)
 
 @frappe.whitelist()
-def hide_proceed_button(customer):
-	if frappe.db.exists('Design Request', {'customer' : customer}):
-		design_request_doc = frappe.get_doc('Design Request', {'customer' : customer})
-		return 1
+def assign_design_analysis(doctype, docname, assign_to):
+    assign_to_list = [assign_to]
+    add_assign({
+    "assign_to": assign_to_list,
+    "doctype": doctype,
+    "name": docname
+    })
+    frappe.db.set_value(doctype, docname, 'assigned_person', assign_to)
+    frappe.db.set_value(doctype, docname, 'status','Request For Approval')
+    frappe.db.commit()
