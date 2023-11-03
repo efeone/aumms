@@ -8,7 +8,8 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "categories"
+  "categories",
+  "description"
  ],
  "fields": [
   {
@@ -16,11 +17,16 @@
    "fieldtype": "Data",
    "label": "Categories",
    "unique": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-26 11:20:55.759872",
+ "modified": "2023-11-02 11:25:39.363869",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Smith Category",
