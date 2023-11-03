@@ -48,150 +48,18 @@ frappe.ui.form.on('Design Analysis', {
             });
         }
     },
-    refresh: function(frm) {
-        frm.add_custom_button('Request For Approval', () => {
-            console.log("Refresh");
-        let dia = new frappe.ui.Dialog({
-            title: __('Request for Approval'),
-            fields: [
-                {
-                    fieldtype: 'Check',
-                    label: 'Self Approval',
-                    fieldname: 'self_approval',
-                    default: 0,
-                    onchange: function() {
-                        dia.toggle_enable('assign_to', !this.value);
-                        if (this.value) {
-                            dia.set_value('assign_to', null); // Clear value when Self Assign is checked
-                        }
-                    }
-                },
-                {
-                    fieldtype: 'Link',
-                    label: 'Assign To',
-                    fieldname: 'assign_to',
-                    options: 'User',
-                    get_query: function () {
-                        return {
-                            query : 'aumms.aumms.doctype.design_analysis.design_analysis.supervisor_user_query',
-                        };
-                    },
-                    depends_on: 'eval: !doc.self_approval'
-                }
-            ],
-            primary_action_label: __('Submit'),
-            //primary_action: function() {
-            //    const values = dia.get_values();
-              //  console.log(values.self_approval);
-                //console.log(values.assign_to);
-            primary_action(values) {
-                let assign_to = '';
-                if(values.self_assign){
-                    assign_to = frappe.session.user;
-                }
-                else{
-                    assign_to = values.assign_to;
-                }
-                frappe.call({
-                    method: 'frappe.desk.form.assign_to.add',
-                    args: {
-                        doctype: frm.doc.doctype,
-                        name: frm.doc.name,
-                        assign_to: [assign_to]
-                    },
-                    freeze: true,
-                    callback: (r) => {
-                        console.log(r)
-                    },
-                })
-                // Update the button text after successful assignment
-                let assignButton = document.getElementById('assignButton');
-                assignButton.textContent = 'Assigned';
-                // Optional: Show a message after the form fields are updated
-                frappe.msgprint(__('Design Analysis has been approved.'));
-                // Close the dialog after submitting
-                dia.hide();
-            }
-        });
+    refresh: function(frm){
+      if(frm.doc.status == 'Draft'){
+        create_custom_buttons(frm);
+      }
+      if(frm.doc.status == 'Request For Verification'){
+        request_for_approval(frm);
+      }
+      if(frm.doc.status == 'Request For Approval'){
+        approve_design_analysis(frm)
+      }
+    },
 
-        // Show the dialog
-        dia.show();
-        });
-        // Check if the logged-in user is a supervisor
-        const isSupervisor = frappe.user_roles.includes('Supervisor');
-    if (isSupervisor) {
-        frm.add_custom_button(__('Approve'), () => {
-            const item_code = frm.doc.item_code;
-            const item_group = frm.doc.item_group;
-            const purity = frm.doc.purity;
-            const customer_expected_weight = frm.doc.customer_expected_weight;
-
-            frappe.call({
-                method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_aumms_item_from_design_analysis',
-                args: {
-                    item: item_code,
-                    item_group: item_group,
-                    purity: purity,
-                    customer_expected_weight: customer_expected_weight,
-                },
-                callback: (r) => {
-                    if (r.message) {
-                        frm.set_value('aumms_item', r.message);
-                        frm.save();
-                        console.log('AuMMS Item Created:', r.message);
-                    } else {
-                        console.log('Failed to create AuMMS Item');
-                    }
-                }
-            });
-        });
-        }
-        frm.add_custom_button(__('Create BOM'), () => {
-            // Call a function to create the BOM
-            frm.trigger('create_bom');
-        });
-        frm.add_custom_button(__('Proceed'), () => {
-            frm.trigger('proceed_action');
-            hide_proceed_button(frm)
-        });
-    },
-    create_bom: function(frm) {
-        frappe.call({
-            method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_bom_function',
-            args: {
-                design_analysis: frm.doc.name
-            },
-            callback: (r) => {
-                if (r.message) {
-                    frappe.msgprint(__('BOM created successfully.'));
-                    frm.remove_custom_button('Create BOM')
-                } else {
-                    frappe.throw(__('Failed to create BOM.'));
-                }
-            }
-        });
-    },
-    proceed_action: function(frm){
-        if(frm.is_dirty()){
-            frappe.throw('You have unsaved changed. Please save and continue.')
-        }
-        else{
-            if(frm.doc.dr_required_check){
-                frappe.call({
-                  method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_design_request',
-                  args: {
-                    design_analysis: frm.doc.name
-                  }
-                })
-            }
-            else{
-              frm.scroll_to_field('verified_item');
-              if(frm.doc.verified_item.length<1){
-                frappe.msgprint("Please fill the verified item table");
-              }
-            }
-        }
-    },
     check_dr_required:  function(frm){
         let dr_required = 0;
         frm.doc.design_details.forEach(function(detail) {
@@ -205,6 +73,136 @@ frappe.ui.form.on('Design Analysis', {
         frm.trigger('check_dr_required');
     }
 });
+
+let create_custom_buttons = function(frm){
+  if(!frm.is_new()){
+    frm.add_custom_button('Request For Verification',() =>{
+      request_for_verification(frm);
+    }, 'Actions');
+  }
+}
+
+let request_for_verification = function(frm){
+  if(frm.doc.dr_required_check){
+    frappe.call({
+      method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_design_request',
+      args: {
+        design_analysis: frm.doc.name
+      },
+      callback: (r) => {
+                frm.reload_doc()
+             },
+    })
+  }
+  else{
+    frm.scroll_to_field('verified_item');
+    if(frm.doc.verified_item.length<1){
+      frappe.msgprint("Please fill the verified item table");
+    }
+  }
+}
+
+let request_for_approval = function(frm){
+  if(frm.doc.status == "Request For Verification"){
+    frm.add_custom_button('Request For Approval', () =>{
+      make_request_for_approval(frm);
+    },'Actions');
+  }
+}
+
+let make_request_for_approval = function(frm){
+  let d = new frappe.ui.Dialog({
+      title: __('Request for Approval'),
+      fields: [
+          {
+              fieldtype: 'Check',
+              label: 'Self Assign',
+              fieldname: 'self_assign',
+              default: 0,
+              onchange: function(e) {
+                  d.toggle_enable('assign_to', !e.checked);
+                  if (e.checked) {
+                      d.set_value('assign_to', frappe.session.user);
+                  }
+              }
+          },
+          {
+              fieldtype: 'Link',
+              label: 'Assign To',
+              fieldname: 'assign_to',
+              options: 'User',
+              get_query: function () {
+                  return {
+                      query : 'aumms.aumms.doctype.design_analysis.design_analysis.supervisor_user_query',
+                  };
+              },
+              depends_on: 'eval: !doc.self_assign'
+          }
+      ],
+      primary_action_label: __('Submit'),
+      primary_action(values) {
+          let assign_to = '';
+          if(values.self_assign){
+              assign_to = frappe.session.user;
+          }
+          else{
+              assign_to = values.assign_to;
+          }
+          frappe.call({
+              method: 'aumms.aumms.doctype.design_analysis.design_analysis.assign_design_analysis',
+              args: {
+                  doctype: frm.doc.doctype,
+                  docname: frm.doc.name,
+                  assign_to: assign_to
+              },
+              freeze: true,
+              callback: (r) => {
+                  frm.reload_doc();
+                  d.hide()
+              }
+          });
+      }
+  });
+  d.show();
+}
+
+// Check if the logged-in user is a supervisor
+const isSupervisor = frappe.user_roles.includes('Supervisor');
+let approve_design_analysis = function(frm) {
+    if (frm.doc.status === "Request For Approval") {
+        if (isSupervisor) {
+            frm.add_custom_button('Approve', () => {
+                const item_code = frm.doc.item_code;
+                const item_group = frm.doc.item_group;
+                const purity = frm.doc.purity;
+                const customer_expected_weight = frm.doc.customer_expected_weight;
+
+                frappe.call({
+                    method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_aumms_item_from_design_analysis',
+                    args: {
+                        item: item_code,
+                        item_group: item_group,
+                        purity: purity,
+                        customer_expected_weight: customer_expected_weight,
+                    },
+                    callback: (r) => {
+                        if (r.message) {
+                            frm.set_value('aumms_item', r.message);
+                            frm.set_value("status","Approved")
+                            frm.save();
+                            console.log('AuMMS Item Created:', r.message);
+                        } else {
+                            console.log('Failed to create AuMMS Item');
+                        }
+                    }
+                });
+            }, 'Actions');
+            frm.add_custom_button('Reject', () =>{
+            },'Actions');
+        }
+    }
+}
+
 frappe.ui.form.on('Verified Item',{
     item: function(frm,cdt,cdn){
         let d = locals[cdt][cdn];
@@ -234,17 +232,3 @@ frappe.ui.form.on('Verified Item',{
         frm.set_value('calculated_stone_weight',calculated_stone_weight)
     },
 });
-
-let hide_proceed_button = function(frm) {
-	frappe.call({
-		method: 'aumms.aumms.doctype.design_analysis.design_analysis.hide_proceed_button',
-		args: {
-			'customer' : frm.doc.customer_name
-		},
-		callback: (r) => {
-			if(r.message) {
-				frm.remove_custom_button('Proceed')
-			}
-		}
-	})
-}
