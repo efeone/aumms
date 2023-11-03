@@ -10,6 +10,7 @@
   "aumms_item",
   "item",
   "customer_name",
+  "approver_weight",
   "column_break_v9qzp",
   "item_code",
   "item_group",
@@ -26,6 +27,7 @@
   "verified_item",
   "section_break_szurh",
   "gold_weight",
+  "calculated_stone_weight",
   "section_break_qpifr",
   "expected_weight"
  ],
@@ -148,7 +150,7 @@
   {
    "fieldname": "gold_weight",
    "fieldtype": "Data",
-   "label": "Gold Weight"
+   "label": "Calculated Gold Weight"
   },
   {
    "fieldname": "section_break_qpifr",
@@ -157,12 +159,23 @@
   {
    "fieldname": "expected_weight",
    "fieldtype": "Data",
-   "label": "Expected Weight"
+   "label": "Calculated Net Weight"
+  },
+  {
+   "fieldname": "approver_weight",
+   "fieldtype": "Float",
+   "label": "Approver Weight",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "calculated_stone_weight",
+   "fieldtype": "Data",
+   "label": "Calculated Stone Weight"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-30 12:04:57.952805",
+ "modified": "2023-11-02 11:04:13.811167",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Analysis",
