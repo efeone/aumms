@@ -268,3 +268,24 @@ def get_advances_payments_against_so_in_gold(sales_order, item_type, purity, sto
             if advance.get('amount'):
                 advance['qty_obtained'] = float(advance.get('amount'))/float(board_rate)
     return advances
+
+# Notification Function
+@frappe.whitelist()
+def create_notification_log(doctype, docname, recipient, subject, content=None, type=None):
+    """method is used to create notification log
+    args:
+        doc: document object
+        recipient: notification receiving user
+        subject: subject of notification log
+        type: type of the notification log"""
+    notification_log = frappe.new_doc("Notification Log")
+    notification_log.type = "Mention"
+    if type:
+        notification_log.type = type
+    notification_log.document_type = doctype
+    notification_log.document_name = docname
+    notification_log.for_user = recipient
+    notification_log.subject = subject
+    if content:
+        notification_log.email_content = content
+    notification_log.save(ignore_permissions=True)
