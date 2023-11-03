@@ -58,7 +58,7 @@ def create_all_smith_warehouse():
     if not frappe.db.exists('Warehouse', {'warehouse_name': 'All Smith Warehouse'}):
         warehouse_doc = frappe.new_doc('Warehouse')
         warehouse_doc.company = default_company
-        warehouse_doc.warehouse_name = 'All smith Warehouse'
+        warehouse_doc.warehouse_name = 'All Smith Warehouse'
         warehouse_doc.parent_warehouse = warehouse
         warehouse_doc.is_group = 1
         warehouse_doc.insert(ignore_permissions = True)
