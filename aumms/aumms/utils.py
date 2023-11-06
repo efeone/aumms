@@ -289,3 +289,10 @@ def create_notification_log(doctype, docname, recipient, subject, content=None, 
     if content:
         notification_log.email_content = content
     notification_log.save(ignore_permissions=True)
+
+@frappe.whitelist()
+def rejection_action(doctype,doc,comment):
+    doc = frappe.get_doc(doctype,doc)
+    if comment:
+        doc.add_comment('Comment', comment)
+        return True
