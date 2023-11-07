@@ -4,6 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe.desk.form.assign_to import add as add_assign
+from aumms.aumms.utils import create_notification_log
 
 class DesignAnalysis(Document):
     def autoname(self):
@@ -30,6 +31,10 @@ def create_bom_function(doctype, docname,assign_to):
                 "doctype": bom.doctype,
                 "name": bom.name
             })
+        #Send system notification and email to assignee
+        subject = "New BOM request received"
+        content = "You've been assigned a new BOM for work order creation. Please review it at your earliest convenience."
+        create_notification_log(doctype, docname, assign_to, subject, content)
         return True
         
     else:
