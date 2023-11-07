@@ -177,6 +177,7 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Status",
    "options": "Draft\nRequest For Verification\nRequest For Approval\nApproved\nHold\nRejected\nBOM Created\nWorkorder Created"
   },
@@ -190,7 +191,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-03 17:23:27.828034",
+ "modified": "2023-11-04 09:49:21.108122",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Analysis",

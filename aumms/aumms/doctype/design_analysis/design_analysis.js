@@ -49,15 +49,7 @@ frappe.ui.form.on('Design Analysis', {
         }
     },
     refresh: function(frm){
-      if(frm.doc.status == 'Draft'){
-        create_custom_buttons(frm);
-      }
-      if(frm.doc.status == 'Request For Verification'){
-        request_for_approval(frm);
-      }
-      if(frm.doc.status == 'Request For Approval'){
-        approve_design_analysis(frm)
-      }
+      create_custom_buttons(frm);
     },
 
     check_dr_required:  function(frm){
@@ -75,11 +67,13 @@ frappe.ui.form.on('Design Analysis', {
 });
 
 let create_custom_buttons = function(frm){
-  if(!frm.is_new()){
+  if(!frm.is_new() && frm.doc.status=='Draft'){
     frm.add_custom_button('Request For Verification',() =>{
       request_for_verification(frm);
     }, 'Actions');
   }
+  approve_design_analysis(frm);
+  request_for_approval(frm);
 }
 
 let request_for_verification = function(frm){
@@ -103,7 +97,7 @@ let request_for_verification = function(frm){
 }
 
 let request_for_approval = function(frm){
-  if(frm.doc.status == "Request For Verification"){
+  if((frm.doc.status == "Request For Verification" ) || (frm.doc.dr_required_check == 0 && frm.doc.verified_item.length>0 && frm.doc.status != 'Request For Approval' && frm.doc.status != 'Approved')){
     frm.add_custom_button('Request For Approval', () =>{
       make_request_for_approval(frm);
     },'Actions');
@@ -169,7 +163,7 @@ let make_request_for_approval = function(frm){
 // Check if the logged-in user is a supervisor
 const isSupervisor = frappe.user_roles.includes('Supervisor');
 let approve_design_analysis = function(frm) {
-    if (frm.doc.status === "Request For Approval") {
+    if (frm.doc.status == "Request For Approval") {
         if (isSupervisor) {
             frm.add_custom_button('Approve', () => {
                 const item_code = frm.doc.item_code;
@@ -198,9 +192,49 @@ let approve_design_analysis = function(frm) {
                 });
             }, 'Actions');
             frm.add_custom_button('Reject', () =>{
+              reject_design_analysis(frm)
             },'Actions');
         }
     }
+}
+
+let reject_design_analysis = function(frm){
+  let d = new frappe.ui.Dialog({
+    title: 'Reason for Rejection',
+    fields: [
+        {
+            label: 'Comment',
+            fieldname: 'comment',
+            fieldtype: 'Small Text',
+            reqd: 1
+        },
+    ],
+    size: 'small',
+    primary_action_label: 'Add comment',
+    primary_action(values) {
+      frappe.call({
+            method: 'aumms.aumms.utils.rejection_action',
+            args: {
+              'doctype': frm.doc.doctype,
+              'doc':frm.doc.name,
+              'comment':values.comment
+            },
+            callback: function(r) {
+              if (r.message){
+                frm.set_value("status","Rejected")
+                frm.save()
+                frappe.show_alert({
+                  message:__('Rejected........'),
+                  indicator:'red'
+                }, 5);
+              }
+            }
+          })
+        d.hide();
+    }
+});
+
+d.show();
 }
 
 frappe.ui.form.on('Verified Item',{
@@ -212,7 +246,7 @@ frappe.ui.form.on('Verified Item',{
         frm.doc.verified_item.forEach(function(d){
             gold_weight += d.gold_wt;
             expected_weight += d.net_wt;
-            calculated_stone_weight += d.stone_wt; 
+            calculated_stone_weight += d.stone_wt;
         })
         frm.set_value('gold_weight',gold_weight),
         frm.set_value('expected_weight',expected_weight),
