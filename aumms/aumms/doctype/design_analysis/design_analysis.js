@@ -116,60 +116,64 @@ let request_for_approval = function(frm){
   }
 }
 
-let make_request_for_approval = function(frm){
-  let d = new frappe.ui.Dialog({
-      title: __('Request for Approval'),
-      fields: [
-          {
-              fieldtype: 'Check',
-              label: 'Self Assign',
-              fieldname: 'self_assign',
-              default: 0,
-              onchange: function(e) {
-                  d.toggle_enable('assign_to', !e.checked);
-                  if (e.checked) {
-                      d.set_value('assign_to', frappe.session.user);
-                  }
-              }
-          },
-          {
-              fieldtype: 'Link',
-              label: 'Assign To',
-              fieldname: 'assign_to',
-              options: 'User',
-              get_query: function () {
-                  return {
-                      query : 'aumms.aumms.doctype.design_analysis.design_analysis.supervisor_user_query',
-                  };
-              },
-              depends_on: 'eval: !doc.self_assign'
-          }
-      ],
-      primary_action_label: __('Submit'),
-      primary_action(values) {
-          let assign_to = '';
-          if(values.self_assign){
-              assign_to = frappe.session.user;
-          }
-          else{
-              assign_to = values.assign_to;
-          }
-          frappe.call({
-              method: 'aumms.aumms.doctype.design_analysis.design_analysis.assign_design_analysis',
-              args: {
-                  doctype: frm.doc.doctype,
-                  docname: frm.doc.name,
-                  assign_to: assign_to
-              },
-              freeze: true,
-              callback: (r) => {
-                  frm.reload_doc();
-                  d.hide()
-              }
-          });
-      }
-  });
-  d.show();
+let make_request_for_approval = function (frm) {
+    let d = new frappe.ui.Dialog({
+        title: __('Request for Approval'),
+        fields: [
+            {
+                fieldtype: 'Check',
+                label: 'Self Assign',
+                fieldname: 'self_assign',
+                default: 0,
+                onchange: function (e) {
+                    d.toggle_enable('assign_to', !e.checked);
+                    if (e.checked) {
+                        d.set_value('assign_to', frappe.session.user);
+                    }
+                }
+            },
+            {
+                fieldtype: 'Link',
+                label: 'Assign To',
+                fieldname: 'assign_to',
+                options: 'User',
+                get_query: function () {
+                    return {
+                        query: 'aumms.aumms.doctype.design_analysis.design_analysis.supervisor_user_query',
+                    };
+                },
+                depends_on: 'eval: !doc.self_assign'
+            }
+        ],
+        primary_action_label: __('Submit'),
+        primary_action(values) {
+            let assign_to = '';
+            if (values.self_assign) {
+                assign_to = frappe.session.user;
+            }
+            else {
+                assign_to = values.assign_to;
+            }
+            if (assign_to == null) {
+                frappe.msgprint('Please select an option');
+            } else {
+                frappe.call({
+                    method: 'aumms.aumms.doctype.design_analysis.design_analysis.assign_design_analysis',
+                    args: {
+                        doctype: frm.doc.doctype,
+                        docname: frm.doc.name,
+                        assign_to: assign_to
+                    },
+                    freeze: true,
+                    callback: (r) => {
+                        frm.reload_doc();
+                        d.hide()
+                    }
+                });
+            }
+        }
+    });
+    d.show();
 }
 
 // Check if the logged-in user is a supervisor
