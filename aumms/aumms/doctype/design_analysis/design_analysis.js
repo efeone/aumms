@@ -84,7 +84,7 @@ let create_bom_button = function(frm){
     if(!frm.is_new()){
       frm.add_custom_button('Create BOM',() =>{
         create_bom(frm);
-      }, );
+      },'Actions' );
     }
   }
 
@@ -310,7 +310,7 @@ function create_bom(frm) {
                     freeze: true,
                     callback: (r) => {
                         frm.reload_doc();
-                        bom_dia.hide()
+                        bom_dia.hide();
                     }
                 });
             }

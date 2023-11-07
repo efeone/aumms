@@ -31,6 +31,9 @@ def create_bom_function(doctype, docname,assign_to):
                 "doctype": bom.doctype,
                 "name": bom.name
             })
+        frappe.db.set_value(doctype, docname, 'status','BOM Created')
+        frappe.db.commit()
+        frappe.msgprint("BOM Created", indicator="green", alert=1)
         #Send system notification and email to assignee
         subject = "New BOM request received"
         content = "You've been assigned a new BOM for work order creation. Please review it at your earliest convenience."
