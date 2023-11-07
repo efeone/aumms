@@ -81,57 +81,12 @@ let create_custom_buttons = function(frm){
 }
 
 let create_bom_button = function(frm){
-  if(!frm.is_new()){
-    frm.add_custom_button('Create BOM',() =>{
-      create_bom(frm);
-    }, );
+    if(!frm.is_new()){
+      frm.add_custom_button('Create BOM',() =>{
+        create_bom(frm);
+      }, );
+    }
   }
-}
-
-let make_request_for_bom = function(frm){
-  let bo = new frappe.ui.Dialog({
-      title: __('Create BOM'),
-      fields: [
-          {
-              fieldtype: 'Link',
-              label: 'Head of Smith',
-              fieldname: 'head_of_smith',
-              options: 'Head of Smith',
-              get_query: function () {
-                  return {
-                      query : 'aumms.aumms.doctype.design_analysis.design_analysis.supervisor_user_query',
-                  };
-              },
-              
-          }
-      ],
-      primary_action_label: __('Submit'),
-      primary_action(values) {
-          let head_of_smith = '';
-          if(values.self_assign){
-              head_of_smith = frappe.session.user;
-          }
-          if (head_of_smith) {
-            frappe.call({
-                method: 'aumms.aumms.doctype.design_analysis.design_analysis.assign_design_analysis',
-                args: {
-                    doctype: frm.doc.doctype,
-                    docname: frm.doc.name,
-                    head_of_smith: head_of_smith
-                },
-                freeze: true,
-                callback: (r) => {
-                    frm.reload_doc();
-                    bo.hide();
-                }
-            });
-        } else {
-            frappe.msgprint('Please select a "Head of Smith".');
-        }
-      }
-  });
-  bo.show();
-}
 
 let request_for_verification = function(frm){
   if(frm.doc.dr_required_check){
@@ -161,60 +116,64 @@ let request_for_approval = function(frm){
   }
 }
 
-let make_request_for_approval = function(frm){
-  let d = new frappe.ui.Dialog({
-      title: __('Request for Approval'),
-      fields: [
-          {
-              fieldtype: 'Check',
-              label: 'Self Assign',
-              fieldname: 'self_assign',
-              default: 0,
-              onchange: function(e) {
-                  d.toggle_enable('assign_to', !e.checked);
-                  if (e.checked) {
-                      d.set_value('assign_to', frappe.session.user);
-                  }
-              }
-          },
-          {
-              fieldtype: 'Link',
-              label: 'Assign To',
-              fieldname: 'assign_to',
-              options: 'User',
-              get_query: function () {
-                  return {
-                      query : 'aumms.aumms.doctype.design_analysis.design_analysis.supervisor_user_query',
-                  };
-              },
-              depends_on: 'eval: !doc.self_assign'
-          }
-      ],
-      primary_action_label: __('Submit'),
-      primary_action(values) {
-          let assign_to = '';
-          if(values.self_assign){
-              assign_to = frappe.session.user;
-          }
-          else{
-              assign_to = values.assign_to;
-          }
-          frappe.call({
-              method: 'aumms.aumms.doctype.design_analysis.design_analysis.assign_design_analysis',
-              args: {
-                  doctype: frm.doc.doctype,
-                  docname: frm.doc.name,
-                  assign_to: assign_to
-              },
-              freeze: true,
-              callback: (r) => {
-                  frm.reload_doc();
-                  d.hide()
-              }
-          });
-      }
-  });
-  d.show();
+let make_request_for_approval = function (frm) {
+    let d = new frappe.ui.Dialog({
+        title: __('Request for Approval'),
+        fields: [
+            {
+                fieldtype: 'Check',
+                label: 'Self Assign',
+                fieldname: 'self_assign',
+                default: 0,
+                onchange: function (e) {
+                    d.toggle_enable('assign_to', !e.checked);
+                    if (e.checked) {
+                        d.set_value('assign_to', frappe.session.user);
+                    }
+                }
+            },
+            {
+                fieldtype: 'Link',
+                label: 'Assign To',
+                fieldname: 'assign_to',
+                options: 'User',
+                get_query: function () {
+                    return {
+                        query: 'aumms.aumms.doctype.design_analysis.design_analysis.supervisor_user_query',
+                    };
+                },
+                depends_on: 'eval: !doc.self_assign'
+            }
+        ],
+        primary_action_label: __('Submit'),
+        primary_action(values) {
+            let assign_to = '';
+            if (values.self_assign) {
+                assign_to = frappe.session.user;
+            }
+            else {
+                assign_to = values.assign_to;
+            }
+            if (assign_to == null) {
+                frappe.msgprint('Please select an option');
+            } else {
+                frappe.call({
+                    method: 'aumms.aumms.doctype.design_analysis.design_analysis.assign_design_analysis',
+                    args: {
+                        doctype: frm.doc.doctype,
+                        docname: frm.doc.name,
+                        assign_to: assign_to
+                    },
+                    freeze: true,
+                    callback: (r) => {
+                        frm.reload_doc();
+                        d.hide()
+                    }
+                });
+            }
+        }
+    });
+    d.show();
 }
 
 // Check if the logged-in user is a supervisor
@@ -300,60 +259,64 @@ let reject_design_analysis = function(frm){
 d.show();
 }
 function create_bom(frm) {
-  
-  let bom_dia = new frappe.ui.Dialog({
-    title: __('Request for BOM'),
-    fields: [
-        {
-            fieldtype: 'Check',
-            label: 'Self Assign',
-            fieldname: 'self_assign',
-            default: 0,
-            onchange: function(e) {
-                d.toggle_enable('assign_to', !e.checked);
-                if (e.checked) {
-                    d.set_value('assign_to', frappe.session.user);
+
+    let bom_dia = new frappe.ui.Dialog({
+        title: __('Request for BOM'),
+        fields: [
+            {
+                fieldtype: 'Check',
+                label: 'Self Assign',
+                fieldname: 'self_assign',
+                default: 0,
+                onchange: function (e) {
+                    d.toggle_enable('assign_to', !e.checked);
+                    if (e.checked) {
+                        d.set_value('assign_to', frappe.session.user);
+                    }
                 }
-            }
-        },
-        {
-            fieldtype: 'Link',
-            label: 'Assign To',
-            fieldname: 'assign_to',
-            options: 'User',
-            get_query: function () {
-                return {
-                    query : 'aumms.aumms.doctype.design_analysis.design_analysis.head_of_smith_user_query',
-                };
             },
-            depends_on: 'eval: !doc.self_assign'
-        }
-    ],
-    primary_action_label: __('Submit'),
-    primary_action(values) {
-        let assign_to = '';
-        if(values.self_assign){
-            assign_to = frappe.session.user;
-        }
-        else{
-            assign_to = values.assign_to;
-        }
-        frappe.call({
-            method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_bom_function',
-            args: {
-                doctype: frm.doctype,
-                docname: frm.doc.name,
-                assign_to: assign_to
-            },
-            freeze: true,
-            callback: (r) => {
-                frm.reload_doc();
-                bom_dia.hide()
+            {
+                fieldtype: 'Link',
+                label: 'Assign To',
+                fieldname: 'assign_to',
+                options: 'User',
+                get_query: function () {
+                    return {
+                        query: 'aumms.aumms.doctype.design_analysis.design_analysis.head_of_smith_user_query',
+                    };
+                },
+                depends_on: 'eval: !doc.self_assign'
             }
-        });
-    }
-});
-bom_dia.show()
+        ],
+        primary_action_label: __('Submit'),
+        primary_action(values) {
+            let assign_to = '';
+            if (values.self_assign) {
+                assign_to = frappe.session.user;
+            }
+            else {
+                assign_to = values.assign_to;
+            }
+            if (assign_to == null) {
+                frappe.msgprint('Please select an option');
+            } else {
+                frappe.call({
+                    method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_bom_function',
+                    args: {
+                        doctype: frm.doctype,
+                        docname: frm.doc.name,
+                        assign_to: assign_to
+                    },
+                    freeze: true,
+                    callback: (r) => {
+                        frm.reload_doc();
+                        bom_dia.hide()
+                    }
+                });
+            }
+        }
+    });
+    bom_dia.show()
 }
 
 frappe.ui.form.on('Verified Item',{
