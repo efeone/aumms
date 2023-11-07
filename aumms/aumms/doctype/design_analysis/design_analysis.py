@@ -11,9 +11,9 @@ class DesignAnalysis(Document):
                self.name = self.customer_name + '-' + self.item_code + '-' + frappe.utils.today()
 
 @frappe.whitelist()
-def create_bom_function(design_analysis):
-    if frappe.db.exists('Design Analysis', design_analysis):
-        doc = frappe.get_doc('Design Analysis', design_analysis)
+def create_bom_function(doctype, docname,assign_to):
+    if frappe.db.exists('Design Analysis', docname):
+        doc = frappe.get_doc('Design Analysis', docname)
         bom = frappe.new_doc('BOM')
         bom.item = doc.item
         for row in doc.verified_item:
@@ -23,9 +23,32 @@ def create_bom_function(design_analysis):
              bom_row.qty = row.quantity
         bom.flags.ignore_mandatory = True
         bom.save(ignore_permissions=True)
+        frappe.db.set_value(doctype, docname, 'bom_created', 1)
+        assign_to_list = [assign_to]
+        add_assign({
+                "assign_to": assign_to_list,
+                "doctype": bom.doctype,
+                "name": bom.name
+            })
         return True
+        
     else:
         return False
+
+@frappe.whitelist()
+def head_of_smith_user_query(doctype, txt, searchfield, start, page_len, filters):
+    return frappe.db.sql("""
+        SELECT
+            u.name
+        FROM
+            `tabUser`u ,
+            `tabHas Role` r
+        WHERE
+            u.name = r.parent and
+            r.role = 'Head of Smith' and
+            u.enabled = 1 and
+            u.name like %s
+    """, ("%" + txt + "%"))
 
 @frappe.whitelist()
 def create_aumms_item_from_design_analysis(customer_expected_weight, item, item_group, purity):

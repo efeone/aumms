@@ -31,7 +31,8 @@
   "calculated_stone_weight",
   "section_break_qpifr",
   "expected_weight",
-  "assigned_person"
+  "assigned_person",
+  "bom_created"
  ],
  "fields": [
   {
@@ -177,7 +178,6 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
-   "in_list_view": 1,
    "label": "Status",
    "options": "Draft\nRequest For Verification\nRequest For Approval\nApproved\nHold\nRejected\nBOM Created\nWorkorder Created"
   },
@@ -187,11 +187,18 @@
    "hidden": 1,
    "label": "Assigned Person",
    "options": "User"
+  },
+  {
+   "default": "0",
+   "fieldname": "bom_created",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "BOM created"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-04 09:49:21.108122",
+ "modified": "2023-11-07 11:34:45.343042",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Analysis",
