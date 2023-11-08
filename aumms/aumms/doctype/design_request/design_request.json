@@ -21,7 +21,8 @@
   "tab_break_gwdao",
   "attachment",
   "image",
-  "amended_from"
+  "amended_from",
+  "status"
  ],
  "fields": [
   {
@@ -81,6 +82,7 @@
   {
    "fieldname": "delivery_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Delivery Date",
    "reqd": 1
   },
@@ -124,12 +126,18 @@
    "fieldname": "expected_weight",
    "fieldtype": "Float",
    "label": "Expected Weight"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Status"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-30 12:09:04.160399",
+ "modified": "2023-11-07 15:47:10.811032",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Request",

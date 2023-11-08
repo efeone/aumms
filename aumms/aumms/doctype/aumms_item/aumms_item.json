@@ -188,7 +188,7 @@
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
    "label": "Weight UOM",
-   "mandatory_depends_on": "!has_stone",
+   "mandatory_depends_on": "(eval:doc.has_stone == 0)||(eval:doc.is_stone_item == 0)",
    "options": "UOM"
   },
   {
@@ -271,7 +271,7 @@
    "fieldname": "gold_weight",
    "fieldtype": "Float",
    "label": "Gold Weight",
-   "mandatory_depends_on": "!has_stone",
+   "mandatory_depends_on": "(eval:doc.has_stone == 0)||(eval:doc.is_stone == 0)",
    "non_negative": 1
   },
   {
@@ -316,7 +316,7 @@
    "fieldname": "stone_weight",
    "fieldtype": "Float",
    "label": "Stone Weight",
-   "mandatory_depends_on": "has_stone",
+   "mandatory_depends_on": "eval:(doc.has_stone || doc.is_stone_item)",
    "read_only_depends_on": "has_stone"
   },
   {
@@ -325,8 +325,7 @@
    "fieldname": "stone_charge",
    "fieldtype": "Currency",
    "label": "Stone Charge",
-   "mandatory_depends_on": "has_stone",
-   "read_only": 1,
+   "mandatory_depends_on": "eval:(doc.has_stone || doc.is_stone_item)",
    "read_only_depends_on": "has_stone"
   },
   {
@@ -348,7 +347,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-03 15:10:32.224949",
+ "modified": "2023-11-07 16:46:28.810697",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS Item",
