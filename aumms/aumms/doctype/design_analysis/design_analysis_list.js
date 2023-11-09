@@ -1,4 +1,4 @@
-frappe.listview_settings['Design Request'] = {
+frappe.listview_settings['Design Analysis'] = {
     add_fields: ["id", "status", "mobile_no", "delivery_date"],
     has_indicator_for_draft:1,
     get_indicator: function(doc) {
