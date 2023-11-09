@@ -11,12 +11,12 @@
   "smith_type",
   "employee",
   "supplier",
-  "supplier_name",
-  "employee_name",
+  "smith_name",
   "smith_grade",
   "column_break_mhz6m",
   "warehouse",
   "department",
+  "is_head_of_smith",
   "head_of_smith",
   "hourly_rate",
   "section_break_9mmii",
@@ -26,14 +26,17 @@
   {
    "fieldname": "smith_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Smith Type",
-   "options": "\nInternal\nExternal"
+   "options": "\nInternal\nExternal",
+   "reqd": 1
   },
   {
    "depends_on": "eval:doc.smith_type == 'Internal'",
    "fieldname": "employee",
    "fieldtype": "Link",
    "label": "Employee",
+   "mandatory_depends_on": "eval:doc.smith_type == 'Internal'",
    "options": "Employee"
   },
   {
@@ -41,22 +44,8 @@
    "fieldname": "supplier",
    "fieldtype": "Link",
    "label": "Supplier",
+   "mandatory_depends_on": "eval:doc.smith_type == 'External'",
    "options": "Supplier"
-  },
-  {
-   "depends_on": "eval:doc.smith_type == 'External'",
-   "fetch_from": "supplier.supplier_name",
-   "fieldname": "supplier_name",
-   "fieldtype": "Data",
-   "label": "Supplier Name"
-  },
-  {
-   "depends_on": "eval:doc.smith_type =='Internal'",
-   "fetch_from": "employee.employee_name",
-   "fieldname": "employee_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Employee Name"
   },
   {
    "fieldname": "column_break_mhz6m",
@@ -71,14 +60,19 @@
   {
    "fieldname": "department",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Department",
-   "options": "Department"
+   "options": "Department",
+   "reqd": 1
   },
   {
+   "depends_on": "eval: !doc.is_head_of_smith",
    "fetch_from": "department.head_of_department",
+   "fetch_if_empty": 1,
    "fieldname": "head_of_smith",
    "fieldtype": "Link",
    "label": "Head of smith",
+   "mandatory_depends_on": "eval: !doc.is_head_of_smith",
    "options": "Employee"
   },
   {
@@ -87,25 +81,38 @@
   },
   {
    "fieldname": "hourly_rate",
-   "fieldtype": "Data",
+   "fieldtype": "Currency",
    "label": "Hourly Rate"
   },
   {
    "fieldname": "category",
    "fieldtype": "Table",
    "label": "Category",
-   "options": "Smith Categories"
+   "options": "Smith Categories",
+   "reqd": 1
   },
   {
    "fieldname": "smith_grade",
    "fieldtype": "Link",
    "label": "Smith Grade",
    "options": "Smith Grade"
+  },
+  {
+   "fieldname": "smith_name",
+   "fieldtype": "Data",
+   "label": "Smith Name",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_head_of_smith",
+   "fieldtype": "Check",
+   "label": "Is Head of smith"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-02 10:57:11.184968",
+ "modified": "2023-11-09 12:17:19.136645",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Smith",
