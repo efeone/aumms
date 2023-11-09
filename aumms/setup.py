@@ -14,6 +14,7 @@ def setup_aumms_defaults():
         create_default_aumms_item_group()
         create_old_gold_aumms_item_group()
         create_all_smith_warehouse()
+        create_department_for_smith()
 
 def enable_common_party_accounting():
     """
@@ -62,4 +63,17 @@ def create_all_smith_warehouse():
         warehouse_doc.parent_warehouse = warehouse
         warehouse_doc.is_group = 1
         warehouse_doc.insert(ignore_permissions = True)
+        frappe.db.commit()
+
+def create_department_for_smith():
+    ''' Method to create smith department on after migrate '''
+    default_company = frappe.db.get_single_value('Global Defaults', 'default_company')
+    department = frappe.get_value('Department',{'department_name': 'All Departments'})
+    if not frappe.db.exists('Department', {'department_name': 'Smith'}):
+        department_doc = frappe.new_doc('Department')
+        department_doc.company = default_company
+        department_doc.department_name = 'Smith'
+        department_doc.parent_warehouse = department
+        department_doc.is_group = 1
+        department_doc.insert(ignore_permissions = True)
         frappe.db.commit()
