@@ -10,6 +10,11 @@ class DesignAnalysis(Document):
     def autoname(self):
           if self.customer_name:
                self.name = self.customer_name + '-' + self.item_code + '-' + frappe.utils.today()
+    def on_update(self):
+        design_request_doc = frappe.get_doc("Design Request", self.design_request)
+        design_request_doc.status = self.status
+        design_request_doc.save()
+        frappe.db.commit()
 
 @frappe.whitelist()
 def create_bom_function(doctype, docname,assign_to):

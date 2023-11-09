@@ -10,6 +10,7 @@
   "customer",
   "customer_name",
   "mobile_no",
+  "status",
   "column_break_ey72q",
   "design_title",
   "expected_weight",
@@ -21,8 +22,7 @@
   "tab_break_gwdao",
   "attachment",
   "image",
-  "amended_from",
-  "status"
+  "amended_from"
  ],
  "fields": [
   {
@@ -128,16 +128,19 @@
    "label": "Expected Weight"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "status",
-   "fieldtype": "Data",
+   "fieldtype": "Select",
    "in_list_view": 1,
-   "label": "Status"
+   "label": "Status",
+   "options": "Draft\nRequest For Verification\nRequest For Approval\nApproved\nHold\nRejected\nBOM Created\nWorkorder Created",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-07 15:47:10.811032",
+ "modified": "2023-11-09 11:21:15.789726",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Request",
