@@ -1,0 +1,12 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Email Template",
+  "modified": "2023-11-04 12:57:54.876364",
+  "name": "Design Request Assignment",
+  "response": "<div class=\"ql-editor read-mode\"><p><br></p></div>",
+  "response_html": "<!DOCTYPE html>\n<p>\nDear {{ frappe.get_fullname(assigned_person) }},\nI hope this message finds you well. I'm reaching out to inform you that a new design request has been assigned to you for analysis. We greatly value your expertise and trust in your ability to contribute to the success of this project.\n<br>\nPlease find the details of the assignment below:\n</p>\n<ul>\n    <li>Design Request ID : {{ name }}</li>\n    <li>Deadline: {{ delivery_date }}</li>\n</ul>\n<p>\nWe kindly request you to review the assignment and provide your analysis and insights as soon as possible. \n<br>\nThank you for your prompt attention to this matter.\n<br><br>\nBest regards,\n<br>\n{{ frappe.get_fullname(frappe.session.user) }}\n\n</p>\n",
+  "subject": "New Design Request Assignment",
+  "use_html": 1
+ }
+]

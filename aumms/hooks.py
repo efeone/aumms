@@ -88,6 +88,7 @@ after_migrate = [
 
 fixtures = [{"dt": "Role","filters": [["name", "in", ["Design Analyst", "Supervisor","Smith","Head of Smith"]]]},
             {"dt":"Designation","filters":[["name","in",["Smith"]]]},
+            {"dt":"Email Template","filters":[["name","in",["Design Request Assignment"]]]},
 			]
 # before_uninstall = "aumms.uninstall.before_uninstall"
 # after_uninstall = "aumms.uninstall.after_uninstall"
