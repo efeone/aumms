@@ -10,6 +10,11 @@ class DesignAnalysis(Document):
     def autoname(self):
           if self.customer_name:
                self.name = self.customer_name + '-' + self.item_code + '-' + frappe.utils.today()
+    def on_update(self):
+        design_request_doc = frappe.get_doc("Design Request", self.design_request)
+        design_request_doc.status = self.status
+        design_request_doc.save()
+        frappe.db.commit()
 
 @frappe.whitelist()
 def create_bom_function(doctype, docname,assign_to):
@@ -24,14 +29,12 @@ def create_bom_function(doctype, docname,assign_to):
              bom_row.qty = row.quantity
         bom.flags.ignore_mandatory = True
         bom.save(ignore_permissions=True)
-        frappe.db.set_value(doctype, docname, 'bom_created', 1)
         assign_to_list = [assign_to]
         add_assign({
                 "assign_to": assign_to_list,
                 "doctype": bom.doctype,
                 "name": bom.name
             })
-        frappe.db.set_value(doctype, docname, 'status','BOM Created')
         frappe.db.commit()
         frappe.msgprint("BOM Created", indicator="green", alert=1)
         #Send system notification and email to assignee
@@ -119,9 +122,6 @@ def create_design_request(design_analysis):
                 design_request.delivery_date = frappe.utils.today()
                 design_request.flags.ignore_mandatory = True
                 design_request.save(ignore_permissions=True)
-            if doc.status == 'Draft':
-                frappe.db.set_value("Design Analysis", design_analysis, 'status', 'Request For Verification')
-                doc.reload()
                 frappe.msgprint("Design Request Created for the material {}".format(design_request.design_title), indicator="green", alert=1)
 
 @frappe.whitelist()
@@ -132,6 +132,3 @@ def assign_design_analysis(doctype, docname, assign_to):
     "doctype": doctype,
     "name": docname
     })
-    frappe.db.set_value(doctype, docname, 'assigned_person', assign_to)
-    frappe.db.set_value(doctype, docname, 'status','Request For Approval')
-    frappe.db.commit()

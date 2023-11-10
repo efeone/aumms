@@ -92,24 +92,25 @@ let create_bom_button = function(frm){
     }
   }
 
-let request_for_verification = function(frm){
-  if(frm.doc.dr_required_check){
-    frappe.call({
-      method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_design_request',
-      args: {
-        design_analysis: frm.doc.name
-      },
-      callback: (r) => {
-                frm.reload_doc()
-             },
-    })
-  }
-  else{
-    frm.scroll_to_field('verified_item');
-    if(frm.doc.verified_item.length<1){
-      frappe.msgprint("Please fill the verified item table");
+let request_for_verification = function (frm) {
+    if (frm.doc.dr_required_check) {
+        frappe.call({
+            method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_design_request',
+            args: {
+                design_analysis: frm.doc.name
+            },
+            callback: (r) => {
+                frm.set_value("status", "Request For Verification");
+                frm.save();
+            },
+        })
     }
-  }
+    else {
+        frm.scroll_to_field('verified_item');
+        if (frm.doc.verified_item.length < 1) {
+            frappe.msgprint("Please fill the verified item table");
+        }
+    }
 }
 
 let request_for_approval = function(frm){
@@ -170,8 +171,10 @@ let make_request_for_approval = function (frm) {
                     },
                     freeze: true,
                     callback: (r) => {
-                        frm.reload_doc();
-                        d.hide()
+                        frm.set_value("assigned_person", assign_to)
+                        frm.set_value("status", "Request For Approval");
+                        frm.save();
+                        d.hide();
                     }
                 });
             }
@@ -202,7 +205,7 @@ let approve_design_analysis = function(frm) {
                     callback: (r) => {
                         if (r.message) {
                             frm.set_value('aumms_item', r.message);
-                            frm.set_value("status","Approved")
+                            frm.set_value("status","Approved");
                             frm.save();
                             console.log('AuMMS Item Created:', r.message);
 
@@ -313,7 +316,9 @@ function create_bom(frm) {
                     },
                     freeze: true,
                     callback: (r) => {
-                        frm.reload_doc();
+                        frm.set_value("bom_created", 1);
+                        frm.set_value("status", "BOM Created");
+                        frm.save();
                         bom_dia.hide();
                     }
                 });
