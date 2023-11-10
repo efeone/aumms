@@ -18,6 +18,8 @@ frappe.ui.form.on('Design Analysis', {
       }
     });
 	},
+
+    
     design_request: function(frm) {
         // Clear existing rows in the "Design Details" table
         frm.clear_table('design_details');
@@ -48,6 +50,8 @@ frappe.ui.form.on('Design Analysis', {
             });
         }
     },
+    
+    
     refresh: function(frm){
       create_custom_buttons(frm);
       if(frm.doc.status == 'Approved' && !frm.doc.bom_created){
@@ -109,7 +113,7 @@ let request_for_verification = function(frm){
 }
 
 let request_for_approval = function(frm){
-  if((frm.doc.status == "Request For Verification" ) || (frm.doc.dr_required_check == 0 && frm.doc.verified_item.length>0 && frm.doc.status != 'Request For Approval' && frm.doc.status != 'Approved')){
+  if((frm.doc.status == "Request For Verification" ) || (frm.doc.dr_required_check == 0 && frm.doc.verified_item.length>0 && frm.doc.status != 'Request For Approval' && frm.doc.status != 'Approved' && frm.doc.status !='BOM Created')){
     frm.add_custom_button('Request For Approval', () =>{
       make_request_for_approval(frm);
     },'Actions');

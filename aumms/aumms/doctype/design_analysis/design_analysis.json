@@ -17,7 +17,7 @@
   "item_group",
   "customer_expected_weight",
   "purity",
-  "mobile_no",
+  "phone_no",
   "section_break_rgobr",
   "column_break_y3jbr",
   "section_break_qqgnh",
@@ -32,7 +32,11 @@
   "section_break_qpifr",
   "expected_weight",
   "assigned_person",
-  "bom_created"
+  "tolerance",
+  "bom_created",
+  "reference_tab",
+  "reference_image",
+  "image"
  ],
  "fields": [
   {
@@ -96,13 +100,6 @@
    "label": "Purity",
    "options": "Purity",
    "reqd": 1
-  },
-  {
-   "fetch_from": "customer_name.mobile_no",
-   "fetch_if_empty": 1,
-   "fieldname": "mobile_no",
-   "fieldtype": "Data",
-   "label": "Phone.No"
   },
   {
    "fieldname": "section_break_rgobr",
@@ -179,7 +176,8 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Draft\nRequest For Verification\nRequest For Approval\nApproved\nHold\nRejected\nBOM Created\nWorkorder Created"
+   "options": "Draft\nRequest For Verification\nRequest For Approval\nApproved\nHold\nRejected\nBOM Created\nWorkorder Created",
+   "read_only": 1
   },
   {
    "fieldname": "assigned_person",
@@ -194,11 +192,39 @@
    "fieldtype": "Check",
    "hidden": 1,
    "label": "BOM created"
+  },
+  {
+   "fieldname": "reference_tab",
+   "fieldtype": "Tab Break",
+   "label": "Reference"
+  },
+  {
+   "fetch_from": "design_request.attachment",
+   "fieldname": "reference_image",
+   "fieldtype": "Attach Image",
+   "label": "Reference Image"
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Image",
+   "label": "image",
+   "options": "reference_image"
+  },
+  {
+   "fieldname": "tolerance",
+   "fieldtype": "Float",
+   "label": "Tolerance"
+  },
+  {
+   "fetch_from": "design_request.mobile_no",
+   "fieldname": "phone_no",
+   "fieldtype": "Data",
+   "label": "Phone No"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-07 20:48:24.657689",
+ "modified": "2023-11-09 14:49:22.769235",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Analysis",
