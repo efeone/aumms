@@ -50,3 +50,38 @@ def get_all_smith_warehouse():
 		return all_smith_warehouse
 	else:
 		frappe.throw(_('All Smith Warehouse not found, Please contact System Manager'))
+
+@frappe.whitelist()
+def head_of_smith_filter_query(doctype, txt, searchfield, start, page_len, filters):
+	'''
+		Query for Head of Smith field in Smith DocType
+	'''
+	return frappe.db.sql('''
+		SELECT
+			employee
+		FROM
+			tabSmith
+		WHERE
+			is_head_of_smith = 1
+	''')
+
+@frappe.whitelist()
+def smith_reference_filter_query(doctype, txt, searchfield, start, page_len, filters):
+	'''
+		Query for Employee and Supplier fields in Smith DocType
+	'''
+	return frappe.db.sql('''
+		SELECT
+			name
+		FROM
+			{tab_of_doctype}
+		WHERE
+			name
+		NOT IN
+			(
+				SELECT
+					{doctype}
+				FROM
+					tabSmith
+			)
+	'''.format(tab_of_doctype = f'tab{doctype}', doctype = doctype.lower()))
