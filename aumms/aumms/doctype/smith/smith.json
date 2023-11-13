@@ -55,7 +55,8 @@
    "fieldname": "warehouse",
    "fieldtype": "Link",
    "label": "Warehouse",
-   "options": "Warehouse"
+   "options": "Warehouse",
+   "read_only": 1
   },
   {
    "fieldname": "department",
@@ -112,7 +113,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-09 12:17:19.136645",
+ "modified": "2023-11-10 13:12:57.067492",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Smith",
