@@ -35,8 +35,21 @@ def create_bom_function(doctype, docname,assign_to):
                 "doctype": bom.doctype,
                 "name": bom.name
             })
+        s_warehouse = frappe.get_single("AuMMS Settings").get("default_warehouse")
+        t_warehouse = frappe.get_value("Smith", {"email" : assign_to}, "warehouse")
+        stock_entry = frappe.new_doc("Stock Entry")
+        stock_entry.stock_entry_type = "Material Transfer"
+        for row in doc.verified_item:
+            items_row = stock_entry.append('items')
+            items_row.item_code = row.item
+            items_row.s_warehouse = s_warehouse
+            items_row.t_warehouse = t_warehouse
+            items_row.qty = row.quantity
+            items_row.allow_zero_valuation_rate = 1
+        stock_entry.submit()
         frappe.db.commit()
         frappe.msgprint("BOM Created", indicator="green", alert=1)
+        frappe.msgprint("Stock Entry Created", indicator="green", alert=1)
         #Send system notification and email to assignee
         subject = "New BOM request received"
         content = "You've been assigned a new BOM for work order creation. Please review it at your earliest convenience."
