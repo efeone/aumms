@@ -113,7 +113,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-10 13:12:57.067492",
+ "modified": "2023-11-14 12:11:41.367067",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Smith",
@@ -133,6 +133,7 @@
    "write": 1
   }
  ],
+ "search_fields": "smith_name",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
