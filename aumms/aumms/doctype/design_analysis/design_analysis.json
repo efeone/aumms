@@ -17,7 +17,7 @@
   "item_group",
   "customer_expected_weight",
   "purity",
-  "phone_no",
+  "mobile_no",
   "section_break_rgobr",
   "column_break_y3jbr",
   "section_break_qqgnh",
@@ -217,14 +217,15 @@
   },
   {
    "fetch_from": "design_request.mobile_no",
-   "fieldname": "phone_no",
+   "fetch_if_empty": 1,
+   "fieldname": "mobile_no",
    "fieldtype": "Data",
    "label": "Phone No"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-09 14:49:22.769235",
+ "modified": "2023-11-13 12:34:20.281981",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Analysis",
