@@ -19,6 +19,7 @@
   "is_head_of_smith",
   "head_of_smith",
   "hourly_rate",
+  "email",
   "section_break_9mmii",
   "category"
  ],
@@ -109,11 +110,20 @@
    "fieldname": "is_head_of_smith",
    "fieldtype": "Check",
    "label": "Is Head of smith"
+  },
+  {
+   "fetch_from": "employee.company_email",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "mandatory_depends_on": "eval:doc.is_head_of_smith",
+   "read_only": 1,
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-10 13:12:57.067492",
+ "modified": "2023-11-14 11:49:07.892640",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Smith",
