@@ -17,15 +17,15 @@ frappe.ui.form.on('Job Card', {
 		if (!frm.doc.started_time && !frm.doc.current_time) {
 			frm.add_custom_button(__("Start Job"), () => {
 				if ((frm.doc.employee && !frm.doc.employee.length) || !frm.doc.employee) {
-					frappe.prompt({fieldtype: 'Table MultiSelect', label: __('Select Employees'),
-						options: "Job Card Time Log", fieldname: 'employees', get_query() {
+					frappe.prompt({fieldtype: 'Link', label: __('Select Employees'),
+						options: "Employee", fieldname: 'employees', default:frm.doc.assigned_employee, get_query() {
                             return {
                                 filters: {
                                     "designation": "Smith"
                                 }
                             };
                         }}, d => {
-						frm.events.start_job(frm, "Work In Progress", d.employees);
+						frm.events.start_job(frm, "Work In Progress", [{'employee':d.employees}]);
 					}, __("Assign Job to Employee"));
 				} else {
 					frm.events.start_job(frm, "Work In Progress", frm.doc.employee);
@@ -65,6 +65,5 @@ frappe.ui.form.on('Job Card', {
 		}
 	},
 
-    
+
 })
-  
