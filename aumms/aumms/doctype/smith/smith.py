@@ -26,18 +26,8 @@ class Smith(Document):
 
 			# creating a new warehouse
 			new_warehouse.warehouse_name = req_warehouse_name
-			if self.is_head_of_smith:
-				new_warehouse.is_group = 1
-				new_warehouse.parent_warehouse = get_all_smith_warehouse()
-			else:
-				head_of_smith = frappe.db.exists('Smith', {'employee':self.head_of_smith})
-				if not head_of_smith:
-					frappe.throw(_(f'Smith not found for {self.head_of_smith}'))
-				head_of_smith_warehouse = frappe.db.get_value('Smith', head_of_smith, 'warehouse')
-				if not head_of_smith_warehouse:
-					frappe.throw(_(f'No Warehouse found for Head of Smith {head_of_smith}'))
-				new_warehouse.parent_warehouse = head_of_smith_warehouse
-
+			new_warehouse.is_group = 0
+			new_warehouse.parent_warehouse = get_all_smith_warehouse()
 			new_warehouse.save(ignore_permissions=True)
 			self.warehouse = new_warehouse.name
 
