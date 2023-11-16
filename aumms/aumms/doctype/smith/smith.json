@@ -118,12 +118,13 @@
    "label": "Email",
    "mandatory_depends_on": "eval:doc.is_head_of_smith",
    "read_only": 1,
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-14 12:11:41.367067",
+ "modified": "2023-11-16 12:48:51.743227",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Smith",
@@ -143,7 +144,6 @@
    "write": 1
   }
  ],
- "search_fields": "smith_name",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
