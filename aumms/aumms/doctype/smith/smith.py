@@ -80,11 +80,12 @@ def smith_reference_filter_query(doctype, txt, searchfield, start, page_len, fil
 	'''.format(tab_of_doctype = f'tab{doctype}', doctype = doctype.lower()))
 
 def create_user_for_smith(doc):
-	if doc.email:
-		user = frappe.new_doc('User')
-		user.email = doc.email
-		user.first_name = doc.smith_name
-		user.append('roles', {'role': 'Head of Smith'})
-		user.save(ignore_permissions = True)
-		frappe.msgprint('User created for this smith', alert=True, indicator='green')
+    if doc.email and doc.is_head_of_smith:
+        user = frappe.new_doc('User')
+        user.email = doc.email
+        user.first_name = doc.smith_name
+        user.append('roles', {'role': 'Head of Smith'})
+        user.save(ignore_permissions=True)
+        frappe.msgprint('User created for this smith', alert=True, indicator='green')
+
 
