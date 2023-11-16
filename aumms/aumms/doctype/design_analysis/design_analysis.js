@@ -17,6 +17,14 @@ frappe.ui.form.on('Design Analysis', {
         }
       }
     });
+
+    frm.set_query('design_request',function(){
+        return {
+            filters: {
+                "docstatus" : ['!=',2]
+            }
+        }
+    });
 	},
 
     
@@ -57,7 +65,6 @@ frappe.ui.form.on('Design Analysis', {
       if(frm.doc.status == 'Approved' && !frm.doc.bom_created){
         create_bom_button(frm);   
       }
-
     },
 
     check_dr_required:  function(frm){
@@ -306,21 +313,18 @@ function create_bom(frm) {
             }
             if (assign_to == null) {
                 frappe.msgprint('Please select an option');
-            } else {
-                frappe.call({
-                    method: 'aumms.aumms.doctype.design_analysis.design_analysis.create_bom_function',
-                    args: {
-                        doctype: frm.doctype,
-                        docname: frm.doc.name,
-                        assign_to: assign_to
-                    },
-                    freeze: true,
-                    callback: (r) => {
-                        frm.set_value("bom_created", 1);
-                        frm.set_value("status", "BOM Created");
-                        frm.save();
-                        bom_dia.hide();
-                    }
+            }
+            else {
+                console.log("function call");
+                frm.call('create_bom_function', {
+                    assign_to: assign_to
+                }).then(r => {
+                    frm.set_value("bom_created", 1);
+                    frm.set_value("status", "BOM Created");
+                    console.log(r);
+                    frm.set_value("bom_no", r.message);
+                    frm.save();
+                    bom_dia.hide();
                 });
             }
         }
