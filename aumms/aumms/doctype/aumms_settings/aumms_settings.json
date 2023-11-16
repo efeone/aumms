@@ -11,7 +11,8 @@
   "metal_ledger_uom",
   "old_gold_item",
   "column_break_2",
-  "metal_ledger_purity"
+  "metal_ledger_purity",
+  "default_warehouse"
  ],
  "fields": [
   {
@@ -40,12 +41,18 @@
    "fieldtype": "Link",
    "label": "Old Gold Item",
    "options": "AuMMS Item"
+  },
+  {
+   "fieldname": "default_warehouse",
+   "fieldtype": "Link",
+   "label": "Default Warehouse",
+   "options": "Warehouse"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-08-04 10:11:36.992374",
+ "modified": "2023-11-15 12:10:31.006443",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS Settings",
