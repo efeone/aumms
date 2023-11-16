@@ -21,7 +21,7 @@ frappe.ui.form.on('Design Analysis', {
     frm.set_query('design_request',function(){
         return {
             filters: {
-                "docstatus" : ['!=',2]
+                "docstatus" : 1
             }
         }
     });

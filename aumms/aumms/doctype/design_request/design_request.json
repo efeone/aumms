@@ -133,14 +133,14 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Draft\nRequest For Verification\nRequest For Approval\nApproved\nHold\nRejected\nBOM Created\nWorkorder Created",
+   "options": "Draft\nRequest For Verification\nRequest For Approval\nApproved\nHold\nRejected\nBOM Created\nWork Order Created",
    "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-09 11:21:15.789726",
+ "modified": "2023-11-16 13:24:53.023430",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Request",

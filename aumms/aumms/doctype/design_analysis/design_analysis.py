@@ -16,17 +16,15 @@ class DesignAnalysis(Document):
         design_request_doc.save()
         frappe.db.commit()
 
-@frappe.whitelist()
-def create_bom_function(doctype, docname,assign_to):
-    if frappe.db.exists('Design Analysis', docname):
-        doc = frappe.get_doc('Design Analysis', docname)
+    @frappe.whitelist()
+    def create_bom_function(self, assign_to):
         bom = frappe.new_doc('BOM')
-        bom.item = doc.item
-        for row in doc.verified_item:
-             bom_row = bom.append('items')
-             bom_row.item_code = row.item
-             bom_row.uom = row.unit_of_measure
-             bom_row.qty = row.quantity
+        bom.item = self.item
+        for row in self.verified_item:
+            bom_row = bom.append('items')
+            bom_row.item_code = row.item
+            bom_row.uom = row.unit_of_measure
+            bom_row.qty = row.quantity
         bom.flags.ignore_mandatory = True
         bom.save(ignore_permissions=True)
         assign_to_list = [assign_to]
@@ -53,11 +51,8 @@ def create_bom_function(doctype, docname,assign_to):
         #Send system notification and email to assignee
         subject = "New BOM request received"
         content = "You've been assigned a new BOM for work order creation. Please review it at your earliest convenience."
-        create_notification_log(doctype, docname, assign_to, subject, content)
-        return True
-        
-    else:
-        return False
+        create_notification_log("BOM", bom.name, assign_to, subject, content)
+        return bom.name
 
 @frappe.whitelist()
 def head_of_smith_user_query(doctype, txt, searchfield, start, page_len, filters):
