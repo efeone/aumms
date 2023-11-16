@@ -19,7 +19,7 @@ frappe.ui.form.on('Design Request', {
 		}
 	},
 	refresh: function(frm) {
-        if(!frm.doc.assigned_person && !frm.is_new()) {
+        if(!frm.doc.assigned_person && !frm.is_new() && frm.doc.docstatus == 1) {
             frm.add_custom_button(__('Assign'), () => {
                 let d = new frappe.ui.Dialog({
                     title: __('Assign Design Request'),
