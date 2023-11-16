@@ -17,6 +17,7 @@
   "item_group",
   "customer_expected_weight",
   "purity",
+  "bom_no",
   "mobile_no",
   "section_break_rgobr",
   "column_break_y3jbr",
@@ -176,7 +177,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Draft\nRequest For Verification\nRequest For Approval\nApproved\nHold\nRejected\nBOM Created\nWorkorder Created",
+   "options": "Draft\nRequest For Verification\nRequest For Approval\nApproved\nHold\nRejected\nBOM Created\nWork Order Created",
    "read_only": 1
   },
   {
@@ -221,11 +222,18 @@
    "fieldname": "mobile_no",
    "fieldtype": "Data",
    "label": "Phone No"
+  },
+  {
+   "fieldname": "bom_no",
+   "fieldtype": "Link",
+   "label": "BOM No.",
+   "options": "BOM",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-13 12:34:20.281981",
+ "modified": "2023-11-16 13:24:11.951774",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Analysis",

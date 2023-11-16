@@ -152,6 +152,9 @@ doc_events = {
 	},
 	'Payment Entry':{
 		'on_submit': 'aumms.aumms.doc_events.payment_entry.payment_entry_on_submit'
+	},
+    'Work Order':{
+        'after_insert' : 'aumms.aumms.doc_events.work_order.change_design_analysis_status'
 	}
 }
 
