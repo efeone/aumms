@@ -27,7 +27,7 @@ frappe.ui.form.on('Design Analysis', {
     });
 	},
 
-    
+
     design_request: function(frm) {
         // Clear existing rows in the "Design Details" table
         frm.clear_table('design_details');
@@ -58,12 +58,12 @@ frappe.ui.form.on('Design Analysis', {
             });
         }
     },
-    
-    
+
+
     refresh: function(frm){
       create_custom_buttons(frm);
       if(frm.doc.status == 'Approved' && !frm.doc.bom_created){
-        create_bom_button(frm);   
+        create_bom_button(frm);
       }
     },
 
@@ -216,16 +216,16 @@ let approve_design_analysis = function(frm) {
                             frm.save();
                             console.log('AuMMS Item Created:', r.message);
 
-                            
+
                         } else {
                             console.log('Failed to create AuMMS Item');
                         }
 
                     }
-                    
+
                 });
             }, 'Actions');
-              
+
 
             frm.add_custom_button('Reject', () =>{
               reject_design_analysis(frm)
@@ -278,18 +278,6 @@ function create_bom(frm) {
         title: __('Request for BOM'),
         fields: [
             {
-                fieldtype: 'Check',
-                label: 'Self Assign',
-                fieldname: 'self_assign',
-                default: 0,
-                onchange: function (e) {
-                    d.toggle_enable('assign_to', !e.checked);
-                    if (e.checked) {
-                        d.set_value('assign_to', frappe.session.user);
-                    }
-                }
-            },
-            {
                 fieldtype: 'Link',
                 label: 'Assign To',
                 fieldname: 'assign_to',
@@ -297,20 +285,17 @@ function create_bom(frm) {
                 get_query: function () {
                     return {
                         query: 'aumms.aumms.doctype.design_analysis.design_analysis.head_of_smith_user_query',
+                        filters: {
+                            "role" : "Head of Smith"
+                        }
                     };
-                },
-                depends_on: 'eval: !doc.self_assign'
+                }
             }
         ],
         primary_action_label: __('Submit'),
         primary_action(values) {
             let assign_to = '';
-            if (values.self_assign) {
-                assign_to = frappe.session.user;
-            }
-            else {
                 assign_to = values.assign_to;
-            }
             if (assign_to == null) {
                 frappe.msgprint('Please select an option');
             }
