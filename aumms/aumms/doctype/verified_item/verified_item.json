@@ -47,6 +47,7 @@
    "label": "Unit of Measure"
   },
   {
+   "default": "1",
    "fieldname": "quantity",
    "fieldtype": "Int",
    "in_list_view": 1,
@@ -90,7 +91,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-11-03 11:21:02.548953",
+ "modified": "2023-11-17 11:38:32.848259",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Verified Item",
