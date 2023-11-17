@@ -27,6 +27,12 @@ class DesignAnalysis(Document):
             bom_row.qty = row.quantity
         bom.flags.ignore_mandatory = True
         bom.save(ignore_permissions=True)
+        assign_to_list = [assign_to]
+        add_assign({
+                "assign_to": assign_to_list,
+                "doctype": bom.doctype,
+                "name": bom.name
+            })
         s_warehouse = frappe.get_single("AuMMS Settings").get("default_warehouse")
         t_warehouse = frappe.get_value("Smith", {"email" : assign_to}, "warehouse")
         stock_entry = frappe.new_doc("Stock Entry")
@@ -125,3 +131,12 @@ def create_design_request(design_analysis):
                 design_request.flags.ignore_mandatory = True
                 design_request.save(ignore_permissions=True)
                 frappe.msgprint("Design Request Created for the material {}".format(design_request.design_title), indicator="green", alert=1)
+
+@frappe.whitelist()
+def assign_design_analysis(doctype, docname, assign_to):
+    assign_to_list = [assign_to]
+    add_assign({
+    "assign_to": assign_to_list,
+    "doctype": doctype,
+    "name": docname
+    })
