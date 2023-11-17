@@ -37,7 +37,7 @@ class DesignAnalysis(Document):
         t_warehouse = frappe.get_value("Smith", {"email" : assign_to}, "warehouse")
         stock_entry = frappe.new_doc("Stock Entry")
         stock_entry.stock_entry_type = "Material Transfer"
-        for row in doc.verified_item:
+        for row in self.verified_item:
             items_row = stock_entry.append('items')
             items_row.item_code = row.item
             items_row.s_warehouse = s_warehouse
