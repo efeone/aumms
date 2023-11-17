@@ -2,30 +2,31 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Design Analysis', {
-    setup:function(frm){
-        frm.set_query('unit_of_measure', 'verified_item', ()=> {
-      return{
-        filters: {
-          "is_purity_uom":1
-        }
-      }
-    });
-        frm.set_query('unit_of_measure', 'design_details', ()=> {
-      return{
-        filters: {
-            "is_purity_uom":1
-        }
-      }
-    });
-
-    frm.set_query('design_request',function(){
-        return {
-            filters: {
-                "docstatus" : 1
+    setup: function (frm) {
+        frm.set_query('unit_of_measure', 'verified_item', () => {
+            return {
+                filters: {
+                    "is_purity_uom": 1
+                }
             }
-        }
-    });
-	},
+        });
+        frm.set_query('unit_of_measure', 'design_details', () => {
+            return {
+                filters: {
+                    "is_purity_uom": 1
+                }
+            }
+        });
+
+        frm.set_query('design_request', function () {
+            return {
+                filters: {
+                    "docstatus": 1,
+                    "assigned_person": frappe.session.user
+                }
+            }
+        });
+    },
 
 
     design_request: function(frm) {
