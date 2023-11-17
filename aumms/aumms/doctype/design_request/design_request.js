@@ -11,7 +11,7 @@ frappe.ui.form.on('Design Request', {
             }
         });
     },
-	// Delivery date valdation 
+	// Delivery date validation
 	delivery_date: function(frm){
 		if (frm.doc.delivery_date < frappe.datetime.get_today()){
 			frm.set_value('delivery_date', )
@@ -44,6 +44,9 @@ frappe.ui.form.on('Design Request', {
                             get_query: function () {
                                 return {
                                     query : 'aumms.aumms.doctype.design_request.design_request.design_analyst_user_query',
+                                    filters: {
+                                        "role" : "Design Analyst"
+                                    }
                                 };
                             },
                             depends_on: 'eval: !doc.self_assign' // Show the field only when Self Assign is not checked
@@ -73,15 +76,9 @@ frappe.ui.form.on('Design Request', {
                         });
                     }
                 });
-                // Show the dialog                
+                // Show the dialog
                 d.show();
             });
-        }   
+        }
     }
 });
-
-
-
-
-
-
