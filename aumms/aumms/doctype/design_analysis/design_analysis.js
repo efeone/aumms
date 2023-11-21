@@ -21,8 +21,7 @@ frappe.ui.form.on('Design Analysis', {
         frm.set_query('design_request', function () {
             return {
                 filters: {
-                    "docstatus": 1,
-                    "assigned_person": frappe.session.user
+                    "docstatus": 1
                 }
             }
         });
