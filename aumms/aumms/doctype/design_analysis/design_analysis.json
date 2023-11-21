@@ -33,7 +33,6 @@
   "section_break_qpifr",
   "expected_weight",
   "assigned_person",
-  "tolerance",
   "bom_created",
   "reference_tab",
   "reference_image",
@@ -212,11 +211,6 @@
    "options": "reference_image"
   },
   {
-   "fieldname": "tolerance",
-   "fieldtype": "Float",
-   "label": "Tolerance"
-  },
-  {
    "fetch_from": "design_request.mobile_no",
    "fetch_if_empty": 1,
    "fieldname": "mobile_no",
@@ -233,7 +227,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-16 13:24:11.951774",
+ "modified": "2023-11-21 15:49:41.731009",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Analysis",
