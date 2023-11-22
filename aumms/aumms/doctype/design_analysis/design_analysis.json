@@ -150,7 +150,8 @@
   {
    "fieldname": "gold_weight",
    "fieldtype": "Data",
-   "label": "Calculated Gold Weight"
+   "label": "Calculated Gold Weight",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_qpifr",
@@ -159,7 +160,8 @@
   {
    "fieldname": "expected_weight",
    "fieldtype": "Data",
-   "label": "Calculated Net Weight"
+   "label": "Calculated Net Weight",
+   "read_only": 1
   },
   {
    "fieldname": "approver_weight",
@@ -170,7 +172,8 @@
   {
    "fieldname": "calculated_stone_weight",
    "fieldtype": "Data",
-   "label": "Calculated Stone Weight"
+   "label": "Calculated Stone Weight",
+   "read_only": 1
   },
   {
    "fieldname": "status",
@@ -227,7 +230,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-21 15:49:41.731009",
+ "modified": "2023-11-22 16:41:08.561262",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Analysis",

@@ -16,7 +16,10 @@
   "gold_wt",
   "net_wt",
   "stone_wt",
-  "tolerence"
+  "tolerence",
+  "total_gold_wt",
+  "total_stone_wt",
+  "total_net_wt"
  ],
  "fields": [
   {
@@ -90,15 +93,33 @@
   },
   {
    "fieldname": "tolerence",
-   "fieldtype": "Float",
+   "fieldtype": "Percent",
    "in_list_view": 1,
    "label": "Tolerence"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_gold_wt",
+   "fieldtype": "Data",
+   "label": "Total Gold Wt"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_stone_wt",
+   "fieldtype": "Data",
+   "label": "Total Stone Wt"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_net_wt",
+   "fieldtype": "Data",
+   "label": "Total Net Wt"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-11-21 15:43:06.305349",
+ "modified": "2023-11-22 16:30:45.338319",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Verified Item",
