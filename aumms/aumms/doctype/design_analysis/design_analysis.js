@@ -81,6 +81,7 @@ frappe.ui.form.on('Design Analysis', {
     }
 });
 
+
 let create_custom_buttons = function(frm){
   if(!frm.is_new() && frm.doc.status=='Draft'){
     frm.add_custom_button('Request For Verification',() =>{
@@ -317,32 +318,43 @@ function create_bom(frm) {
     bom_dia.show()
 }
 
+function update_child_table_weight(frm, cdt, cdn){
+    var child = locals[cdt][cdn];
+    // Assuming gold_wt is a field in your child table
+    var total_gold_wt = child.quantity * child.gold_wt;
+    var total_stone_wt = child.quantity * child.stone_wt;
+    var total_net_wt = child.quantity * child.net_wt;
+    // Update the total_gold_wt field in the current row
+    frappe.model.set_value(cdt, cdn, 'total_gold_wt', total_gold_wt);
+    frappe.model.set_value(cdt, cdn, 'total_stone_wt', total_stone_wt);
+    frappe.model.set_value(cdt, cdn, 'total_net_wt', total_net_wt);
+}
+
+function update_total_weight(frm) {
+    var expected_weight = 0;
+    var gold_weight = 0;
+    var calculated_stone_weight = 0;
+    frm.doc.verified_item.forEach(function (child) {
+        gold_weight += child.total_gold_wt;
+        expected_weight += child.total_net_wt;
+        calculated_stone_weight += child.total_stone_wt;
+    })
+    frm.set_value('gold_weight', gold_weight);
+    frm.set_value('expected_weight', expected_weight);
+    frm.set_value('calculated_stone_weight', calculated_stone_weight);
+}
+
 frappe.ui.form.on('Verified Item',{
-    item: function(frm,cdt,cdn){
-        let d = locals[cdt][cdn];
-        var gold_weight = 0
-        var expected_weight = 0
-        var calculated_stone_weight = 0
-        frm.doc.verified_item.forEach(function(d){
-            gold_weight += d.gold_wt;
-            expected_weight += d.net_wt;
-            calculated_stone_weight += d.stone_wt;
-        })
-        frm.set_value('gold_weight',gold_weight),
-        frm.set_value('expected_weight',expected_weight),
-        frm.set_value('calculated_stone_weight',calculated_stone_weight)
+
+    quantity: function(frm, cdt, cdn) {
+        update_child_table_weight(frm, cdt,cdn);
+        update_total_weight(frm);
+    },
+    item: function(frm, cdt, cdn){
+        update_child_table_weight(frm, cdt, cdn);
+        update_total_weight(frm);
     },
     verified_item_remove: function(frm){
-        var expected_weight = 0
-        var gold_weight = 0
-        var calculated_stone_weight = 0
-        frm.doc.verified_item.forEach(function(d){
-            gold_weight += d.gold_wt;
-            expected_weight += d.net_wt;
-            calculated_stone_weight += d.stone_wt;
-        })
-        frm.set_value('gold_weight',gold_weight),
-        frm.set_value('expected_weight',expected_weight)
-        frm.set_value('calculated_stone_weight',calculated_stone_weight)
+        update_total_weight(frm);
     },
 });
