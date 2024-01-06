@@ -10,7 +10,7 @@ from frappe.utils import *
 from erpnext.stock.doctype.item.item import get_item_defaults
 from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
 from frappe.contacts.doctype.address.address import get_company_address
-from erpnext.e_commerce.shopping_cart.cart import get_billing_addresses
+# from erpnext.e_commerce.shopping_cart.cart import get_billing_addresses
 from erpnext.accounts.party import get_party_account
 
 class JewelleryInvoice(Document):
