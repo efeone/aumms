@@ -86,7 +86,7 @@ after_migrate = [
 # Uninstallation
 # ------------
 
-fixtures = [{"dt": "Role","filters": [["name", "in", ["Design Analyst", "Supervisor","Smith","Head of Smith"]]]},
+fixtures = [{"dt": "Role","filters": [["name", "in", ["Design Analyst", "Supervisor","Smith","Head of Smith", "AuMMS Manager"]]]},
             {"dt":"Designation","filters":[["name","in",["Smith"]]]},
             {"dt":"Email Template","filters":[["name","in",["Design Request Assignment"]]]},
 			]
