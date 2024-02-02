@@ -230,7 +230,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-22 16:41:08.561262",
+ "modified": "2024-02-01 12:31:27.548126",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Design Analysis",
@@ -253,11 +253,22 @@
    "delete": 1,
    "email": 1,
    "export": 1,
-   "if_owner": 1,
    "print": 1,
    "read": 1,
    "report": 1,
    "role": "Design Analyst",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "AuMMS Manager",
    "share": 1,
    "write": 1
   }
