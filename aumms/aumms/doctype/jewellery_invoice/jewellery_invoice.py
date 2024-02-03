@@ -10,6 +10,7 @@ from frappe.utils import *
 from erpnext.stock.doctype.item.item import get_item_defaults
 from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
 from frappe.contacts.doctype.address.address import get_company_address
+from frappe.model.utils import get_fetch_values
 # from erpnext.e_commerce.shopping_cart.cart import get_billing_addresses
 from erpnext.accounts.party import get_party_account
 
@@ -53,20 +54,22 @@ class JewelleryInvoice(Document):
 		self.cancel_purchase_receipt()
 
 	def set_total_amount(self):
-		''' Method to calculate and set totals '''
-		amount = 0
-		for item in self.items:
-			amount += item.amount
-		currency = self.currency
-		self.grand_total = amount
-		if self.disable_rounded_total:
-			self.rounded_total = amount
-			self.rounding_adjustment = 0
-		else:
-			self.rounded_total = round(amount)
-			self.rounding_adjustment = self.rounded_total - amount
-		self.in_words = money_in_words(self.rounded_total, currency)
-		self.outstanding_amount = self.rounded_total - self.paid_amount
+	    ''' Method to calculate and set totals '''
+	    amount = 0
+	    for item in self.items:
+	        if item.amount is not None:
+	            amount += item.amount
+	    currency = self.currency
+	    self.grand_total = amount
+	    if self.disable_rounded_total:
+	        self.rounded_total = amount
+	        self.rounding_adjustment = 0
+	    else:
+	        self.rounded_total = round(amount)
+	        self.rounding_adjustment = self.rounded_total - amount
+	    self.in_words = money_in_words(self.rounded_total, currency)
+	    self.outstanding_amount = self.rounded_total - self.paid_amount
+
 
 	def cancel_sales_order(self):
 		''' Method to Cancel Sales Order linked with Jewellery Invoice '''
