@@ -27,6 +27,7 @@
   "column_break_mzcap",
   "total_old_gold_amount",
   "total_gold_amount",
+  "sales_taxes_and_charges_template",
   "totals_section",
   "currency",
   "grand_total",
@@ -393,13 +394,19 @@
    "no_copy": 1,
    "options": "Sales\nExchange\nPurchase",
    "reqd": 1
+  },
+  {
+   "fieldname": "sales_taxes_and_charges_template",
+   "fieldtype": "Link",
+   "label": "Sales Taxes and Charges Template",
+   "options": "Sales Taxes and Charges Template"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-01 12:27:43.428882",
+ "modified": "2024-02-03 11:58:01.263231",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Invoice",

@@ -415,6 +415,7 @@ let create_custom_buttons = function(frm){
         frappe.call('aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.create_sales_invoice', {
             source_name: frm.doc.sales_order,
             jewellery_invoice: frm.doc.name,
+            sales_taxes_and_charges_template : frm.doc.sales_taxes_and_charges_template
         }).then(r => {
             frm.reload_doc();
         });
@@ -426,7 +427,7 @@ let create_custom_buttons = function(frm){
       //Delivery Note creation method
       frappe.call('aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.create_delivery_note', {
         source_name: frm.doc.sales_invoice,
-        jewellery_invoice: frm.doc.name,
+        jewellery_invoice: frm.doc.name
       }).then(r => {
         frm.reload_doc();
       });;
@@ -438,6 +439,7 @@ let create_custom_buttons = function(frm){
       frappe.call('aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.create_sales_invoice', {
         source_name: frm.doc.sales_order,
         jewellery_invoice: frm.doc.name,
+        sales_taxes_and_charges_template : frm.doc.sales_taxes_and_charges_template,
         update_stock: 1,
       }).then(r => {
         frm.reload_doc();
