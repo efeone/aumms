@@ -18,6 +18,7 @@ class AuMMSItem(Document):
 		if self.is_new():
 			self.validate_item_name()
 			self.validate_item_code()
+		self.validate_gross_wt_stone_wt_and_charge()
 	
 	"""def validate_stone_weight(self):
 		if not self.stone_weight and self.is_stone_item:
@@ -40,6 +41,24 @@ class AuMMSItem(Document):
 		if self.item_name:
 			if frappe.db.exists('Item', { 'item_name' : self.item_name }):
 				frappe.throw('Item already exists with Item Name `{0}`.'.format(frappe.bold(self.item_name)))
+
+	def validate_gross_wt_stone_wt_and_charge(self):
+		''' Method to validate AuMMS Item calculate missing wrt to Item Name '''
+		if self.has_stone and (not self.stone_weight or self.stone_charge):
+			stone_charge = 0
+			stone_weight = 0
+			for item in self.stone_details:
+				stone_charge = + stone_charge + item.stone_charge
+				stone_weight = + stone_weight + item.stone_weight
+			self.stone_weight = stone_weight
+			self.stone_charge = stone_charge
+
+		if not self.weight_per_unit:
+			if self.has_stone and self.gold_weight and self.stone_weight:
+				self.weight_per_unit = self.gold_weight + self.stone_weight
+			elif not self.has_stone and self.gold_weight:
+				self.weight_per_unit = self.gold_weight
+
 
 	def validate_item_code(self):
 		''' Method to validate AuMMS Item Code wrt to Item Code '''
