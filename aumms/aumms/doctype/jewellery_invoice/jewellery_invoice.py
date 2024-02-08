@@ -21,7 +21,7 @@ class JewelleryInvoice(Document):
 	def on_submit(self):
 		''' Method to Create Sales Order & Purchase Order and link them with Jewellery Invoice '''
 		if self.transaction_type in ['Sales', 'Exchange']:
-			sales_order = create_sales_order(self.name)
+			sales_order = create_sales_order(self.name, self.sales_taxes_and_charges_template)
 			if sales_order:
 				frappe.db.set_value(self.doctype, self.name, 'sales_order', sales_order)
 				frappe.db.set_value(self.doctype, self.name, 'status', 'Ordered')
@@ -121,33 +121,43 @@ class JewelleryInvoice(Document):
 			else:
 				frappe.throw('Delivery Note `{0}` not found!'.format(self.delivery_note))
 
-def create_sales_order(source_name, target_doc=None):
-	''' Method to create Sales Order from Jewellery Invoice '''
-	def set_missing_values(source, target):
-		keep_metal_ledger = 0
-		transaction_type = frappe.db.get_value('Jewellery Invoice', source_name, 'transaction_type')
-		if transaction_type in ['Purchase', 'Exchange']:
-			keep_metal_ledger = 1
-		target.keep_metal_ledger = keep_metal_ledger
-	target_doc = get_mapped_doc("Jewellery Invoice", source_name,
-		{
-			"Jewellery Invoice": {
-				"doctype": "Sales Order",
-				"field_map":{
-				},
-			},
-			"Jewellery Invoice Item": {
-				"doctype": "Sales Order Item",
-				"field_map": {
-					'delivery_date':'delivery_date',
-					'gold_weight':'qty',
-				},
-			},
-    	}, target_doc, set_missing_values)
-	target_doc.submit()
-	frappe.msgprint(('Sales Order created'), indicator="green", alert=1)
-	frappe.db.commit()
-	return target_doc.name
+def create_sales_order(source_name, sales_taxes_and_charges_template , target_doc=None):
+    ''' Method to create Sales Order from Jewellery Invoice '''
+    def set_missing_values(source, target):
+        keep_metal_ledger = 0
+        transaction_type = frappe.db.get_value('Jewellery Invoice', source_name, 'transaction_type')
+        if transaction_type in ['Purchase', 'Exchange']:
+            keep_metal_ledger = 1
+        target.keep_metal_ledger = keep_metal_ledger
+        taxes_and_charges_details = frappe.get_doc("Sales Taxes and Charges Template", sales_taxes_and_charges_template)
+        for tax in taxes_and_charges_details.taxes:
+            target.append("taxes", {
+                "charge_type": tax.charge_type,
+                "account_head": tax.account_head,
+                "description": tax.description,
+                "rate": tax.rate,
+                "tax_amount": tax.tax_amount,
+                "included_in_print_rate": tax.included_in_print_rate
+            })
+    target_doc = get_mapped_doc("Jewellery Invoice", source_name,
+        {
+            "Jewellery Invoice": {
+                "doctype": "Sales Order",
+                "field_map": {
+                },
+            },
+            "Jewellery Invoice Item": {
+                "doctype": "Sales Order Item",
+                "field_map": {
+                    'delivery_date': 'delivery_date',
+                    'gold_weight': 'qty',
+                },
+            },
+        }, target_doc, set_missing_values)
+    target_doc.submit()
+    frappe.msgprint(('Sales Order created'), indicator="green", alert=1)
+    frappe.db.commit()
+    return target_doc.name
 
 def get_party_link_if_exist(party_type, party):
 	''' Method to get Common Party Link if exists '''
