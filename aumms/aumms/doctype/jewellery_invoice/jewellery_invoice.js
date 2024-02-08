@@ -60,7 +60,40 @@ frappe.ui.form.on('Jewellery Invoice', {
   },
   transaction_type: function(frm){
     set_net_weight_and_amount(frm);
-  }
+  },
+  sales_taxes_and_charges_template: function(frm) {
+    if (frm.doc.sales_taxes_and_charges_template) {
+        frappe.call({
+            method: 'aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.get_sales_taxes_and_charges_details',
+            args: {
+                sales_taxes_and_charges_template: frm.doc.sales_taxes_and_charges_template,
+                total_gold_amount : frm.doc.total_gold_amount,
+                jewellery_invoice: frm.doc.name
+            },
+            callback: function(response) {
+                if (response.message) {
+                    frm.clear_table("custom_sales_taxes_and_charges");
+                    var total_taxes_and_charges = 0
+                    response.message.forEach(function(tax) {
+                        frm.add_child("custom_sales_taxes_and_charges", {
+                            charge_type: tax.charge_type,
+                            account_head: tax.account_head,
+                            description: tax.description,
+                            rate: tax.rate,
+                            tax_amount: tax.tax_amount,
+                            included_in_print_rate: tax.included_in_print_rate,
+                            total : tax.total
+                        });
+                        total_taxes_and_charges += tax.tax_amount
+                    });
+                    frm.set_value('custom_total_taxes_and_charges', total_taxes_and_charges)
+                    frm.refresh_field('custom_total_taxes_and_charges');
+                    frm.refresh_field("custom_sales_taxes_and_charges");
+                }
+            }
+        });
+    }
+}
 });
 
 frappe.ui.form.on('Old Jewellery Item', {
@@ -273,7 +306,7 @@ frappe.ui.form.on('Jewellery Invoice Item', {
     set_totals(frm);
     set_net_weight_and_amount(frm);
   }
-})
+});
 
 let set_item_details = function(frm, child) {
   //function to get item get_item_details
@@ -415,12 +448,20 @@ let create_custom_buttons = function(frm){
         frappe.call('aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.create_sales_invoice', {
             source_name: frm.doc.sales_order,
             jewellery_invoice: frm.doc.name,
-            sales_taxes_and_charges_template : frm.doc.sales_taxes_and_charges_template
+            sales_taxes_and_charges_template : frm.doc.sales_taxes_and_charges_template,
+            keep_metal_ledger : 1
         }).then(r => {
             frm.reload_doc();
         });
     }, 'Create');
   }
+  // if (frm.doc.sales_invoice && !frm.doc.metal_ledger_entry){
+  //   frappe.call('aumms.aumms.aumms.utils.create_metal_ledger_entries', {
+  //     doc : frm.doc.sales_invoice
+  //   }).then(r => {
+  //     frm.reload_doc();
+  //   });
+  // }
 
   if(frm.doc.sales_invoice && !frm.doc.delivery_note && !frm.doc.delivered){
     frm.add_custom_button('Delivery Note', () => {
@@ -441,6 +482,7 @@ let create_custom_buttons = function(frm){
         jewellery_invoice: frm.doc.name,
         sales_taxes_and_charges_template : frm.doc.sales_taxes_and_charges_template,
         update_stock: 1,
+        keep_metal_ledger :1
       }).then(r => {
         frm.reload_doc();
       });;
