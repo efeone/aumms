@@ -21,7 +21,7 @@ class JewelleryInvoice(Document):
 	def on_submit(self):
 		''' Method to Create Sales Order & Purchase Order and link them with Jewellery Invoice '''
 		if self.transaction_type in ['Sales', 'Exchange']:
-			sales_order = create_sales_order(self.name)
+			sales_order = create_sales_order(self.name, self.sales_taxes_and_charges_template)
 			if sales_order:
 				frappe.db.set_value(self.doctype, self.name, 'sales_order', sales_order)
 				frappe.db.set_value(self.doctype, self.name, 'status', 'Ordered')
@@ -121,33 +121,43 @@ class JewelleryInvoice(Document):
 			else:
 				frappe.throw('Delivery Note `{0}` not found!'.format(self.delivery_note))
 
-def create_sales_order(source_name, target_doc=None):
-	''' Method to create Sales Order from Jewellery Invoice '''
-	def set_missing_values(source, target):
-		keep_metal_ledger = 0
-		transaction_type = frappe.db.get_value('Jewellery Invoice', source_name, 'transaction_type')
-		if transaction_type in ['Purchase', 'Exchange']:
-			keep_metal_ledger = 1
-		target.keep_metal_ledger = keep_metal_ledger
-	target_doc = get_mapped_doc("Jewellery Invoice", source_name,
-		{
-			"Jewellery Invoice": {
-				"doctype": "Sales Order",
-				"field_map":{
-				},
-			},
-			"Jewellery Invoice Item": {
-				"doctype": "Sales Order Item",
-				"field_map": {
-					'delivery_date':'delivery_date',
-					'gold_weight':'qty',
-				},
-			},
-    	}, target_doc, set_missing_values)
-	target_doc.submit()
-	frappe.msgprint(('Sales Order created'), indicator="green", alert=1)
-	frappe.db.commit()
-	return target_doc.name
+def create_sales_order(source_name, sales_taxes_and_charges_template , target_doc=None):
+    ''' Method to create Sales Order from Jewellery Invoice '''
+    def set_missing_values(source, target):
+        keep_metal_ledger = 0
+        transaction_type = frappe.db.get_value('Jewellery Invoice', source_name, 'transaction_type')
+        if transaction_type in ['Purchase', 'Exchange']:
+            keep_metal_ledger = 1
+        target.keep_metal_ledger = keep_metal_ledger
+        taxes_and_charges_details = frappe.get_doc("Sales Taxes and Charges Template", sales_taxes_and_charges_template)
+        for tax in taxes_and_charges_details.taxes:
+            target.append("taxes", {
+                "charge_type": tax.charge_type,
+                "account_head": tax.account_head,
+                "description": tax.description,
+                "rate": tax.rate,
+                "tax_amount": tax.tax_amount,
+                "included_in_print_rate": tax.included_in_print_rate
+            })
+    target_doc = get_mapped_doc("Jewellery Invoice", source_name,
+        {
+            "Jewellery Invoice": {
+                "doctype": "Sales Order",
+                "field_map": {
+                },
+            },
+            "Jewellery Invoice Item": {
+                "doctype": "Sales Order Item",
+                "field_map": {
+                    'delivery_date': 'delivery_date',
+                    'gold_weight': 'qty',
+                },
+            },
+        }, target_doc, set_missing_values)
+    target_doc.submit()
+    frappe.msgprint(('Sales Order created'), indicator="green", alert=1)
+    frappe.db.commit()
+    return target_doc.name
 
 def get_party_link_if_exist(party_type, party):
 	''' Method to get Common Party Link if exists '''
@@ -293,7 +303,7 @@ def create_payment_entry(mode_of_payment, amount, docname, posting_date=None, re
 		return True
 
 @frappe.whitelist()
-def create_sales_invoice(source_name, jewellery_invoice, sales_taxes_and_charges_template, update_stock=0, target_doc=None):
+def create_sales_invoice(source_name, jewellery_invoice, sales_taxes_and_charges_template, keep_metal_ledger = 0, update_stock=0, target_doc=None):
     ''' Method to create Sales Invoice from Jewellery Invoice with Sales Order reference '''
     def postprocess(source, target):
         set_missing_values(source, target)
@@ -317,18 +327,19 @@ def create_sales_invoice(source_name, jewellery_invoice, sales_taxes_and_charges
         target.allocate_advances_automatically = 1
         target.update_stock = update_stock
         target.taxes_and_charges = sales_taxes_and_charges_template
+        target.keep_metal_ledger = 1
 
         # Fetch Sales Taxes and Charges Template details and set them in Sales Invoice
-        taxes_and_charges_details = frappe.get_doc("Sales Taxes and Charges Template", sales_taxes_and_charges_template)
-        for tax in taxes_and_charges_details.taxes:
-            target.append("taxes", {
-                "charge_type": tax.charge_type,
-                "account_head": tax.account_head,
-                "description": tax.description,
-                "rate": tax.rate,
-                "tax_amount": tax.tax_amount,
-                "included_in_print_rate": tax.included_in_print_rate
-            })
+        # taxes_and_charges_details = frappe.get_doc("Sales Taxes and Charges Template", sales_taxes_and_charges_template)
+        # for tax in taxes_and_charges_details.taxes:
+        #     target.append("taxes", {
+        #         "charge_type": tax.charge_type,
+        #         "account_head": tax.account_head,
+        #         "description": tax.description,
+        #         "rate": tax.rate,
+        #         "tax_amount": tax.tax_amount,
+        #         "included_in_print_rate": tax.included_in_print_rate
+        #     })
 
     def update_item(source, target, source_parent):
         target.amount = flt(source.amount) - flt(source.billed_amt)
@@ -386,7 +397,8 @@ def create_sales_invoice(source_name, jewellery_invoice, sales_taxes_and_charges
         doclist.set_payment_schedule()
 
     doclist.set_onload("ignore_price_list", True)
-    doclist.save(ignore_permissions = True)
+    doclist.save(ignore_permissions=True)
+    doclist.submit()
     if doclist:
         frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'sales_invoice', doclist.name)
         if update_stock:
@@ -459,3 +471,30 @@ def create_delivery_note(source_name, jewellery_invoice, target_doc=None):
 		frappe.db.commit()
 		frappe.msgprint(('Delivery Note created'), indicator="green", alert=1)
 		return True
+
+@frappe.whitelist()
+def get_sales_taxes_and_charges_details(sales_taxes_and_charges_template, total_gold_amount, jewellery_invoice):
+    custom_sales_taxes_and_charges = []
+    total_taxes_and_charges = 0
+    total_gold_amount = float(total_gold_amount)
+    cumulative_total = total_gold_amount
+
+    if sales_taxes_and_charges_template and frappe.db.exists('Sales Taxes and Charges Template', sales_taxes_and_charges_template):
+        taxes_and_charges_details = frappe.get_doc('Sales Taxes and Charges Template', sales_taxes_and_charges_template)
+        for tax in taxes_and_charges_details.taxes:
+            tax_amount = round((tax.rate / 100) * total_gold_amount, 2)  # rounding tax_amount to 2 decimal places
+            total_amount = total_gold_amount + tax_amount
+            cumulative_total += tax_amount
+            custom_sales_taxes_and_charges.append({
+                "charge_type": tax.charge_type,
+                "account_head": tax.account_head,
+                "description": tax.description,
+                "rate": tax.rate,
+                "tax_amount": tax_amount,
+                "included_in_print_rate": tax.included_in_print_rate,
+                "total": round(cumulative_total, 2)
+            })
+
+            total_taxes_and_charges += tax_amount
+
+    return custom_sales_taxes_and_charges
