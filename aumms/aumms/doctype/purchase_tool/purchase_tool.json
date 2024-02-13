@@ -1,0 +1,132 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "PT-.#####",
+ "creation": "2024-02-13 00:05:57.984587",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_urwi",
+  "supplier",
+  "item_type",
+  "item_group",
+  "item_set",
+  "column_break_pnvl",
+  "board_rate",
+  "date",
+  "stone",
+  "is_stone",
+  "has_stone",
+  "section_break_vxux",
+  "item_details",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_urwi",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier"
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type"
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Item Group",
+   "options": "Item Group"
+  },
+  {
+   "fieldname": "column_break_pnvl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "stone",
+   "fieldtype": "Link",
+   "label": "Stone",
+   "options": "Stone Type"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_stone",
+   "fieldtype": "Check",
+   "label": "Is Stone"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_stone",
+   "fieldtype": "Check",
+   "label": "Has Stone"
+  },
+  {
+   "fieldname": "item_details",
+   "fieldtype": "Table",
+   "label": "Item details",
+   "options": "Purchase Item Details"
+  },
+  {
+   "fieldname": "section_break_vxux",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Purchase Tool",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "item_set",
+   "fieldtype": "Data",
+   "label": "Item Set"
+  },
+  {
+   "fieldname": "board_rate",
+   "fieldtype": "Float",
+   "label": "Board Rate"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-02-12 02:39:50.132642",
+ "modified_by": "Administrator",
+ "module": "AuMMS",
+ "name": "Purchase Tool",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
