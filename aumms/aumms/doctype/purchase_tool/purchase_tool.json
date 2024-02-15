@@ -15,7 +15,6 @@
   "board_rate",
   "date",
   "stone",
-  "is_stone",
   "has_stone",
   "section_break_vxux",
   "item_details",
@@ -29,36 +28,37 @@
   {
    "fieldname": "supplier",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Supplier",
-   "options": "Supplier"
+   "options": "Supplier",
+   "reqd": 1
   },
   {
    "fieldname": "item_type",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Item Type",
-   "options": "Item Type"
+   "options": "Item Type",
+   "reqd": 1
   },
   {
    "fieldname": "item_group",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Item Group",
-   "options": "Item Group"
+   "options": "Item Group",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_pnvl",
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.has_stone == 1",
    "fieldname": "stone",
    "fieldtype": "Link",
    "label": "Stone",
    "options": "Stone Type"
-  },
-  {
-   "default": "0",
-   "fieldname": "is_stone",
-   "fieldtype": "Check",
-   "label": "Is Stone"
   },
   {
    "default": "0",
@@ -89,7 +89,8 @@
   {
    "fieldname": "date",
    "fieldtype": "Date",
-   "label": "Date"
+   "label": "Date",
+   "reqd": 1
   },
   {
    "fieldname": "item_set",
@@ -99,13 +100,15 @@
   {
    "fieldname": "board_rate",
    "fieldtype": "Float",
-   "label": "Board Rate"
+   "in_list_view": 1,
+   "label": "Board Rate",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-12 02:39:50.132642",
+ "modified": "2024-02-14 12:52:10.709714",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Purchase Tool",
