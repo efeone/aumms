@@ -15,8 +15,8 @@
   "stone",
   "stone_weight",
   "stone_charge",
-  "amount",
-  "purity"
+  "purity",
+  "amount"
  ],
  "fields": [
   {
@@ -87,7 +87,8 @@
    "fieldname": "item_code",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Item Code"
+   "label": "Item Code",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,

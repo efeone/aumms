@@ -7,6 +7,20 @@ from frappe.model.mapper import get_mapped_doc
 
 class PurchaseTool(Document):
 
+    def autoname(self):
+        """
+        Set the autoname for the document based on the specified format.
+        """
+        if self.has_stone:
+            # If the item has a stone, use the specified format
+            for item_detail in self.get("item_details"):
+                item_detail.item_code = f"{self.item_category} {item_detail.stone_weight} {item_detail.stone} {item_detail.gold_weight}"
+        else:
+            # If there is no stone, use a different format
+            for item_detail in self.get("item_details"):
+                item_detail.item_code = f"{self.item_category} {item_detail.gold_weight}"
+
+
     def before_submit(self):
         self.create_item()
 
