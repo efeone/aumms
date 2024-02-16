@@ -3,29 +3,26 @@
  "allow_rename": 1,
  "creation": "2024-02-12 23:46:19.937061",
  "doctype": "DocType",
+ "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "item_details_column",
-  "item_name",
+  "item_code",
   "gold_weight",
   "net_weight",
+  "uom",
   "column_break_juco",
   "stone",
   "stone_weight",
   "stone_charge",
-  "amount"
+  "amount",
+  "purity"
  ],
  "fields": [
   {
    "fieldname": "item_details_column",
    "fieldtype": "Column Break",
    "label": "Item Details "
-  },
-  {
-   "fieldname": "item_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Item Code"
   },
   {
    "fieldname": "gold_weight",
@@ -54,7 +51,8 @@
    "fieldname": "stone",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Stone"
+   "label": "Stone",
+   "read_only": 1
   },
   {
    "fieldname": "stone_weight",
@@ -68,12 +66,32 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Stone Charge"
+  },
+  {
+   "fieldname": "purity",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Purity",
+   "options": "Purity"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Code"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-16 12:40:10.378507",
+ "modified": "2024-02-16 15:04:13.555094",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Purchase Item Details",
