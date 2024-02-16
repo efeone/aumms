@@ -2,20 +2,14 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Purchase Tool", {
-	is_stone(frm) {
-    if(frm.doc.is_stone == 1){
-      frm.set_df_property("has_stone", "hidden", 1)
+    // refresh : function(frm){}
+});
+
+frappe.ui.form.on("Purchase Item Details",{
+    item_details_add : function(frm, cdt, cdn){
+        let child = locals[cdt][cdn]
+        if(frm.doc.stone){
+            frappe.model.set_value(child.doctype, child.name, 'stone', frm.doc.stone);
+        }
     }
-    else{
-      frm.set_df_property("has_stone", "hidden", 0)
-    }
-	},
-  has_stone(frm){
-    if(frm.doc.has_stone == 1){
-      frm.set_df_property("is_stone", "hidden", 1)
-    }
-    else{
-      frm.set_df_property("is_stone", "hidden", 0)
-    }
-  }
 });
