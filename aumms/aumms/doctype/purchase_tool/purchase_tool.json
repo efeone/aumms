@@ -7,15 +7,15 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_urwi",
-  "supplier",
+  "item_category",
   "item_type",
   "item_group",
-  "item_set",
+  "supplier",
   "column_break_pnvl",
   "board_rate",
   "date",
-  "stone",
   "has_stone",
+  "stone",
   "section_break_vxux",
   "item_details",
   "amended_from"
@@ -93,22 +93,23 @@
    "reqd": 1
   },
   {
-   "fieldname": "item_set",
-   "fieldtype": "Data",
-   "label": "Item Set"
-  },
-  {
    "fieldname": "board_rate",
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Board Rate",
    "reqd": 1
+  },
+  {
+   "fieldname": "item_category",
+   "fieldtype": "Link",
+   "label": "Item Category",
+   "options": "Item Category"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-14 12:52:10.709714",
+ "modified": "2024-02-16 11:39:30.426147",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Purchase Tool",

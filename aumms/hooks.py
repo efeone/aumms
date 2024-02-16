@@ -126,7 +126,10 @@ fixtures = [{"dt": "Role","filters": [["name", "in", ["Design Analyst", "Supervi
 doc_events = {
 	'Item': {
         'validate': 'aumms.aumms.doc_events.item.validate_item',
-		'before_save': 'aumms.aumms.doc_events.item.check_conversion_factor_for_uom',
+		'before_save': [
+			'aumms.aumms.doc_events.item.check_conversion_factor_for_uom',
+			'aumms.aumms.doc_events.item.create_qr'
+		],
 		'on_update': 'aumms.aumms.doc_events.item.update_uoms_table'
 	},
 	'Purchase Receipt': {

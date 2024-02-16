@@ -2,25 +2,29 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Purchase Tool", {
-    refresh : function(frm){
-        if(frm.doc.has_stone == 1){
-             frm.fields_dict.item_details.grid.update_docfield_property('stone', 'hidden', 1);
-             frm.fields_dict.item_details.grid.update_docfield_property('stone_weight', 'hidden', 1);
-             frm.fields_dict.item_details.grid.update_docfield_property('stone_charge', 'hidden', 1);
-        }
-        else{
-            frm.fields_dict.item_details.grid.update_docfield_property('stone', 'hidden', 0);
-            frm.fields_dict.item_details.grid.update_docfield_property('stone_weight', 'hidden', 0);
-            frm.fields_dict.item_details.grid.update_docfield_property('stone_charge', 'hidden', 0);
-        }
-    }
+
+    // refresh : function(frm){}
+
 });
 
-frappe.ui.form.on("Purchase Item Details",{
-    item_details_add : function(frm, cdt, cdn){
-        let child = locals[cdt][cdn]
-        if(frm.doc.stone){
+frappe.ui.form.on("Purchase Item Details", {
+    item_details_add: function(frm, cdt, cdn) {
+        let child = locals[cdt][cdn];
+        if (frm.doc.stone) {
             frappe.model.set_value(child.doctype, child.name, 'stone', frm.doc.stone);
         }
-    }
+    },
+    stone_weight: function(frm, cdt, cdn) {
+        let d = locals[cdt][cdn];
+        if (frm.doc.has_stone) {
+            let net_weight = d.gold_weight + d.stone_weight;
+            frappe.model.set_value(cdt, cdn, 'net_weight', net_weight);
+        }
+    },
+    gold_weight: function(frm, cdt, cdn) {
+        let d = locals[cdt][cdn];
+        if (!frm.doc.has_stone) {
+            frappe.model.set_value(cdt, cdn, 'net_weight', d.gold_weight);
+        }
+    },
 });

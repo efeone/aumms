@@ -1,6 +1,15 @@
+import os
+import io
+import json
 import frappe
 from frappe import _
+from datetime import date
+from pyqrcode import create
+from base64 import b64encode
+from pyqrcode import create as qr_create
+from frappe.utils.data import get_url_to_form
 from aumms.aumms.utils import get_conversion_factor
+from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 @frappe.whitelist()
 def validate_item(doc, method):
@@ -128,3 +137,85 @@ def get_existing_uoms(uoms):
     for uom in uoms:
         uoms_list.append(uom.uom)
     return uoms_list
+
+def create_qr(doc, method=None):
+    # Creating a fied for QR code if it doesn't exist
+    if not hasattr(doc, "item_qr"):
+        create_custom_fields(
+            {
+                doc.doctype: [
+                    dict(
+                        fieldname="item_qr",
+                        label="Item QR",
+                        fieldtype="Attach Image",
+                        read_only=1,
+                        no_copy=1,
+                        # hidden=1,
+                    )
+                ]
+            }
+        )
+
+    # Checking if a qr code is already generated
+    qr_code = doc.get("item_qr")
+    if qr_code and frappe.db.exists({"doctype": "File", "file_url": qr_code}):
+        return
+
+
+    doc_url = get_si_json(doc)
+
+    # Generating QR image
+    qr_image = io.BytesIO()
+    url = create(doc_url, error="L")
+    url.png(qr_image, scale = 2, quiet_zone=1)
+
+    name = frappe.generate_hash(doc.name, 5)
+
+    # Uploading the QR and attaching it to the document
+    filename = f"QRCode-{name}.png".replace(os.path.sep, "__")
+    _file = frappe.get_doc(
+        {
+            "doctype": "File",
+            "file_name": filename,
+            "is_private": 0,
+            "content": qr_image.getvalue(),
+            "attached_to_doctype": doc.get("doctype"),
+            "attached_to_name": doc.get("name"),
+            "attached_to_field": "item_qr",
+        }
+    )
+
+    _file.save()
+
+    # assigning to document
+    doc.db_set("item_qr", _file.file_url)
+    doc.notify_update()
+
+def get_si_json(doc):
+    # Define the list of essential fields
+    essential_fields = [
+        "item_code",
+        "item_name",
+        "item_group",
+        "custom_company",
+        "custom_item_class",
+        "custom_parent_item_group",
+    ]
+
+    # Create a dictionary to store the field values
+    item_data = {}
+
+    # Extract the field values from the document object
+    for field in essential_fields:
+        value = doc.get(field)
+
+        # Convert datetime.date objects to string representation
+        if isinstance(value, date):
+            value = value.strftime("%Y-%m-%d")
+
+        item_data[field] = value
+
+    # Convert the dictionary to JSON
+    json_data = json.dumps(item_data, indent=4)
+
+    return json_data
