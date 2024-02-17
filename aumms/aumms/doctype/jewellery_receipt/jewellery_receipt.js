@@ -1,11 +1,22 @@
 // Copyright (c) 2024, efeone and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on("Purchase Tool", {
-    // refresh: function(frm) {}
+frappe.ui.form.on("Jewellery Receipt", {
+  refresh:function(frm) {
+
+    // show only customers whose territory is set to India
+    frm.set_query('stone', () => {
+        return {
+            filters: {
+                is_stone_item: 1
+            }
+        }
+    })
+
+  },
 });
 
-frappe.ui.form.on("Purchase Item Details", {
+frappe.ui.form.on("Jewellery Item Receipt", {
     item_details_add: function(frm, cdt, cdn) {
         let child = locals[cdt][cdn];
         if (frm.doc.stone) {
