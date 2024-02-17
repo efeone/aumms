@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "PT-.#####",
+ "autoname": "JR-.#####",
  "creation": "2024-02-13 00:05:57.984587",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -26,12 +26,10 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "supplier",
+   "fieldname": "item_category",
    "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Supplier",
-   "options": "Supplier",
-   "reqd": 1
+   "label": "Item Category",
+   "options": "Item Category"
   },
   {
    "fieldname": "item_type",
@@ -50,47 +48,16 @@
    "reqd": 1
   },
   {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supplier",
+   "options": "Supplier",
+   "reqd": 1
+  },
+  {
    "fieldname": "column_break_pnvl",
    "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "eval:doc.has_stone == 1",
-   "fieldname": "stone",
-   "fieldtype": "Link",
-   "label": "Stone",
-   "options": "Stone Type"
-  },
-  {
-   "default": "0",
-   "fieldname": "has_stone",
-   "fieldtype": "Check",
-   "label": "Has Stone"
-  },
-  {
-   "fieldname": "item_details",
-   "fieldtype": "Table",
-   "label": "Item details",
-   "options": "Purchase Item Details"
-  },
-  {
-   "fieldname": "section_break_vxux",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Purchase Tool",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "label": "Date",
-   "reqd": 1
   },
   {
    "fieldname": "board_rate",
@@ -100,19 +67,52 @@
    "reqd": 1
   },
   {
-   "fieldname": "item_category",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "has_stone",
+   "fieldtype": "Check",
+   "label": "Has Stone"
+  },
+  {
+   "depends_on": "eval:doc.has_stone == 1",
+   "fieldname": "stone",
    "fieldtype": "Link",
-   "label": "Item Category",
-   "options": "Item Category"
+   "label": "Stone",
+   "options": "AuMMS Item"
+  },
+  {
+   "fieldname": "section_break_vxux",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "item_details",
+   "fieldtype": "Table",
+   "label": "Item Details",
+   "options": "Jewellery Item Receipt"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Jewellery Receipt",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-16 11:39:30.426147",
+ "modified": "2024-02-17 11:00:48.481280",
  "modified_by": "Administrator",
  "module": "AuMMS",
- "name": "Purchase Tool",
+ "name": "Jewellery Receipt",
  "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [

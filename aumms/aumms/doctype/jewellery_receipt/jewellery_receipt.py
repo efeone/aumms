@@ -4,8 +4,9 @@ import frappe
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
 from frappe.model.mapper import get_mapped_doc
+from frappe.model import meta
 
-class PurchaseTool(Document):
+class JewelleryReceipt(Document):
 
     def autoname(self):
         """
@@ -19,7 +20,6 @@ class PurchaseTool(Document):
             # If there is no stone, use a different format
             for item_detail in self.get("item_details"):
                 item_detail.item_code = f"{self.item_category} {item_detail.gold_weight}"
-
 
     def before_submit(self):
         self.create_item()
@@ -46,8 +46,9 @@ class PurchaseTool(Document):
                     'item_name': self.stone,
                     'item_type': self.stone,
                 })
-            frappe.msgprint('AuMMS Item Created.')
             aumms_item.insert(ignore_permissions=True)
+            frappe.msgprint('AuMMS Item Created.', indicator="green", alert=1)
+
 
     def create_purchase_receipt(self):
         purchase_receipt = frappe.new_doc('Purchase Receipt')
@@ -73,4 +74,23 @@ class PurchaseTool(Document):
             purchase_receipt.save(ignore_permissions=True)
             purchase_receipt.submit()
 
-            frappe.msgprint('Purchase Receipt created and submitted successfully.')
+            frappe.msgprint('Purchase Receipt created.', indicator="green", alert=1)
+
+@frappe.whitelist()
+def get_stone_items():
+    stone_items = frappe.get_list("AuMMS Item", filters={"is_stone_item": 1}, fields=["item_code", "item_name"])
+    return stone_items
+
+# @frappe.whitelist()
+# def stone_filter_query(doctype, txt, searchfield, start, page_len, filters):
+# 	'''
+# 		Query for Stone field in JewelleryReceipt DocType
+# 	'''
+# 	return frappe.db.sql('''
+# 		SELECT
+# 		      item_code
+# 		FROM
+# 			`tabAuMMS Item`
+# 		WHERE
+# 			is_stone_item = 1
+# 	''')
