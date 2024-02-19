@@ -35,15 +35,20 @@ frappe.ui.form.on("Jewellery Item Receipt", {
     if (!frm.doc.has_stone) {
         let net_weight = d.gold_weight;
         frappe.model.set_value(cdt, cdn, 'net_weight', net_weight);
-        let amount = d.gold_weight * frm.doc.board_rate;
-        frappe.model.set_value(cdt, cdn, 'amount', amount);
       }
     },
-    stone_charge: function(frm, cdt, cdn) {
+    making_charge: function(frm, cdt, cdn) {
         let d = locals[cdt][cdn];
         if (frm.doc.has_stone) {
-            let amount = (d.gold_weight * frm.doc.board_rate) + (d.stone_charge);
+            let amount = (d.gold_weight * frm.doc.board_rate) + (d.stone_charge + d.making_charge);
             frappe.model.set_value(cdt, cdn, 'amount', amount);
         }
+        if (!frm.doc.has_stone){
+          let amount = (d.gold_weight * frm.doc.board_rate) + (d.making_charge);
+          frappe.model.set_value(cdt, cdn, 'amount', amount);
+        }
     }
+});
+frappe.ui.form.on("Jewellery Item Receipt", {
+
 });
