@@ -72,11 +72,13 @@ class JewelleryReceipt(Document):
             purchase_receipt.append('items', {
                 'item_code': aumms_item.item_code,
                 'item_name': aumms_item.item_name,
-                'qty': item_detail.net_weight,
+                'board_rate': self.board_rate,
+                'qty': item_detail.gold_weight,
                 'uom': item_detail.uom,
                 'stock_uom': aumms_item.weight_uom,
                 'conversion_factor': aumms_item.weight_per_unit / item_detail.net_weight,
                 'base_rate': self.board_rate,
+                'rate':item_detail.amount
             })
 
             # Save and submit the Purchase Receipt
