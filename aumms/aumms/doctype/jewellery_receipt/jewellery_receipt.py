@@ -48,6 +48,7 @@ class JewelleryReceipt(Document):
             aumms_item.weight_per_unit = item_detail.net_weight
             aumms_item.weight_uom = item_detail.uom
             aumms_item.has_stone = self.has_stone
+            aumms_item.gold_weight = item_detail.gold_weight
             # If has_stone is checked, fetch stone details from item_detail
             if self.has_stone:
                 aumms_item.append('stone_details', {
