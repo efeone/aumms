@@ -5,6 +5,7 @@ from frappe.model.document import Document
 from frappe.model.naming import make_autoname
 from frappe.model.mapper import get_mapped_doc
 from frappe.model import meta
+from frappe.utils import today
 
 class JewelleryReceipt(Document):
 
@@ -21,18 +22,27 @@ class JewelleryReceipt(Document):
             for item_detail in self.get("item_details"):
                 item_detail.item_code = f"{self.item_category} {item_detail.gold_weight}"
 
+    def validate(self):
+        self.validate_date()
+
     def before_submit(self):
         self.create_item()
 
     def on_submit(self):
         self.create_purchase_receipt()
 
+    def validate_date(self):
+        today_date = today()
+        if self.date != today_date:
+            frappe.throw('Please select today\'s date')
+
+
     def create_item(self):
         for item_detail in self.get("item_details"):
             aumms_item = frappe.new_doc('AuMMS Item')
             aumms_item.item_code = item_detail.item_code
             aumms_item.item_name = item_detail.item_code
-            aumms_item.purity = item_detail.purity
+            aumms_item.purity = self.purity
             aumms_item.item_group = self.item_group
             aumms_item.item_type = self.item_type
             aumms_item.weight_per_unit = item_detail.net_weight
@@ -62,11 +72,13 @@ class JewelleryReceipt(Document):
             purchase_receipt.append('items', {
                 'item_code': aumms_item.item_code,
                 'item_name': aumms_item.item_name,
-                'qty': item_detail.net_weight,
+                'board_rate': self.board_rate,
+                'qty': item_detail.gold_weight,
                 'uom': item_detail.uom,
                 'stock_uom': aumms_item.weight_uom,
                 'conversion_factor': aumms_item.weight_per_unit / item_detail.net_weight,
                 'base_rate': self.board_rate,
+                'rate':item_detail.amount
             })
 
             # Save and submit the Purchase Receipt
@@ -75,22 +87,3 @@ class JewelleryReceipt(Document):
             purchase_receipt.submit()
 
             frappe.msgprint('Purchase Receipt created.', indicator="green", alert=1)
-
-@frappe.whitelist()
-def get_stone_items():
-    stone_items = frappe.get_list("AuMMS Item", filters={"is_stone_item": 1}, fields=["item_code", "item_name"])
-    return stone_items
-
-# @frappe.whitelist()
-# def stone_filter_query(doctype, txt, searchfield, start, page_len, filters):
-# 	'''
-# 		Query for Stone field in JewelleryReceipt DocType
-# 	'''
-# 	return frappe.db.sql('''
-# 		SELECT
-# 		      item_code
-# 		FROM
-# 			`tabAuMMS Item`
-# 		WHERE
-# 			is_stone_item = 1
-# 	''')

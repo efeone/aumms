@@ -11,7 +11,9 @@
   "item_type",
   "item_group",
   "supplier",
+  "is_fix",
   "column_break_pnvl",
+  "purity",
   "board_rate",
   "date",
   "has_stone",
@@ -104,12 +106,25 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "purity",
+   "fieldtype": "Link",
+   "label": "Purity",
+   "options": "Purity",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_fix",
+   "fieldtype": "Check",
+   "label": "Is Fix"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-17 11:00:48.481280",
+ "modified": "2024-02-19 09:57:16.557567",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Receipt",
