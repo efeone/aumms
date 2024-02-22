@@ -2,6 +2,15 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Jewellery Receipt", {
+  setup: function (frm) {
+      frm.set_query('uom', 'item_details', () => {
+          return {
+              filters: {
+                  "is_purity_uom": 1
+              }
+          }
+      });
+  },
   refresh:function(frm) {
     // show only customers whose territory is set to India
     frm.set_query('stone', () => {
