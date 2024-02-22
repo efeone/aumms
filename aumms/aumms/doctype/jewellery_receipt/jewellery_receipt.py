@@ -16,7 +16,7 @@ class JewelleryReceipt(Document):
         if self.has_stone:
             # If the item has a stone, use the specified format
             for item_detail in self.get("item_details"):
-                item_detail.item_code = f"{self.item_category} {item_detail.stone_weight} {item_detail.stone} {item_detail.gold_weight}"
+                item_detail.item_code = f"{self.item_category} {item_detail.gold_weight} {item_detail.stone} {item_detail.stone_weight}"
         else:
             # If there is no stone, use a different format
             for item_detail in self.get("item_details"):
@@ -77,12 +77,13 @@ class JewelleryReceipt(Document):
                 'qty': item_detail.gold_weight,
                 'uom': item_detail.uom,
                 'stock_uom': aumms_item.weight_uom,
-                'conversion_factor': aumms_item.weight_per_unit / item_detail.net_weight,
+                'conversion_factor': 1,
                 'base_rate': self.board_rate,
-                'rate':item_detail.amount
+                'rate': item_detail.amount/item_detail.gold_weight,
+                'custom_making_charge' : item_detail.making_charge,
+                'custom_stone_weight' : item_detail.stone_weight,
+                'custom_stone_charge': item_detail.stone_charge
             })
-
-            # Save and submit the Purchase Receipt
             purchase_receipt.insert(ignore_permissions=True)
             purchase_receipt.save(ignore_permissions=True)
             purchase_receipt.submit()
