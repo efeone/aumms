@@ -74,11 +74,12 @@ frappe.ui.form.on("Jewellery Item Receipt", {
     making_charge: function(frm, cdt, cdn) {
         let d = locals[cdt][cdn];
         if (frm.doc.has_stone) {
-            let amount = (d.gold_weight * frm.doc.board_rate) + (d.stone_charge + d.making_charge);
+
+            let amount = ((d.gold_weight * frm.doc.board_rate) + d.stone_charge )*  (1+(d.making_charge/100));
             frappe.model.set_value(cdt, cdn, 'amount', amount);
         }
         if (!frm.doc.has_stone){
-          let amount = (d.gold_weight * frm.doc.board_rate) + (d.making_charge);
+          let amount = (d.gold_weight * frm.doc.board_rate) * (1+(d.making_charge/100));
           frappe.model.set_value(cdt, cdn, 'amount', amount);
         }
     }
