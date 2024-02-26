@@ -69,6 +69,7 @@
    "reqd": 1
   },
   {
+   "default": "Today",
    "fieldname": "date",
    "fieldtype": "Date",
    "label": "Date",
@@ -118,13 +119,13 @@
    "default": "0",
    "fieldname": "is_fix",
    "fieldtype": "Check",
-   "label": "Is Fix"
+   "label": "Fixed Charge"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-19 09:57:16.557567",
+ "modified": "2024-02-26 13:59:56.968963",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Receipt",

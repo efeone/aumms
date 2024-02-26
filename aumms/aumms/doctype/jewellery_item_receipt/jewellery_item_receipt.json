@@ -14,7 +14,10 @@
   "net_weight",
   "column_break_juco",
   "stone",
+  "unit_stone_charge",
   "stone_charge",
+  "amount_without_making_charge",
+  "making_chargein_percentage",
   "making_charge",
   "amount",
   "has_stone"
@@ -81,9 +84,10 @@
   },
   {
    "fieldname": "making_charge",
-   "fieldtype": "Percent",
+   "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Making Charge",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -99,12 +103,29 @@
    "fieldtype": "Check",
    "hidden": 1,
    "label": "has Stone"
+  },
+  {
+   "fieldname": "amount_without_making_charge",
+   "fieldtype": "Currency",
+   "label": "Amount Without Making Charge",
+   "read_only": 1
+  },
+  {
+   "fieldname": "making_chargein_percentage",
+   "fieldtype": "Percent",
+   "label": "Making Charge(In Percentage)"
+  },
+  {
+   "default": "3000",
+   "fieldname": "unit_stone_charge",
+   "fieldtype": "Int",
+   "label": "Unit Stone Charge"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-22 14:58:10.281266",
+ "modified": "2024-02-26 14:46:45.162826",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Item Receipt",
