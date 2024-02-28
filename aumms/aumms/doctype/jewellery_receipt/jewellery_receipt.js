@@ -12,7 +12,6 @@ frappe.ui.form.on("Jewellery Receipt", {
       });
   },
   refresh:function(frm) {
-    // show only customers whose territory is set to India
     frm.set_query('stone', () => {
       return {
         filters: {
@@ -62,25 +61,38 @@ frappe.ui.form.on("Jewellery Item Receipt", {
         if (frm.doc.has_stone) {
             let net_weight = d.gold_weight + d.stone_weight;
             frappe.model.set_value(cdt, cdn, 'net_weight', net_weight);
+            let stone_charge = d.unit_stone_charge * d.stone_weight;
+            frappe.model.set_value(cdt, cdn, 'stone_charge', stone_charge)
         }frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);
     },
     gold_weight: function(frm, cdt, cdn) {
-    let d = locals[cdt][cdn];
-    if (!frm.doc.has_stone) {
-        let net_weight = d.gold_weight;
-        frappe.model.set_value(cdt, cdn, 'net_weight', net_weight);
+      let d = locals[cdt][cdn];
+      if (!frm.doc.has_stone) {
+          let net_weight = d.gold_weight;
+          frappe.model.set_value(cdt, cdn, 'net_weight', net_weight);
+          let amount_without_making_charge = (d.gold_weight * frm.doc.board_rate)
+          frappe.model.set_value(cdt, cdn, 'amount_without_making_charge', amount_without_making_charge);
+        }
+    },
+    making_chargein_percentage: function(frm, cdt, cdn) {
+      let d = locals[cdt][cdn];
+      if (d.amount_without_making_charge && d.making_chargein_percentage) {
+          let making_charge = d.amount_without_making_charge * (d.making_chargein_percentage / 100); // Calculate the specified percentage of amount_without_making_charge
+          frappe.model.set_value(cdt, cdn, 'making_charge', making_charge);
       }
     },
     making_charge: function(frm, cdt, cdn) {
         let d = locals[cdt][cdn];
-        if (frm.doc.has_stone) {
-
-            let amount = ((d.gold_weight * frm.doc.board_rate) + d.stone_charge )*  (1+(d.making_charge/100));
+        if (d.making_charge) {
+            let amount = d.amount_without_making_charge + d.making_charge
             frappe.model.set_value(cdt, cdn, 'amount', amount);
         }
-        if (!frm.doc.has_stone){
-          let amount = (d.gold_weight * frm.doc.board_rate) * (1+(d.making_charge/100));
-          frappe.model.set_value(cdt, cdn, 'amount', amount);
-        }
+    },
+    stone_charge : function(frm, cdt, cdn){
+      let d = locals[cdt][cdn];
+      if (frm.doc.has_stone){
+        let amount_without_making_charge = (d.gold_weight * frm.doc.board_rate) + d.stone_charge
+        frappe.model.set_value(cdt, cdn, 'amount_without_making_charge', amount_without_making_charge);
+      }
     }
 });

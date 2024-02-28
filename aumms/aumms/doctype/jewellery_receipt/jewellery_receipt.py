@@ -32,10 +32,7 @@ class JewelleryReceipt(Document):
         self.create_purchase_receipt()
 
     def validate_date(self):
-        today_date = today()
-        if self.date != today_date:
-            frappe.throw('Please select today\'s date')
-
+        self.calculate_item_details()
 
     def create_item(self):
         for item_detail in self.get("item_details"):
@@ -89,3 +86,26 @@ class JewelleryReceipt(Document):
             purchase_receipt.submit()
 
             frappe.msgprint('Purchase Receipt created.', indicator="green", alert=1)
+
+
+    def calculate_item_details(self):
+        for item_detail in self.get("item_details"):
+            if self.has_stone:
+                if item_detail.stone_weight:
+                    item_detail.net_weight = item_detail.gold_weight + item_detail.stone_weight
+                    if item_detail.unit_stone_charge:
+                        item_detail.stone_charge = item_detail.unit_stone_charge * item_detail.stone_weight
+            else:
+                item_detail.net_weight = item_detail.gold_weight
+            if self.board_rate:
+                if self.has_stone:
+                    item_detail.amount_without_making_charge = (item_detail.gold_weight * self.board_rate) + item_detail.stone_charge
+                else:
+                    item_detail.amount_without_making_charge = item_detail.gold_weight * self.board_rate
+
+                if item_detail.amount_without_making_charge:
+                    item_detail.making_charge = item_detail.amount_without_making_charge * (item_detail.making_chargein_percentage / 100)
+
+                if item_detail.making_charge:
+                    item_detail.amount = item_detail.amount_without_making_charge + item_detail.making_charge
+            frappe.db.commit()
