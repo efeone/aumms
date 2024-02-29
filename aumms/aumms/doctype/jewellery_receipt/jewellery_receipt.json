@@ -19,6 +19,7 @@
   "has_stone",
   "stone",
   "section_break_vxux",
+  "create_item",
   "item_details",
   "amended_from"
  ],
@@ -120,12 +121,18 @@
    "fieldname": "is_fix",
    "fieldtype": "Check",
    "label": "Fixed Charge"
+  },
+  {
+   "depends_on": "eval:doc.has_stone",
+   "fieldname": "create_item",
+   "fieldtype": "Button",
+   "label": "Create Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-26 13:59:56.968963",
+ "modified": "2024-02-29 11:53:41.803877",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Receipt",
