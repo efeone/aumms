@@ -62,7 +62,11 @@ let create_item_details = function(frm) {
       {
         label: 'Making Charge In Percentage',
         fieldname: 'making_charge_in_percentage',
-        fieldtype: 'Percent'
+        fieldtype: 'Percent',
+        onchange: function() {
+          // Calculate making charge when making_charge_in_percentage changes
+          calculate_making_charge();
+        }
       },
       {
         label: 'Has Stone',
@@ -129,6 +133,7 @@ let create_item_details = function(frm) {
                 let amount_without_making_charge = (values.gold_weight * frm.doc.board_rate) + stone_charge;
                 frappe.model.set_value(child.doctype, child.name, 'amount_without_making_charge', amount_without_making_charge);
             }
+             calculate_making_charge(child);
         }
 
         // Refresh the child table field to reflect the changes
@@ -139,6 +144,17 @@ let create_item_details = function(frm) {
     }
 
   });
+
+  function calculate_making_charge(child) {
+    let making_charge_in_percentage = child.making_chargein_percentage;
+    if (making_charge_in_percentage) {
+      let gold_weight = child.gold_weight || 0;
+      let amount_without_making_charge = child.amount_without_making_charge || 0;
+      let making_charge = amount_without_making_charge * (child.making_chargein_percentage / 100);
+      frappe.model.set_value(child.doctype, child.name, 'making_charge', making_charge);
+    }
+  }
+
   function calculate_total_stone_weight() {
     let total_weight = 0;
     let stone_details = d.get_value('stone_details');
@@ -198,7 +214,12 @@ frappe.ui.form.on("Jewellery Item Receipt", {
             frappe.model.set_value(cdt, cdn, 'net_weight', net_weight);
             // let stone_charge = d.unit_stone_charge * d.stone_weight;
             // frappe.model.set_value(cdt, cdn, 'stone_charge', stone_charge)
-        }frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);
+        }
+        if (d.making_charge) {
+                let amount = d.amount_without_making_charge + d.making_charge
+                frappe.model.set_value(cdt, cdn, 'amount', amount);
+            }
+        frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);
     },
     gold_weight: function(frm, cdt, cdn) {
       let d = locals[cdt][cdn];
