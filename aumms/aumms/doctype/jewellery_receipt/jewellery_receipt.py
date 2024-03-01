@@ -1,9 +1,6 @@
 # Copyright (c) 2024, efeone and contributors
 # For license information, please see license.txt
-import json
 import frappe
-from frappe import _
-from frappe.utils import flt
 from frappe.model import meta
 from frappe.utils import today
 from frappe.model.document import Document
@@ -54,8 +51,8 @@ class JewelleryReceipt(Document):
                 aumms_item.append('stone_details', {
                     'stone_weight': item_detail.stone_weight,
                     'stone_charge': item_detail.stone_charge,
-                    'item_name': self.stone,
-                    'item_type': self.stone,
+                    'item_name': item_detail.stone,
+                    'item_type': item_detail.stone,
                 })
             aumms_item.insert(ignore_permissions=True)
             frappe.msgprint('AuMMS Item Created.', indicator="green", alert=1)
