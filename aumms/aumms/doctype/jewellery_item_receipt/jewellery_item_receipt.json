@@ -12,6 +12,7 @@
   "gold_weight",
   "stone_weight",
   "net_weight",
+  "individual_stone_weight",
   "column_break_juco",
   "stone",
   "unit_stone_charge",
@@ -120,12 +121,18 @@
    "fieldname": "unit_stone_charge",
    "fieldtype": "Int",
    "label": "Unit Stone Charge"
+  },
+  {
+   "fieldname": "individual_stone_weight",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Individual Stone Weight"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-01 12:33:21.126025",
+ "modified": "2024-03-01 13:18:13.905918",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Item Receipt",

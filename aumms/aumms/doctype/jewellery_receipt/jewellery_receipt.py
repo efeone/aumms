@@ -30,9 +30,14 @@ class JewelleryReceipt(Document):
 
     def on_submit(self):
         self.create_purchase_receipt()
+        self.make_form_read_only(['aumms_item', 'purchase_receipt', 'metal_ledger'])
 
     def validate_date(self):
         self.calculate_item_details()
+
+    def make_form_read_only(self, fields):
+        for field in fields:
+            self.set(field, 'read_only', 1)
 
     def create_item(self):
         for item_detail in self.get("item_details"):
@@ -48,12 +53,28 @@ class JewelleryReceipt(Document):
             aumms_item.gold_weight = item_detail.gold_weight
             # If has_stone is checked, fetch stone details from item_detail
             if self.has_stone:
-                aumms_item.append('stone_details', {
-                    'stone_weight': item_detail.stone_weight,
-                    'stone_charge': item_detail.stone_charge,
-                    'item_name': item_detail.stone,
-                    'item_type': item_detail.stone,
-                })
+                if self.single_stone:
+                    stones = item_detail.stone.split(',')
+                    for stone in stones:
+                        aumms_item.append('stone_details', {
+                            'stone_weight': item_detail.stone_weight,
+                            'stone_charge': item_detail.stone_charge,
+                            'item_name': stone,
+                            'stone_type': stone,
+                        })
+
+                stones = item_detail.stone.split(',')
+                individual_stone_weight = item_detail.individual_stone_weight
+                if individual_stone_weight:
+                    stone_weights = individual_stone_weight.split(',')
+                    for stone, weight in zip(stones, stone_weights):
+                        aumms_item.append('stone_details', {
+                            'stone_weight': float(weight),
+                            'stone_charge': item_detail.unit_stone_charge * float(weight),
+                            'item_name': stone,
+                            'stone_type': stone,
+                        })
+
             aumms_item.insert(ignore_permissions=True)
             frappe.msgprint('AuMMS Item Created.', indicator="green", alert=1)
 

@@ -106,18 +106,23 @@ let create_item_details = function(frm) {
     primary_action: function(values) {
       console.log(values);
       let stone_names = "";
-      let stone_charge = 0
+      let stone_charge = 0;
+      let stone_weight = "";
       for (let i = 0; i < values.stone_details.length; i++) {
           stone_names += values.stone_details[i].stone;
+          stone_weight += values.stone_details[i].stone_weight;
+
           if (i < values.stone_details.length - 1) {
-              stone_names += " - ";
-          }
+              stone_names += " , ";
+              stone_weight += " , ";
+          };
       }
       var child = frm.add_child('item_details');
       child.uom = values.uom;
       child.gold_weight = values.gold_weight;
       child.making_chargein_percentage = values.making_charge_in_percentage;
       child.stone = stone_names;
+      child.individual_stone_weight = stone_weight;
       child.stone_weight = values.total_stone_weight;
       child.unit_stone_charge = values.unit_stone_charge;
       for (let i = 0; i < values.stone_details.length; i++) {
