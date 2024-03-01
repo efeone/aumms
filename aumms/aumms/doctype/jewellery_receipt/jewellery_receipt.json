@@ -17,9 +17,10 @@
   "board_rate",
   "date",
   "has_stone",
+  "single_stone",
   "stone",
-  "section_break_vxux",
   "create_item",
+  "section_break_vxux",
   "item_details",
   "amended_from"
  ],
@@ -32,7 +33,8 @@
    "fieldname": "item_category",
    "fieldtype": "Link",
    "label": "Item Category",
-   "options": "Item Category"
+   "options": "Item Category",
+   "reqd": 1
   },
   {
    "fieldname": "item_type",
@@ -83,10 +85,11 @@
    "label": "Has Stone"
   },
   {
-   "depends_on": "eval:doc.has_stone == 1",
+   "depends_on": "eval:doc.single_stone",
    "fieldname": "stone",
    "fieldtype": "Link",
    "label": "Stone",
+   "mandatory_depends_on": "eval:doc.single_stone",
    "options": "AuMMS Item"
   },
   {
@@ -123,16 +126,23 @@
    "label": "Fixed Charge"
   },
   {
-   "depends_on": "eval:doc.has_stone",
+   "depends_on": "eval:doc.has_stone && doc.single_stone != 1",
    "fieldname": "create_item",
    "fieldtype": "Button",
    "label": "Create Item"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.has_stone ==1",
+   "fieldname": "single_stone",
+   "fieldtype": "Check",
+   "label": "Single Stone"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-29 11:53:41.803877",
+ "modified": "2024-03-01 12:32:02.236025",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Receipt",

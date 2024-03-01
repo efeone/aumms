@@ -112,7 +112,8 @@
   {
    "fieldname": "making_chargein_percentage",
    "fieldtype": "Percent",
-   "label": "Making Charge(In Percentage)"
+   "label": "Making Charge(In Percentage)",
+   "reqd": 1
   },
   {
    "default": "3000",
@@ -124,7 +125,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-29 14:50:48.946413",
+ "modified": "2024-03-01 12:33:21.126025",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Item Receipt",

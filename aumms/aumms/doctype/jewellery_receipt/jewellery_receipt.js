@@ -52,22 +52,20 @@ let create_item_details = function(frm) {
         label: 'UOM',
         fieldname: 'uom',
         fieldtype: 'Link',
-        options: 'UOM'
+        options: 'UOM',
+        reqd: 1
       },
       {
         label: 'Gold Weight',
         fieldname: 'gold_weight',
-        fieldtype: 'Float'
+        fieldtype: 'Float',
+        reqd: 1,
       },
       {
         label: 'Making Charge In Percentage',
         fieldname: 'making_charge_in_percentage',
         fieldtype: 'Percent',
-      },
-      {
-        label: 'Has Stone',
-        fieldname: 'has_stone',
-        fieldtype: 'Check'
+        reqd: 1
       },
       {
         label: 'Stone Details',
@@ -76,7 +74,6 @@ let create_item_details = function(frm) {
         reqd: 1,
         annotatable: true,
         editable: true,
-        depends_on: 'eval: doc.has_stone',
         fields: [
           {
             label: 'Stone',
@@ -97,7 +94,6 @@ let create_item_details = function(frm) {
         label: 'Total Stone Weight',
         fieldname: 'total_stone_weight',
         fieldtype: 'Float',
-        depends_on: 'eval: doc.has_stone'
       },
       {
         label: 'Unit of Stone Charge',
@@ -111,34 +107,27 @@ let create_item_details = function(frm) {
       console.log(values);
       let stone_names = "";
       let stone_charge = 0
-      if (values.has_stone) {
-          // Concatenate the names of all stones
-          for (let i = 0; i < values.stone_details.length; i++) {
-              stone_names += values.stone_details[i].stone;
-              if (i < values.stone_details.length - 1) {
-                  stone_names += " - ";
-              }
+      for (let i = 0; i < values.stone_details.length; i++) {
+          stone_names += values.stone_details[i].stone;
+          if (i < values.stone_details.length - 1) {
+              stone_names += " - ";
           }
       }
       var child = frm.add_child('item_details');
       child.uom = values.uom;
       child.gold_weight = values.gold_weight;
       child.making_chargein_percentage = values.making_charge_in_percentage;
-      child.has_stone = values.has_stone;
       child.stone = stone_names;
       child.stone_weight = values.total_stone_weight;
       child.unit_stone_charge = values.unit_stone_charge;
-      if (values.has_stone) {
-          for (let i = 0; i < values.stone_details.length; i++) {
-              let stone_charge = values.unit_stone_charge * values.total_stone_weight;
-              frappe.model.set_value(child.doctype, child.name, 'stone_charge', stone_charge);
-          }
-          let amount_without_making_charge = (values.gold_weight * frm.doc.board_rate) + stone_charge;
-          frappe.model.set_value(child.doctype, child.name, 'amount_without_making_charge', amount_without_making_charge);
-          let making_charge = amount_without_making_charge * (child.making_chargein_percentage / 100);
-          frappe.model.set_value(child.doctype, child.name, 'making_charge', making_charge);
+      for (let i = 0; i < values.stone_details.length; i++) {
+          let stone_charge = values.unit_stone_charge * values.total_stone_weight;
+          frappe.model.set_value(child.doctype, child.name, 'stone_charge', stone_charge);
       }
-
+      let amount_without_making_charge = (values.gold_weight * frm.doc.board_rate) + stone_charge;
+      frappe.model.set_value(child.doctype, child.name, 'amount_without_making_charge', amount_without_making_charge);
+      let making_charge = amount_without_making_charge * (child.making_chargein_percentage / 100);
+      frappe.model.set_value(child.doctype, child.name, 'making_charge', making_charge);
       refresh_field("item_details");
       d.hide();
   }
@@ -160,16 +149,15 @@ function calculate_total_stone_weight() {
     }
   });
 
-  if ('stone' in d.fields_dict) {
-    d.fields_dict.stone.get_query = function() {
-      return {
-        filters: {
-          "is_stone_item": 1
-        }
-      };
+  if ('stone_details' in d.fields_dict) {
+    d.fields_dict.stone_details.grid.get_field('stone').get_query = function() {
+        return {
+            filters: {
+                "is_stone_item": 1
+            }
+        };
     };
-  }
-
+  };
   if ('uom' in d.fields_dict) {
     d.fields_dict.uom.get_query = function() {
       return {
