@@ -37,14 +37,14 @@ frappe.ui.form.on("Jewellery Receipt", {
     }
     frm.refresh_fields();
   },
-  create_item: function(frm) {
+  add_multi_stone: function(frm) {
     if (frm.is_new()) {
-       create_item_details(frm);
+       create_multi_stone(frm);
     }
   }
 });
 
-let create_item_details = function(frm) {
+let create_multi_stone = function(frm) {
   let d = new frappe.ui.Dialog({
     title: 'Enter Item Details',
     fields: [
@@ -65,6 +65,12 @@ let create_item_details = function(frm) {
         label: 'Making Charge In Percentage',
         fieldname: 'making_charge_in_percentage',
         fieldtype: 'Percent',
+        reqd: 1
+      },
+      {
+        label: 'Unit of Stone Charge',
+        fieldname: 'unit_stone_charge',
+        fieldtype: 'Int',
         reqd: 1
       },
       {
@@ -94,12 +100,6 @@ let create_item_details = function(frm) {
         label: 'Total Stone Weight',
         fieldname: 'total_stone_weight',
         fieldtype: 'Float',
-      },
-      {
-        label: 'Unit of Stone Charge',
-        fieldname: 'unit_stone_charge',
-        fieldtype: 'Int',
-        default: 3000
       },
     ],
     primary_action_label: 'Submit',

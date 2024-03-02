@@ -98,6 +98,9 @@ frappe.ui.form.on('AuMMS Item', {
   },
   refresh(frm){
     frm.trigger('triger_checkbox_display');
+    if (!frm.is_new()){
+      frm.disable_form();
+    }
   }
 });
 
