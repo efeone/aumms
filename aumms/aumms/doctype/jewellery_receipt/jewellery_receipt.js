@@ -52,26 +52,20 @@ let create_item_details = function(frm) {
         label: 'UOM',
         fieldname: 'uom',
         fieldtype: 'Link',
-        options: 'UOM'
+        options: 'UOM',
+        reqd: 1
       },
       {
         label: 'Gold Weight',
         fieldname: 'gold_weight',
-        fieldtype: 'Float'
+        fieldtype: 'Float',
+        reqd: 1,
       },
       {
         label: 'Making Charge In Percentage',
         fieldname: 'making_charge_in_percentage',
         fieldtype: 'Percent',
-        onchange: function() {
-          // Calculate making charge when making_charge_in_percentage changes
-          calculate_making_charge();
-        }
-      },
-      {
-        label: 'Has Stone',
-        fieldname: 'has_stone',
-        fieldtype: 'Check'
+        reqd: 1
       },
       {
         label: 'Stone Details',
@@ -80,7 +74,6 @@ let create_item_details = function(frm) {
         reqd: 1,
         annotatable: true,
         editable: true,
-        depends_on: 'eval: doc.has_stone',
         fields: [
           {
             label: 'Stone',
@@ -101,7 +94,6 @@ let create_item_details = function(frm) {
         label: 'Total Stone Weight',
         fieldname: 'total_stone_weight',
         fieldtype: 'Float',
-        depends_on: 'eval: doc.has_stone'
       },
       {
         label: 'Unit of Stone Charge',
@@ -112,50 +104,40 @@ let create_item_details = function(frm) {
     ],
     primary_action_label: 'Submit',
     primary_action: function(values) {
-        console.log(values);
-        var StoneDetails = values.stone_details;
-        for (var i = 0; i < StoneDetails.length; i++) {
-            var child = frm.add_child('item_details');
-            child.uom = values.uom;
-            child.gold_weight = values.gold_weight;
-            child.making_chargein_percentage = values.making_charge_in_percentage;
-            child.has_stone = values.has_stone;
-            child.stone = StoneDetails[i].stone;
-            child.stone_weight = StoneDetails[i].stone_weight;
-            child.unit_stone_charge = values.unit_stone_charge; // Include unit_stone_charge
+      console.log(values);
+      let stone_names = "";
+      let stone_charge = 0;
+      let stone_weight = "";
+      for (let i = 0; i < values.stone_details.length; i++) {
+          stone_names += values.stone_details[i].stone;
+          stone_weight += values.stone_details[i].stone_weight;
 
-            // Calculate stone charge for each stone detail
-            if (values.has_stone) {
-                let stone_charge = StoneDetails[i].stone_weight * values.unit_stone_charge;
-                frappe.model.set_value(child.doctype, child.name, 'stone_charge', stone_charge);
-
-                // Calculate amount without making charge
-                let amount_without_making_charge = (values.gold_weight * frm.doc.board_rate) + stone_charge;
-                frappe.model.set_value(child.doctype, child.name, 'amount_without_making_charge', amount_without_making_charge);
-            }
-             calculate_making_charge(child);
-        }
-
-        // Refresh the child table field to reflect the changes
-        refresh_field("item_details");
-
-        // Hide the dialogue box
-        d.hide();
-    }
-
-  });
-
-  function calculate_making_charge(child) {
-    let making_charge_in_percentage = child.making_chargein_percentage;
-    if (making_charge_in_percentage) {
-      let gold_weight = child.gold_weight || 0;
-      let amount_without_making_charge = child.amount_without_making_charge || 0;
+          if (i < values.stone_details.length - 1) {
+              stone_names += " , ";
+              stone_weight += " , ";
+          };
+      }
+      var child = frm.add_child('item_details');
+      child.uom = values.uom;
+      child.gold_weight = values.gold_weight;
+      child.making_chargein_percentage = values.making_charge_in_percentage;
+      child.stone = stone_names;
+      child.individual_stone_weight = stone_weight;
+      child.stone_weight = values.total_stone_weight;
+      child.unit_stone_charge = values.unit_stone_charge;
+      for (let i = 0; i < values.stone_details.length; i++) {
+          let stone_charge = values.unit_stone_charge * values.total_stone_weight;
+          frappe.model.set_value(child.doctype, child.name, 'stone_charge', stone_charge);
+      }
+      let amount_without_making_charge = (values.gold_weight * frm.doc.board_rate) + stone_charge;
+      frappe.model.set_value(child.doctype, child.name, 'amount_without_making_charge', amount_without_making_charge);
       let making_charge = amount_without_making_charge * (child.making_chargein_percentage / 100);
       frappe.model.set_value(child.doctype, child.name, 'making_charge', making_charge);
-    }
+      refresh_field("item_details");
+      d.hide();
   }
-
-  function calculate_total_stone_weight() {
+  });
+function calculate_total_stone_weight() {
     let total_weight = 0;
     let stone_details = d.get_value('stone_details');
     if (stone_details && stone_details.length > 0) {
@@ -172,16 +154,15 @@ let create_item_details = function(frm) {
     }
   });
 
-  if ('stone' in d.fields_dict) {
-    d.fields_dict.stone.get_query = function() {
-      return {
-        filters: {
-          "is_stone_item": 1
-        }
-      };
+  if ('stone_details' in d.fields_dict) {
+    d.fields_dict.stone_details.grid.get_field('stone').get_query = function() {
+        return {
+            filters: {
+                "is_stone_item": 1
+            }
+        };
     };
-  }
-
+  };
   if ('uom' in d.fields_dict) {
     d.fields_dict.uom.get_query = function() {
       return {
@@ -212,14 +193,22 @@ frappe.ui.form.on("Jewellery Item Receipt", {
         if (frm.doc.has_stone) {
             let net_weight = d.gold_weight + d.stone_weight;
             frappe.model.set_value(cdt, cdn, 'net_weight', net_weight);
-            // let stone_charge = d.unit_stone_charge * d.stone_weight;
-            // frappe.model.set_value(cdt, cdn, 'stone_charge', stone_charge)
         }
-        if (d.making_charge) {
-                let amount = d.amount_without_making_charge + d.making_charge
-                frappe.model.set_value(cdt, cdn, 'amount', amount);
-            }
-        frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);
+    },
+    stone_weight: function(frm, cdt, cdn){
+      let d = locals[cdt][cdn];
+      if (frm.doc.has_stone){
+        let net_weight = d.gold_weight + d.stone_weight;
+        frappe.model.set_value(cdt, cdn, 'net_weight', net_weight);
+        let stone_charge = d.unit_stone_charge * d.stone_weight;
+        frappe.model.set_value(cdt, cdn, 'stone_charge', stone_charge);
+      }
+    },
+    making_charge : function(frm, cdt, cdn){
+      if (d.making_charge) {
+        let amount = d.amount_without_making_charge + d.making_charge
+        frappe.model.set_value(cdt, cdn, 'amount', amount);
+      }frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);
     },
     gold_weight: function(frm, cdt, cdn) {
       let d = locals[cdt][cdn];
@@ -233,7 +222,7 @@ frappe.ui.form.on("Jewellery Item Receipt", {
     making_chargein_percentage: function(frm, cdt, cdn) {
       let d = locals[cdt][cdn];
       if (d.amount_without_making_charge && d.making_chargein_percentage) {
-          let making_charge = d.amount_without_making_charge * (d.making_chargein_percentage / 100); // Calculate the specified percentage of amount_without_making_charge
+          let making_charge = d.amount_without_making_charge * (d.making_chargein_percentage / 100);
           frappe.model.set_value(cdt, cdn, 'making_charge', making_charge);
       }
     },
