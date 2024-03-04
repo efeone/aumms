@@ -17,6 +17,34 @@ frappe.ui.form.on("Jewellery Receipt", {
       }
     })
   },
+  item_category: function(frm) {
+    frm.events.update_item_details_table(frm);
+  },
+  item_type: function(frm) {
+    frm.events.update_item_details_table(frm);
+  },
+  item_group:function(frm) {
+    frm.events.update_item_details_table(frm);
+  },
+  purity: function(frm) {
+    frm.events.update_item_details_table(frm);
+  },
+  board_rate: function(frm) {
+    frm.events.update_item_details_table(frm);
+  },
+  update_item_details_table: function(frm){
+    if(frm.doc.item_details){
+      frm.doc.item_details.forEach(function(item){
+        frappe.model.set_value(item.doctype, item.name, 'item_category', frm.doc.item_category);
+        frappe.model.set_value(item.doctype, item.name, 'item_type', frm.doc.item_type);
+        frappe.model.set_value(item.doctype, item.name, 'item_group', frm.doc.item_group);
+        frappe.model.set_value(item.doctype, item.name, 'purity', frm.doc.purity);
+        frappe.model.set_value(item.doctype, item.name, 'board_rate', frm.doc.board_rate);
+
+      });
+    }
+    frm.refresh_fields();
+  },
   has_stone: function (frm) {
     if(!frm.doc.has_stone){
       frm.set_value('stone', );
@@ -40,7 +68,22 @@ frappe.ui.form.on("Jewellery Receipt", {
   create_item: function(frm) {
     if (frm.is_new()) {
        create_item_details(frm);
+       frm.trigger('update_item_details_table');
     }
+  },
+  quantity: function(frm) {
+    var quantity = frm.doc.quantity;
+    // Clear existing rows
+    frm.clear_table("item_details");
+    // Add new rows based on quantity
+    for (var i = 0; i < quantity; i++) {
+        var row = frappe.model.add_child(frm.doc, "Jewellery Receipt Item", "item_details");
+    }
+    // Refresh the grid
+    frm.fields_dict["item_details"].grid.refresh();
+    frm.trigger('update_item_details_table');
+    // Refresh other fields if needed
+    frm.refresh_fields();
   }
 });
 
@@ -172,7 +215,6 @@ function calculate_total_stone_weight() {
       }
     }
   }
-
   d.show();
 };
 
@@ -208,7 +250,9 @@ frappe.ui.form.on("Jewellery Item Receipt", {
       if (d.making_charge) {
         let amount = d.amount_without_making_charge + d.making_charge
         frappe.model.set_value(cdt, cdn, 'amount', amount);
-      }frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);
+      }
+      frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);
+      update_calculations_for_row(d, frm);
     },
     gold_weight: function(frm, cdt, cdn) {
       let d = locals[cdt][cdn];
@@ -232,6 +276,7 @@ frappe.ui.form.on("Jewellery Item Receipt", {
             let amount = d.amount_without_making_charge + d.making_charge
             frappe.model.set_value(cdt, cdn, 'amount', amount);
         }
+        update_calculations_for_row(d, frm);
     },
     stone_charge : function(frm, cdt, cdn){
       let d = locals[cdt][cdn];

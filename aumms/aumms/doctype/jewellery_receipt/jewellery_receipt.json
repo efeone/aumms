@@ -12,6 +12,7 @@
   "item_group",
   "supplier",
   "is_fix",
+  "quantity",
   "column_break_pnvl",
   "purity",
   "board_rate",
@@ -100,7 +101,8 @@
    "fieldname": "item_details",
    "fieldtype": "Table",
    "label": "Item Details",
-   "options": "Jewellery Item Receipt"
+   "options": "Jewellery Item Receipt",
+   "reqd": 1
   },
   {
    "fieldname": "amended_from",
@@ -137,12 +139,17 @@
    "fieldname": "single_stone",
    "fieldtype": "Check",
    "label": "Single Stone"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "label": "Quantity"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-01 12:32:02.236025",
+ "modified": "2024-03-02 15:53:24.191868",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Receipt",

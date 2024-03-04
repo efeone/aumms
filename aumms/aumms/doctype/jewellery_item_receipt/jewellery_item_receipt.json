@@ -7,6 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "item_details_column",
+  "item_category",
+  "item_type",
+  "item_group",
   "item_code",
   "uom",
   "gold_weight",
@@ -14,6 +17,8 @@
   "net_weight",
   "individual_stone_weight",
   "column_break_juco",
+  "purity",
+  "board_rate",
   "stone",
   "unit_stone_charge",
   "stone_charge",
@@ -21,7 +26,8 @@
   "making_chargein_percentage",
   "making_charge",
   "amount",
-  "has_stone"
+  "has_stone",
+  "multi_stones"
  ],
  "fields": [
   {
@@ -101,7 +107,6 @@
    "default": "0",
    "fieldname": "has_stone",
    "fieldtype": "Check",
-   "hidden": 1,
    "label": "has Stone"
   },
   {
@@ -127,12 +132,50 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Individual Stone Weight"
+  },
+  {
+   "fieldname": "item_category",
+   "fieldtype": "Link",
+   "label": "Item Category",
+   "options": "Item Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Item Group",
+   "options": "Item Group",
+   "reqd": 1
+  },
+  {
+   "fieldname": "purity",
+   "fieldtype": "Link",
+   "label": "Purity",
+   "options": "Purity"
+  },
+  {
+   "fieldname": "board_rate",
+   "fieldtype": "Float",
+   "label": "Board Rate"
+  },
+  {
+   "depends_on": "eval:doc.has_stone ==1",
+   "fieldname": "multi_stones",
+   "fieldtype": "Button",
+   "label": "Multi Stones"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-01 13:18:13.905918",
+ "modified": "2024-03-02 13:05:17.808606",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Item Receipt",
