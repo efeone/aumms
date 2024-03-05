@@ -12,15 +12,12 @@
   "item_group",
   "supplier",
   "is_fix",
-  "quantity",
   "column_break_pnvl",
   "purity",
   "board_rate",
   "date",
+  "quantity",
   "has_stone",
-  "single_stone",
-  "stone",
-  "create_item",
   "section_break_vxux",
   "item_details",
   "amended_from"
@@ -80,20 +77,6 @@
    "reqd": 1
   },
   {
-   "default": "0",
-   "fieldname": "has_stone",
-   "fieldtype": "Check",
-   "label": "Has Stone"
-  },
-  {
-   "depends_on": "eval:doc.single_stone",
-   "fieldname": "stone",
-   "fieldtype": "Link",
-   "label": "Stone",
-   "mandatory_depends_on": "eval:doc.single_stone",
-   "options": "AuMMS Item"
-  },
-  {
    "fieldname": "section_break_vxux",
    "fieldtype": "Section Break"
   },
@@ -128,28 +111,21 @@
    "label": "Fixed Charge"
   },
   {
-   "depends_on": "eval:doc.has_stone && doc.single_stone != 1",
-   "fieldname": "create_item",
-   "fieldtype": "Button",
-   "label": "Create Item"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:doc.has_stone ==1",
-   "fieldname": "single_stone",
-   "fieldtype": "Check",
-   "label": "Single Stone"
-  },
-  {
    "fieldname": "quantity",
    "fieldtype": "Int",
    "label": "Quantity"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_stone",
+   "fieldtype": "Check",
+   "label": "has Stone"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-02 15:53:24.191868",
+ "modified": "2024-03-05 14:23:15.492994",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Receipt",

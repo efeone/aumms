@@ -9,10 +9,10 @@ frappe.ui.form.on("Jewellery Receipt", {
       });
   },
   refresh:function(frm) {
-    frm.set_query('stone', () => {
+    frm.set_query('stone', 'item_details', () => {
       return {
         filters: {
-          is_stone_item: 1
+          "is_stone_item": 1
         }
       }
     })
@@ -45,32 +45,32 @@ frappe.ui.form.on("Jewellery Receipt", {
     }
     frm.refresh_fields();
   },
-  has_stone: function (frm) {
-    if(!frm.doc.has_stone){
-      frm.set_value('stone', );
-    }
-    frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);
-    frm.refresh_fields();
-    frm.trigger('update_item_details');
-  },
-  stone: function(frm){
-    frm.trigger('update_item_details');
-  },
-  update_item_details: function(frm){
-    if(frm.doc.item_details){
-      frm.doc.item_details.forEach(function(item){
-        frappe.model.set_value(item.doctype, item.name, 'has_stone', frm.doc.has_stone);
-        frappe.model.set_value(item.doctype, item.name, 'stone', frm.doc.stone);
-      });
-    }
-    frm.refresh_fields();
-  },
-  create_item: function(frm) {
-    if (frm.is_new()) {
-       create_item_details(frm);
-       frm.trigger('update_item_details_table');
-    }
-  },
+  // has_stone: function (frm) {
+  //   if(!frm.doc.has_stone){
+  //     frm.set_value('stone', );
+  //   }
+  //   frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);
+  //   frm.refresh_fields();
+  //   frm.trigger('update_item_details');
+  // },
+  // stone: function(frm){
+  //   frm.trigger('update_item_details');
+  // },
+  // update_item_details: function(frm){
+  //   if(frm.doc.item_details){
+  //     frm.doc.item_details.forEach(function(item){
+  //       frappe.model.set_value(item.doctype, item.name, 'has_stone', frm.doc.has_stone);
+  //       frappe.model.set_value(item.doctype, item.name, 'stone', frm.doc.stone);
+  //     });
+  //   }
+  //   frm.refresh_fields();
+  // },
+  // create_item: function(frm) {
+  //   if (frm.is_new()) {
+  //      create_item_details(frm);
+  //      frm.trigger('update_item_details_table');
+  //   }
+  // },
   quantity: function(frm) {
     var quantity = frm.doc.quantity;
     // // Clear existing rows
@@ -102,7 +102,66 @@ frappe.ui.form.on("Jewellery Receipt", {
   }
 });
 
-let create_item_details = function(frm) {
+frappe.ui.form.on("Jewellery Item Receipt", {
+    form_render	: function(frm, cdt, cdn) {
+        let d = locals[cdt][cdn];
+        if (d.has_stone) {
+            let net_weight = d.gold_weight + d.stone_weight;
+            frappe.model.set_value(cdt, cdn, 'net_weight', net_weight);
+        }
+    },
+    stone_weight: function(frm, cdt, cdn){
+      let d = locals[cdt][cdn];
+      if (d.single_stone){
+        let net_weight = d.gold_weight + d.stone_weight;
+        frappe.model.set_value(cdt, cdn, 'net_weight', net_weight);
+        let stone_charge = d.unit_stone_charge * d.stone_weight;
+        frappe.model.set_value(cdt, cdn, 'stone_charge', stone_charge);
+      }
+    },
+    making_charge : function(frm, cdt, cdn){
+      if (d.making_charge) {
+        let amount = d.amount_without_making_charge + d.making_charge
+        frappe.model.set_value(cdt, cdn, 'amount', amount);
+      }frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);
+    },
+    gold_weight: function(frm, cdt, cdn) {
+      let d = locals[cdt][cdn];
+      if (! d.has_stone) {
+          let net_weight = d.gold_weight;
+          frappe.model.set_value(cdt, cdn, 'net_weight', net_weight);
+          let amount_without_making_charge = (d.gold_weight * frm.doc.board_rate)
+          frappe.model.set_value(cdt, cdn, 'amount_without_making_charge', amount_without_making_charge);
+        }
+    },
+    making_chargein_percentage: function(frm, cdt, cdn) {
+      let d = locals[cdt][cdn];
+      if (d.amount_without_making_charge && d.making_chargein_percentage) {
+          let making_charge = d.amount_without_making_charge * (d.making_chargein_percentage / 100);
+          frappe.model.set_value(cdt, cdn, 'making_charge', making_charge);
+      }
+    },
+    making_charge: function(frm, cdt, cdn) {
+        let d = locals[cdt][cdn];
+        if (d.making_charge) {
+            let amount = d.amount_without_making_charge + d.making_charge
+            frappe.model.set_value(cdt, cdn, 'amount', amount);
+        }
+    },
+    stone_charge : function(frm, cdt, cdn){
+      let d = locals[cdt][cdn];
+      if (d.has_stone){
+        let amount_without_making_charge = (d.gold_weight * frm.doc.board_rate) + d.stone_charge
+        frappe.model.set_value(cdt, cdn, 'amount_without_making_charge', amount_without_making_charge);
+      }
+    },
+    add_multi_stone: function(frm) {
+      if (frm.is_new()) {
+         create_multi_stone(frm);
+      }
+    }
+});
+let create_multi_stone = function(frm) {
   let d = new frappe.ui.Dialog({
     title: 'Enter Item Details',
     fields: [
@@ -157,45 +216,53 @@ let create_item_details = function(frm) {
         label: 'Unit of Stone Charge',
         fieldname: 'unit_stone_charge',
         fieldtype: 'Int',
-        default: 3000
+        reqd: 1
       },
     ],
     primary_action_label: 'Submit',
     primary_action: function(values) {
-      console.log(values);
-      let stone_names = "";
-      let stone_charge = 0;
-      let stone_weight = "";
-      for (let i = 0; i < values.stone_details.length; i++) {
-          stone_names += values.stone_details[i].stone;
-          stone_weight += values.stone_details[i].stone_weight;
-
-          if (i < values.stone_details.length - 1) {
-              stone_names += " , ";
-              stone_weight += " , ";
-          };
-      }
-      var child = frm.add_child('item_details');
+      // let child = frm.add_child('item_details');
+      var child= cur_frm.doc.item_details[cur_frm.doc.item_details.length - 1];
       child.uom = values.uom;
       child.gold_weight = values.gold_weight;
       child.making_chargein_percentage = values.making_charge_in_percentage;
+      child.stone_charge = 0;
+      let stone_weight = 0;
+      let stone_names = "";
+
+      for (let i = 0; i < values.stone_details.length; i++) {
+        let stone = values.stone_details[i];
+        stone_names += stone.stone;
+        stone_weight += stone.stone_weight;
+
+        if (i < values.stone_details.length - 1) {
+          stone_names += ", ";
+        }
+      }
       child.stone = stone_names;
       child.individual_stone_weight = stone_weight;
       child.stone_weight = values.total_stone_weight;
       child.unit_stone_charge = values.unit_stone_charge;
-      for (let i = 0; i < values.stone_details.length; i++) {
-          let stone_charge = values.unit_stone_charge * values.total_stone_weight;
-          frappe.model.set_value(child.doctype, child.name, 'stone_charge', stone_charge);
-      }
+      child.has_stone = 1;
+
+      let stone_charge = values.unit_stone_charge * values.total_stone_weight;
+      child.stone_charge = stone_charge;
+
       let amount_without_making_charge = (values.gold_weight * frm.doc.board_rate) + stone_charge;
-      frappe.model.set_value(child.doctype, child.name, 'amount_without_making_charge', amount_without_making_charge);
-      let making_charge = amount_without_making_charge * (child.making_chargein_percentage / 100);
-      frappe.model.set_value(child.doctype, child.name, 'making_charge', making_charge);
-      refresh_field("item_details");
+      child.amount_without_making_charge = amount_without_making_charge;
+
+      let making_charge = amount_without_making_charge * (values.making_charge_in_percentage / 100);
+      child.making_charge = making_charge;
+
+      let amount = amount_without_making_charge + making_charge
+      child.amount  = amount
+
+      refresh_field('item_details');
       d.hide();
-  }
+    }
   });
-function calculate_total_stone_weight() {
+
+  function calculate_total_stone_weight() {
     let total_weight = 0;
     let stone_details = d.get_value('stone_details');
     if (stone_details && stone_details.length > 0) {

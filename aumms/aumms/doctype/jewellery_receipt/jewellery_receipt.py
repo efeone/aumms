@@ -25,6 +25,10 @@ class JewelleryReceipt(Document):
     def validate(self):
         self.validate_date()
 
+
+    def before_submit(self):
+        self.create_item()
+
     def on_submit(self):
         self.create_item()
         self.create_purchase_receipt()
@@ -36,6 +40,8 @@ class JewelleryReceipt(Document):
     def make_form_read_only(self, fields):
         for field in fields:
             self.set(field, 'read_only', 1)
+
+
 
     def create_item(self):
         for item_detail in self.get("item_details"):
