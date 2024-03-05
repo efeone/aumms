@@ -73,17 +73,32 @@ frappe.ui.form.on("Jewellery Receipt", {
   },
   quantity: function(frm) {
     var quantity = frm.doc.quantity;
-    // Clear existing rows
-    frm.clear_table("item_details");
-    // Add new rows based on quantity
-    for (var i = 0; i < quantity; i++) {
-        var row = frappe.model.add_child(frm.doc, "Jewellery Receipt Item", "item_details");
+    // // Clear existing rows
+    // frm.clear_table("item_details");
+    // // Add new rows based on quantity
+    // for (var i = 0; i < quantity; i++) {
+    //     var row = frappe.model.add_child(frm.doc, "Jewellery Receipt Item", "item_details");
+    // }
+    // // Refresh the grid
+    // frm.fields_dict["item_details"].grid.refresh();
+    // frm.trigger('update_item_details_table');
+    // // Refresh other fields if needed
+    // frm.refresh_fields();
+
+    var cur_items_len = frm.doc.item_details.length
+    var no_of_rows = quantity - cur_items_len
+    console.log(no_of_rows);
+    for (var i=0; i<no_of_rows; i++) {
+      let row = frm.add_child('item_details', {
+        item_category: frm.doc.item_category,
+        item_type: frm.doc.item_type,
+        item_group: frm.doc.item_group,
+        purity: frm.doc.purity,
+        board_rate: frm.doc.board_rate
+      });
+      frm.refresh_field('item_details')
     }
-    // Refresh the grid
-    frm.fields_dict["item_details"].grid.refresh();
-    frm.trigger('update_item_details_table');
-    // Refresh other fields if needed
-    frm.refresh_fields();
+
   }
 });
 
@@ -250,9 +265,8 @@ frappe.ui.form.on("Jewellery Item Receipt", {
       if (d.making_charge) {
         let amount = d.amount_without_making_charge + d.making_charge
         frappe.model.set_value(cdt, cdn, 'amount', amount);
-      }
+      }form_render
       frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);
-      update_calculations_for_row(d, frm);
     },
     gold_weight: function(frm, cdt, cdn) {
       let d = locals[cdt][cdn];
@@ -276,7 +290,6 @@ frappe.ui.form.on("Jewellery Item Receipt", {
             let amount = d.amount_without_making_charge + d.making_charge
             frappe.model.set_value(cdt, cdn, 'amount', amount);
         }
-        update_calculations_for_row(d, frm);
     },
     stone_charge : function(frm, cdt, cdn){
       let d = locals[cdt][cdn];

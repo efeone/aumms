@@ -25,10 +25,8 @@ class JewelleryReceipt(Document):
     def validate(self):
         self.validate_date()
 
-    def before_submit(self):
-        self.create_item()
-
     def on_submit(self):
+        self.create_item()
         self.create_purchase_receipt()
         self.make_form_read_only(['aumms_item', 'purchase_receipt', 'metal_ledger'])
 
