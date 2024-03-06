@@ -17,7 +17,6 @@
   "board_rate",
   "date",
   "quantity",
-  "has_stone",
   "section_break_vxux",
   "item_details",
   "amended_from"
@@ -114,18 +113,12 @@
    "fieldname": "quantity",
    "fieldtype": "Int",
    "label": "Quantity"
-  },
-  {
-   "default": "0",
-   "fieldname": "has_stone",
-   "fieldtype": "Check",
-   "label": "has Stone"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-05 14:23:15.492994",
+ "modified": "2024-03-05 15:23:23.485197",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Receipt",

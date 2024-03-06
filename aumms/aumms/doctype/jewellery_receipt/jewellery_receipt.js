@@ -227,7 +227,7 @@ let create_multi_stone = function(frm) {
       child.gold_weight = values.gold_weight;
       child.making_chargein_percentage = values.making_charge_in_percentage;
       child.stone_charge = 0;
-      let stone_weight = 0;
+      let stone_weight = "";
       let stone_names = "";
 
       for (let i = 0; i < values.stone_details.length; i++) {
@@ -237,13 +237,15 @@ let create_multi_stone = function(frm) {
 
         if (i < values.stone_details.length - 1) {
           stone_names += ", ";
+          stone_weight += ", ";
         }
       }
-      child.stone = stone_names;
+      child.stones = stone_names;
       child.individual_stone_weight = stone_weight;
       child.stone_weight = values.total_stone_weight;
       child.unit_stone_charge = values.unit_stone_charge;
       child.has_stone = 1;
+
 
       let stone_charge = values.unit_stone_charge * values.total_stone_weight;
       child.stone_charge = stone_charge;
@@ -299,70 +301,3 @@ let create_multi_stone = function(frm) {
   }
   d.show();
 };
-
-frappe.ui.form.on("Jewellery Item Receipt", {
-    item_details_add: function(frm, cdt, cdn) {
-        let child = locals[cdt][cdn];
-        if (frm.doc.stone) {
-            frappe.model.set_value(child.doctype, child.name, 'stone', frm.doc.stone);
-            frappe.model.set_value(child.doctype, child.name, 'has_stone', frm.doc.has_stone);
-            frm.refresh_fields();
-        }
-        else{
-          frappe.model.set_value(child.doctype, child.name, 'has_stone', 0);
-        }
-    },
-    form_render	: function(frm, cdt, cdn) {
-        let d = locals[cdt][cdn];
-        if (frm.doc.has_stone) {
-            let net_weight = d.gold_weight + d.stone_weight;
-            frappe.model.set_value(cdt, cdn, 'net_weight', net_weight);
-        }
-    },
-    stone_weight: function(frm, cdt, cdn){
-      let d = locals[cdt][cdn];
-      if (frm.doc.has_stone){
-        let net_weight = d.gold_weight + d.stone_weight;
-        frappe.model.set_value(cdt, cdn, 'net_weight', net_weight);
-        let stone_charge = d.unit_stone_charge * d.stone_weight;
-        frappe.model.set_value(cdt, cdn, 'stone_charge', stone_charge);
-      }
-    },
-    making_charge : function(frm, cdt, cdn){
-      if (d.making_charge) {
-        let amount = d.amount_without_making_charge + d.making_charge
-        frappe.model.set_value(cdt, cdn, 'amount', amount);
-      }form_render
-      frm.fields_dict.item_details.grid.toggle_enable('has_stone', frm.doc.has_stone);
-    },
-    gold_weight: function(frm, cdt, cdn) {
-      let d = locals[cdt][cdn];
-      if (!frm.doc.has_stone) {
-          let net_weight = d.gold_weight;
-          frappe.model.set_value(cdt, cdn, 'net_weight', net_weight);
-          let amount_without_making_charge = (d.gold_weight * frm.doc.board_rate)
-          frappe.model.set_value(cdt, cdn, 'amount_without_making_charge', amount_without_making_charge);
-        }
-    },
-    making_chargein_percentage: function(frm, cdt, cdn) {
-      let d = locals[cdt][cdn];
-      if (d.amount_without_making_charge && d.making_chargein_percentage) {
-          let making_charge = d.amount_without_making_charge * (d.making_chargein_percentage / 100);
-          frappe.model.set_value(cdt, cdn, 'making_charge', making_charge);
-      }
-    },
-    making_charge: function(frm, cdt, cdn) {
-        let d = locals[cdt][cdn];
-        if (d.making_charge) {
-            let amount = d.amount_without_making_charge + d.making_charge
-            frappe.model.set_value(cdt, cdn, 'amount', amount);
-        }
-    },
-    stone_charge : function(frm, cdt, cdn){
-      let d = locals[cdt][cdn];
-      if (frm.doc.has_stone){
-        let amount_without_making_charge = (d.gold_weight * frm.doc.board_rate) + d.stone_charge
-        frappe.model.set_value(cdt, cdn, 'amount_without_making_charge', amount_without_making_charge);
-      }
-    }
-});
