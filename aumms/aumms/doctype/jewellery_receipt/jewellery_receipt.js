@@ -45,6 +45,7 @@ frappe.ui.form.on("Jewellery Receipt", {
     }
     frm.refresh_fields();
   },
+  
   // has_stone: function (frm) {
   //   if(!frm.doc.has_stone){
   //     frm.set_value('stone', );
@@ -73,18 +74,6 @@ frappe.ui.form.on("Jewellery Receipt", {
   // },
   quantity: function(frm) {
     var quantity = frm.doc.quantity;
-    // // Clear existing rows
-    // frm.clear_table("item_details");
-    // // Add new rows based on quantity
-    // for (var i = 0; i < quantity; i++) {
-    //     var row = frappe.model.add_child(frm.doc, "Jewellery Receipt Item", "item_details");
-    // }
-    // // Refresh the grid
-    // frm.fields_dict["item_details"].grid.refresh();
-    // frm.trigger('update_item_details_table');
-    // // Refresh other fields if needed
-    // frm.refresh_fields();
-
     var cur_items_len = frm.doc.item_details.length
     var no_of_rows = quantity - cur_items_len
     console.log(no_of_rows);
@@ -219,6 +208,7 @@ let create_multi_stone = function(frm) {
         reqd: 1
       },
     ],
+
     primary_action_label: 'Submit',
     primary_action: function(values) {
       // let child = frm.add_child('item_details');
@@ -229,16 +219,14 @@ let create_multi_stone = function(frm) {
       child.stone_charge = 0;
       let stone_weight = "";
       let stone_names = "";
-
       for (let i = 0; i < values.stone_details.length; i++) {
-        let stone = values.stone_details[i];
-        stone_names += stone.stone;
-        stone_weight += stone.stone_weight;
+        stone_names += values.stone_details[i].stone;
+        stone_weight += values.stone_details[i].stone_weight;
 
         if (i < values.stone_details.length - 1) {
           stone_names += ", ";
-          stone_weight += ", ";
-        }
+          stone_weight += " , ";
+        };
       }
       child.stones = stone_names;
       child.individual_stone_weight = stone_weight;

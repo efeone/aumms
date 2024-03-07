@@ -8,20 +8,21 @@
  "field_order": [
   "item_details_column",
   "item_category",
+  "item_code",
   "item_type",
   "item_group",
-  "item_code",
   "has_stone",
   "single_stone",
+  "multi_stone",
   "stone",
   "add_multi_stone",
   "stones",
   "gold_weight",
   "uom",
-  "unit_stone_charge",
   "stone_weight",
   "individual_stone_weight",
   "column_break_juco",
+  "unit_stone_charge",
   "net_weight",
   "stone_charge",
   "making_charge",
@@ -164,7 +165,7 @@
    "label": "Single Stone"
   },
   {
-   "depends_on": "eval:doc.has_stone && doc.single_stone != 1",
+   "depends_on": "eval:doc.has_stone && doc.multi_stone == 1",
    "fieldname": "add_multi_stone",
    "fieldtype": "Button",
    "label": "Add Multi Stone"
@@ -177,16 +178,23 @@
    "reqd": 1
   },
   {
-   "depends_on": "eval:doc.has_stone && doc.single_stone != 1",
+   "depends_on": "eval:doc.has_stone && doc.multi_stone == 1",
    "fieldname": "stones",
    "fieldtype": "Data",
    "label": "Stones"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.has_stone == 1",
+   "fieldname": "multi_stone",
+   "fieldtype": "Check",
+   "label": "Multi Stone"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-06 15:11:11.339144",
+ "modified": "2024-03-07 10:27:25.437006",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Item Receipt",
