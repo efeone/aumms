@@ -25,11 +25,11 @@
   "unit_stone_charge",
   "net_weight",
   "stone_charge",
+  "making_chargein_percentage",
   "making_charge",
   "purity",
   "board_rate",
   "amount_without_making_charge",
-  "making_chargein_percentage",
   "amount"
  ],
  "fields": [
@@ -185,7 +185,7 @@
   },
   {
    "default": "0",
-   "depends_on": "eval:doc.has_stone == 1",
+   "depends_on": "eval:doc.has_stone && !doc.single_stone == 1",
    "fieldname": "multi_stone",
    "fieldtype": "Check",
    "label": "Multi Stone"
@@ -194,7 +194,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-07 10:27:25.437006",
+ "modified": "2024-03-08 10:09:05.686851",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Item Receipt",
