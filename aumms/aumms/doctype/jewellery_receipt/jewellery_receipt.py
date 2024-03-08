@@ -126,7 +126,7 @@ class JewelleryReceipt(Document):
 
     def calculate_item_details(self):
         for item_detail in self.get("item_details"):
-            if item_detail.has_stone:
+            if item_detail.single_stone:
                 if item_detail.stone_weight:
                     item_detail.net_weight = item_detail.gold_weight + item_detail.stone_weight
                     if item_detail.unit_stone_charge:
