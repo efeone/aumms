@@ -45,7 +45,7 @@ frappe.ui.form.on("Jewellery Receipt", {
     }
     frm.refresh_fields();
   },
-  
+
   // has_stone: function (frm) {
   //   if(!frm.doc.has_stone){
   //     frm.set_value('stone', );
@@ -73,22 +73,25 @@ frappe.ui.form.on("Jewellery Receipt", {
   //   }
   // },
   quantity: function(frm) {
-    var quantity = frm.doc.quantity;
-    var cur_items_len = frm.doc.item_details.length
-    var no_of_rows = quantity - cur_items_len
-    console.log(no_of_rows);
-    for (var i=0; i<no_of_rows; i++) {
-      let row = frm.add_child('item_details', {
-        item_category: frm.doc.item_category,
-        item_type: frm.doc.item_type,
-        item_group: frm.doc.item_group,
-        purity: frm.doc.purity,
-        board_rate: frm.doc.board_rate
-      });
-      frm.refresh_field('item_details')
-    }
+        var quantity = frm.doc.quantity;
+        var cur_items_len = frm.doc.item_details.length;
 
-  }
+        if (quantity < cur_items_len) {
+            frm.doc.item_details.splice(quantity);
+        } else {
+            for (var i = cur_items_len; i < quantity; i++) {
+                let row = frm.add_child('item_details', {
+                    item_category: frm.doc.item_category,
+                    item_type: frm.doc.item_type,
+                    item_group: frm.doc.item_group,
+                    purity: frm.doc.purity,
+                    board_rate: frm.doc.board_rate
+                });
+            }
+        }
+
+        frm.refresh_field('item_details');
+    }
 });
 
 frappe.ui.form.on("Jewellery Item Receipt", {
