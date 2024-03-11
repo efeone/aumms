@@ -7,21 +7,30 @@
  "engine": "InnoDB",
  "field_order": [
   "item_details_column",
+  "item_category",
   "item_code",
-  "uom",
+  "item_type",
+  "item_group",
+  "has_stone",
+  "single_stone",
+  "multi_stone",
+  "stone",
+  "add_multi_stone",
+  "stones",
   "gold_weight",
+  "uom",
+  "unit_stone_charge",
   "stone_weight",
-  "net_weight",
   "individual_stone_weight",
   "column_break_juco",
-  "stone",
-  "unit_stone_charge",
+  "net_weight",
   "stone_charge",
-  "amount_without_making_charge",
   "making_chargein_percentage",
   "making_charge",
-  "amount",
-  "has_stone"
+  "purity",
+  "board_rate",
+  "amount_without_making_charge",
+  "amount"
  ],
  "fields": [
   {
@@ -35,14 +44,6 @@
    "in_list_view": 1,
    "label": "Item Code",
    "read_only": 1
-  },
-  {
-   "fieldname": "uom",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "UOM",
-   "options": "UOM",
-   "reqd": 1
   },
   {
    "fieldname": "gold_weight",
@@ -69,25 +70,22 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.single_stone == 1",
    "fieldname": "stone",
-   "fieldtype": "Data",
-   "in_list_view": 1,
+   "fieldtype": "Link",
    "label": "Stone",
-   "read_only": 1
+   "options": "AuMMS Item"
   },
   {
-   "depends_on": "eval:doc.stone",
    "fieldname": "stone_charge",
    "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Stone Charge"
+   "label": "Stone Charge",
+   "read_only": 1
   },
   {
    "fieldname": "making_charge",
    "fieldtype": "Currency",
-   "in_list_view": 1,
    "label": "Making Charge",
-   "read_only": 1,
    "reqd": 1
   },
   {
@@ -101,7 +99,6 @@
    "default": "0",
    "fieldname": "has_stone",
    "fieldtype": "Check",
-   "hidden": 1,
    "label": "has Stone"
   },
   {
@@ -117,7 +114,7 @@
    "reqd": 1
   },
   {
-   "default": "3000",
+   "depends_on": "eval:doc.has_stone == 1",
    "fieldname": "unit_stone_charge",
    "fieldtype": "Int",
    "label": "Unit Stone Charge"
@@ -127,12 +124,77 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Individual Stone Weight"
+  },
+  {
+   "fieldname": "item_category",
+   "fieldtype": "Link",
+   "label": "Item Category",
+   "options": "Item Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Item Group",
+   "options": "Item Group",
+   "reqd": 1
+  },
+  {
+   "fieldname": "purity",
+   "fieldtype": "Link",
+   "label": "Purity",
+   "options": "Purity"
+  },
+  {
+   "fieldname": "board_rate",
+   "fieldtype": "Float",
+   "label": "Board Rate"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.has_stone && !doc.multi_stone == 1",
+   "fieldname": "single_stone",
+   "fieldtype": "Check",
+   "label": "Single Stone"
+  },
+  {
+   "depends_on": "eval:doc.has_stone && doc.multi_stone == 1",
+   "fieldname": "add_multi_stone",
+   "fieldtype": "Button",
+   "label": "Add Multi Stone"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.has_stone && doc.multi_stone == 1",
+   "fieldname": "stones",
+   "fieldtype": "Data",
+   "label": "Stones"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.has_stone && !doc.single_stone == 1",
+   "fieldname": "multi_stone",
+   "fieldtype": "Check",
+   "label": "Multi Stone"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-01 13:18:13.905918",
+ "modified": "2024-03-08 16:00:02.227698",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Item Receipt",
