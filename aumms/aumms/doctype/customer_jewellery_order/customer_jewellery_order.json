@@ -1,0 +1,144 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-12 12:26:20.226352",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "customer_name",
+  "required_date",
+  "column_break_r1uk",
+  "customer_expected_total_weight",
+  "customer_expected_amount",
+  "order_items_tab",
+  "item_category",
+  "item_quantity",
+  "column_break_aamf",
+  "item_type",
+  "expected_weight_per_quantity",
+  "feasible",
+  "description_section",
+  "item_design_attachment",
+  "item_design_description"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "required_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Required Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer_expected_total_weight",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Customer Expected Total Weight",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer_expected_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Customer Expected Amount",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_r1uk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.customer",
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name"
+  },
+  {
+   "fieldname": "order_items_tab",
+   "fieldtype": "Tab Break",
+   "label": "Order Items"
+  },
+  {
+   "fieldname": "item_design_description",
+   "fieldtype": "Text Editor",
+   "label": "Item Design Description"
+  },
+  {
+   "fieldname": "item_design_attachment",
+   "fieldtype": "Attach",
+   "label": "Item Design Attachment",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item_category",
+   "fieldtype": "Link",
+   "label": "Item Category",
+   "options": "Item Category"
+  },
+  {
+   "fieldname": "item_quantity",
+   "fieldtype": "Int",
+   "label": "Item Quantity"
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type"
+  },
+  {
+   "fieldname": "expected_weight_per_quantity",
+   "fieldtype": "Float",
+   "label": "Expected Weight Per Quantity"
+  },
+  {
+   "fieldname": "column_break_aamf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "description_section",
+   "fieldtype": "Section Break",
+   "label": "Description"
+  },
+  {
+   "default": "0",
+   "fieldname": "feasible",
+   "fieldtype": "Check",
+   "label": "Feasible"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-03-13 10:14:02.585928",
+ "modified_by": "Administrator",
+ "module": "AuMMS",
+ "name": "Customer Jewellery Order",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
