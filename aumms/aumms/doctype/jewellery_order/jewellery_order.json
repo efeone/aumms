@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "JO.#####",
  "creation": "2024-03-12 12:31:03.178116",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -43,13 +44,17 @@
   {
    "fieldname": "customer",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Customer",
-   "options": "Customer"
+   "options": "Customer",
+   "reqd": 1
   },
   {
    "fieldname": "required_date",
    "fieldtype": "Date",
-   "label": "Required Date"
+   "in_list_view": 1,
+   "label": "Required Date",
+   "reqd": 1
   },
   {
    "fieldname": "customer_expected_total_weight",
@@ -64,7 +69,9 @@
   {
    "fieldname": "making_chargein_percentage",
    "fieldtype": "Percent",
-   "label": "Making Charge(In Percentage)"
+   "in_list_view": 1,
+   "label": "Making Charge(In Percentage)",
+   "reqd": 1
   },
   {
    "fieldname": "tab_break_xdtp",
@@ -134,10 +141,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-13 11:40:31.411169",
+ "modified": "2024-03-13 16:50:41.660525",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Order",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
