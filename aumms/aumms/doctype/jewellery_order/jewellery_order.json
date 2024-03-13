@@ -1,0 +1,160 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-12 12:31:03.178116",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "required_date",
+  "making_chargein_percentage",
+  "column_break_yko9",
+  "customer_expected_total_weight",
+  "customer_expected_amount",
+  "tab_break_xdtp",
+  "item_category",
+  "item_type",
+  "design_attachment",
+  "column_break_9zsc",
+  "quantity",
+  "expected_weight_per_quantity",
+  "available",
+  "item_details_section",
+  "item_details",
+  "total_weight",
+  "section_break_oyix",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_oyix",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Jewellery Order",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "required_date",
+   "fieldtype": "Date",
+   "label": "Required Date"
+  },
+  {
+   "fieldname": "customer_expected_total_weight",
+   "fieldtype": "Float",
+   "label": "Customer Expected Total Weight"
+  },
+  {
+   "fieldname": "customer_expected_amount",
+   "fieldtype": "Currency",
+   "label": "Customer Expected Amount"
+  },
+  {
+   "fieldname": "making_chargein_percentage",
+   "fieldtype": "Percent",
+   "label": "Making Charge(In Percentage)"
+  },
+  {
+   "fieldname": "tab_break_xdtp",
+   "fieldtype": "Tab Break",
+   "label": "Order Items"
+  },
+  {
+   "fieldname": "item_category",
+   "fieldtype": "Link",
+   "label": "Item Category",
+   "options": "Item Category"
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "label": "Quantity"
+  },
+  {
+   "fieldname": "expected_weight_per_quantity",
+   "fieldtype": "Float",
+   "label": "Expected Weight Per Quantity"
+  },
+  {
+   "fieldname": "design_attachment",
+   "fieldtype": "Attach",
+   "label": "Design Attachment"
+  },
+  {
+   "fieldname": "column_break_yko9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_9zsc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "available",
+   "fieldtype": "Check",
+   "label": "Available"
+  },
+  {
+   "depends_on": "eval:doc.available == 1",
+   "fieldname": "item_details",
+   "fieldtype": "Table",
+   "label": "Item Details",
+   "options": "Jewellery Order Items"
+  },
+  {
+   "fieldname": "item_details_section",
+   "fieldtype": "Section Break",
+   "label": "Item Details"
+  },
+  {
+   "depends_on": "eval:doc.available == 1",
+   "fieldname": "total_weight",
+   "fieldtype": "Float",
+   "label": "Total Weight"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-03-13 11:40:31.411169",
+ "modified_by": "Administrator",
+ "module": "AuMMS",
+ "name": "Jewellery Order",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
