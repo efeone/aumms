@@ -1,0 +1,84 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "RMR.#####",
+ "creation": "2024-03-13 12:59:50.076009",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "manufacturing_request",
+  "raw_material_request_type",
+  "column_break_bonn",
+  "priority",
+  "available",
+  "section_break_opjm",
+  "raw_material_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "manufacturing_request",
+   "fieldtype": "Data",
+   "label": "Manufacturing Request"
+  },
+  {
+   "fieldname": "raw_material_request_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Raw Material Request Type",
+   "options": "\nStock\nManufacturing Request",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_bonn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "label": "Priority",
+   "options": "\nHigh\nMedium\nLow"
+  },
+  {
+   "fieldname": "section_break_opjm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "raw_material_details",
+   "fieldtype": "Table",
+   "label": "Raw material Details",
+   "options": "Raw Material Details",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "available",
+   "fieldtype": "Check",
+   "label": "Available"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-03-13 16:31:15.091269",
+ "modified_by": "Administrator",
+ "module": "AuMMS",
+ "name": "Raw Material Request",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
