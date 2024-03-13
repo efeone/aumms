@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "CJO.#####",
  "creation": "2024-03-12 12:26:20.226352",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -11,16 +12,8 @@
   "column_break_r1uk",
   "customer_expected_total_weight",
   "customer_expected_amount",
-  "order_items_tab",
-  "item_category",
-  "item_quantity",
-  "column_break_aamf",
-  "item_type",
-  "expected_weight_per_quantity",
-  "feasible",
-  "description_section",
-  "item_design_attachment",
-  "item_design_description"
+  "jewellery_order_details_section",
+  "order_item"
  ],
  "fields": [
   {
@@ -64,65 +57,24 @@
    "label": "Customer Name"
   },
   {
-   "fieldname": "order_items_tab",
-   "fieldtype": "Tab Break",
-   "label": "Order Items"
-  },
-  {
-   "fieldname": "item_design_description",
-   "fieldtype": "Text Editor",
-   "label": "Item Design Description"
-  },
-  {
-   "fieldname": "item_design_attachment",
-   "fieldtype": "Attach",
-   "label": "Item Design Attachment",
-   "reqd": 1
-  },
-  {
-   "fieldname": "item_category",
-   "fieldtype": "Link",
-   "label": "Item Category",
-   "options": "Item Category"
-  },
-  {
-   "fieldname": "item_quantity",
-   "fieldtype": "Int",
-   "label": "Item Quantity"
-  },
-  {
-   "fieldname": "item_type",
-   "fieldtype": "Link",
-   "label": "Item Type",
-   "options": "Item Type"
-  },
-  {
-   "fieldname": "expected_weight_per_quantity",
-   "fieldtype": "Float",
-   "label": "Expected Weight Per Quantity"
-  },
-  {
-   "fieldname": "column_break_aamf",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "description_section",
+   "fieldname": "jewellery_order_details_section",
    "fieldtype": "Section Break",
-   "label": "Description"
+   "label": "Jewellery Order Details"
   },
   {
-   "default": "0",
-   "fieldname": "feasible",
-   "fieldtype": "Check",
-   "label": "Feasible"
+   "fieldname": "order_item",
+   "fieldtype": "Table",
+   "label": "Order Item",
+   "options": "Customer Jewellery Order Details"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-13 10:14:02.585928",
+ "modified": "2024-03-13 12:57:52.140338",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Customer Jewellery Order",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
