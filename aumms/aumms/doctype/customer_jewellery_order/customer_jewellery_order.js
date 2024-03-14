@@ -2,16 +2,19 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Customer Jewellery Order", {
-	// refresh(frm) {
-  //
-	// },
-  // validate(frm) {
-  //   if(self.total_expected_weight_per_quantity<=self.customer_expected_total_weight)
-  //   {
-  //
-  //   }
-  // }
+	refresh(frm) {
+		if (!frm.is_new()){
+			frm.add_custom_button('Jewellery Order', () => {
+				frappe.call('aumms.aumms.doctype.customer_jewellery_order.customer_jewellery_order.create_jewellery_order', {
+					customer_jewellery_order : frm.doc.name
+				}).then(r =>{
+						frm.reload_doc();
+				});
+			},'Create');
+		}
+	},
 });
+
 frappe.ui.form.on("Customer Jewellery Order Details",{
   expected_weight_per_quantity: function(frm, cdt, cdn){
    let d = locals[cdt][cdn];
