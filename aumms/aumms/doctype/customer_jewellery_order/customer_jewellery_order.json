@@ -13,7 +13,8 @@
   "customer_expected_total_weight",
   "customer_expected_amount",
   "jewellery_order_details_section",
-  "order_item"
+  "order_item",
+  "total_expected_weight_per_quantity"
  ],
  "fields": [
   {
@@ -66,11 +67,17 @@
    "fieldtype": "Table",
    "label": "Order Item",
    "options": "Customer Jewellery Order Details"
+  },
+  {
+   "fieldname": "total_expected_weight_per_quantity",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Total Expected Weight per Quantity"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-13 12:57:52.140338",
+ "modified": "2024-03-14 12:41:26.251019",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Customer Jewellery Order",
