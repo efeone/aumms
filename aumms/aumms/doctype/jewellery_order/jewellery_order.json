@@ -6,9 +6,9 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "customer_jewellery_order",
   "customer",
   "required_date",
-  "making_chargein_percentage",
   "column_break_yko9",
   "customer_expected_total_weight",
   "customer_expected_amount",
@@ -65,13 +65,6 @@
    "fieldname": "customer_expected_amount",
    "fieldtype": "Currency",
    "label": "Customer Expected Amount"
-  },
-  {
-   "fieldname": "making_chargein_percentage",
-   "fieldtype": "Percent",
-   "in_list_view": 1,
-   "label": "Making Charge(In Percentage)",
-   "reqd": 1
   },
   {
    "fieldname": "tab_break_xdtp",
@@ -136,12 +129,18 @@
    "fieldname": "total_weight",
    "fieldtype": "Float",
    "label": "Total Weight"
+  },
+  {
+   "fieldname": "customer_jewellery_order",
+   "fieldtype": "Link",
+   "label": "Customer Jewellery Order",
+   "options": "Customer Jewellery Order"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-13 16:50:41.660525",
+ "modified": "2024-03-14 11:24:24.198867",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Order",
