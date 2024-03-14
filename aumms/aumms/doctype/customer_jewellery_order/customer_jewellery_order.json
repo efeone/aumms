@@ -1,7 +1,6 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "CJO.#####",
  "creation": "2024-03-12 12:26:20.226352",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -15,6 +14,16 @@
   "jewellery_order_details_section",
   "order_item",
   "total_expected_weight_per_quantity"
+  "order_items_tab",
+  "item_category",
+  "item_quantity",
+  "column_break_aamf",
+  "item_type",
+  "expected_weight_per_quantity",
+  "feasible",
+  "description_section",
+  "item_design_attachment",
+  "item_design_description"
  ],
  "fields": [
   {
@@ -58,9 +67,51 @@
    "label": "Customer Name"
   },
   {
-   "fieldname": "jewellery_order_details_section",
+   "fieldname": "order_items_tab",
+   "fieldtype": "Tab Break",
+   "label": "Order Items"
+  },
+  {
+   "fieldname": "item_design_description",
+   "fieldtype": "Text Editor",
+   "label": "Item Design Description"
+  },
+  {
+   "fieldname": "item_design_attachment",
+   "fieldtype": "Attach",
+   "label": "Item Design Attachment",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item_category",
+   "fieldtype": "Link",
+   "label": "Item Category",
+   "options": "Item Category"
+  },
+  {
+   "fieldname": "item_quantity",
+   "fieldtype": "Int",
+   "label": "Item Quantity"
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type"
+  },
+  {
+   "fieldname": "expected_weight_per_quantity",
+   "fieldtype": "Float",
+   "label": "Expected Weight Per Quantity"
+  },
+  {
+   "fieldname": "column_break_aamf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "description_section",
    "fieldtype": "Section Break",
-   "label": "Jewellery Order Details"
+   "label": "Description"
   },
   {
    "fieldname": "order_item",
@@ -73,6 +124,10 @@
    "fieldtype": "Float",
    "hidden": 1,
    "label": "Total Expected Weight per Quantity"
+   "default": "0",
+   "fieldname": "feasible",
+   "fieldtype": "Check",
+   "label": "Feasible"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -81,7 +136,6 @@
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Customer Jewellery Order",
- "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
