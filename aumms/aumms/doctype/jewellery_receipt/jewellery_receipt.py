@@ -55,7 +55,6 @@ class JewelleryReceipt(Document):
             aumms_item.has_stone = item_detail.has_stone
             aumms_item.gold_weight = item_detail.gold_weight
 
-            # If has_stone is checked, fetch stone details from item_detail
             if item_detail.has_stone:
                 if item_detail.single_stone:
                     aumms_item.append('stone_details', {
@@ -79,12 +78,7 @@ class JewelleryReceipt(Document):
 
             aumms_item.insert(ignore_permissions=True)
             frappe.msgprint('AuMMS Item Created.', indicator="green", alert=1)
-
-            # Fetch the item_code of the created AuMMS Item
             created_item_code = aumms_item.item_code
-
-            # Use the fetched item_code for further processing
-            # For example, you might need to store this item_code in the original document for reference
 
 
     def create_purchase_receipt(self):
@@ -110,10 +104,7 @@ class JewelleryReceipt(Document):
                     'custom_stone_charge': item_detail.stone_charge,
 
                 })
-            # Insert the new document
             purchase_receipt.insert(ignore_permissions=True)
-
-            # Submit the Purchase Receipt
             purchase_receipt.submit()
             frappe.msgprint('Purchase Receipt created.', indicator="green", alert=1)
 
