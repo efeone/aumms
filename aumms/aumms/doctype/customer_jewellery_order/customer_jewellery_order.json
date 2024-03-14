@@ -69,12 +69,10 @@
    "options": "Customer Jewellery Order Details"
   },
   {
-<<<<<<< HEAD
    "fieldname": "total_expected_weight_per_quantity",
    "fieldtype": "Float",
    "hidden": 1,
-   "label": "Total Expected Weight per Quantity"
-=======
+   "label": "Total Expected Weight per Quantity",
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -83,17 +81,13 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
->>>>>>> f446f6a (feat : Created Jewellery Order Throught Customer Jewellery Order)
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
-<<<<<<< HEAD
  "modified": "2024-03-14 12:41:26.251019",
-=======
  "modified": "2024-03-13 16:29:50.599255",
->>>>>>> f446f6a (feat : Created Jewellery Order Throught Customer Jewellery Order)
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Customer Jewellery Order",
