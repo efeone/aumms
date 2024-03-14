@@ -2,9 +2,25 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Jewellery Order", {
-	// refresh(frm) {
-  //
-	// },
+    refresh: function(frm) {
+        if (!frm.doc.available) {
+            frm.add_custom_button('Request for Manufacturing', function() {
+                // Add your custom button action here
+            }, __('Actions'));
+        }
+    },
+    available: function(frm){
+      if (!frm.doc.available) {
+          frm.add_custom_button('Request for Manufacturing', function() {
+              // Add your custom button action here
+          }, __('Actions'));
+      }
+      else{
+        if (frm.doc.available) {
+          frm.remove_custom_button('Request for Manufacturing', 'Actions')
+        }
+      }
+    }
 });
 
 frappe.ui.form.on("Jewellery Order Items",{
