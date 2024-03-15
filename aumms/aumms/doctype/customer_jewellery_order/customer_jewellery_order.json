@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "CJO.#####",
  "creation": "2024-03-12 12:26:20.226352",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -11,19 +12,12 @@
   "column_break_r1uk",
   "customer_expected_total_weight",
   "customer_expected_amount",
-  "jewellery_order_details_section",
+  "purity",
+  "uom",
+  "order_item_details_section",
   "order_item",
-  "total_expected_weight_per_quantity",
-  "order_items_tab",
-  "item_category",
-  "item_quantity",
-  "column_break_aamf",
-  "item_type",
-  "expected_weight_per_quantity",
-  "feasible",
-  "description_section",
-  "item_design_attachment",
-  "item_design_description"
+  "amended_from",
+  "total_expected_weight_per_quantity"
  ],
  "fields": [
   {
@@ -46,6 +40,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Customer Expected Total Weight",
+   "precision": "2",
    "reqd": 1
   },
   {
@@ -67,76 +62,53 @@
    "label": "Customer Name"
   },
   {
-   "fieldname": "order_items_tab",
-   "fieldtype": "Tab Break",
-   "label": "Order Items"
-  },
-  {
-   "fieldname": "item_design_description",
-   "fieldtype": "Text Editor",
-   "label": "Item Design Description"
-  },
-  {
-   "fieldname": "item_design_attachment",
-   "fieldtype": "Attach",
-   "label": "Item Design Attachment",
-   "reqd": 1
-  },
-  {
-   "fieldname": "item_category",
-   "fieldtype": "Link",
-   "label": "Item Category",
-   "options": "Item Category"
-  },
-  {
-   "fieldname": "item_quantity",
-   "fieldtype": "Int",
-   "label": "Item Quantity"
-  },
-  {
-   "fieldname": "item_type",
-   "fieldtype": "Link",
-   "label": "Item Type",
-   "options": "Item Type"
-  },
-  {
-   "fieldname": "expected_weight_per_quantity",
-   "fieldtype": "Float",
-   "label": "Expected Weight Per Quantity"
-  },
-  {
-   "fieldname": "column_break_aamf",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "description_section",
-   "fieldtype": "Section Break",
-   "label": "Description"
-  },
-  {
    "fieldname": "order_item",
    "fieldtype": "Table",
    "label": "Order Item",
    "options": "Customer Jewellery Order Details"
   },
   {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Customer Jewellery Order",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "order_item_details_section",
+   "fieldtype": "Section Break",
+   "label": "Order item Details"
+  },
+  {
    "fieldname": "total_expected_weight_per_quantity",
    "fieldtype": "Float",
    "hidden": 1,
-   "label": "Total Expected Weight per Quantity",
-   "default": "0",
-   "fieldname": "feasible",
-   "fieldtype": "Check",
-   "label": "Feasible",
+   "label": "Total Customer Expected Weight Per Quantity"
+  },
+  {
+   "fieldname": "purity",
+   "fieldtype": "Link",
+   "label": "Purity",
+   "options": "Purity"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-14 12:41:26.251019",
+ "modified": "2024-03-15 16:40:45.639559",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Customer Jewellery Order",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

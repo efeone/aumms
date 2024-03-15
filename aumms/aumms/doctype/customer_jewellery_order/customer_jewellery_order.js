@@ -2,17 +2,32 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Customer Jewellery Order", {
-	refresh(frm) {
+	on_submit(frm) {
 		if (!frm.is_new()){
-			frm.add_custom_button('Jewellery Order', () => {
+			// frm.add_custom_button('Jewellery Order', () => {
 				frappe.call('aumms.aumms.doctype.customer_jewellery_order.customer_jewellery_order.create_jewellery_order', {
 					customer_jewellery_order : frm.doc.name
 				}).then(r =>{
 						frm.reload_doc();
 				});
-			},'Create');
+			// },'Create');
 		}
 	},
+	if (purity) {
+		frappe.call({
+			method: 'aumms.aumms.utils.get_board_rate',
+			args: {
+					'purity': d.purity,
+			},
+			callback: function(r) {
+				if (r.message) {
+					let board_rate = r.message
+					frappe.model.set_value(cdt, cdn, 'board_rate', board_rate);
+					frm.refresh_field('old_jewellery_items');
+				}
+			}
+		})
+	}
 });
 
 frappe.ui.form.on("Customer Jewellery Order Details",{
