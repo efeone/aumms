@@ -13,7 +13,7 @@
   "customer_expected_amount",
   "jewellery_order_details_section",
   "order_item",
-  "total_expected_weight_per_quantity"
+  "total_expected_weight_per_quantity",
   "order_items_tab",
   "item_category",
   "item_quantity",
@@ -123,14 +123,15 @@
    "fieldname": "total_expected_weight_per_quantity",
    "fieldtype": "Float",
    "hidden": 1,
-   "label": "Total Expected Weight per Quantity"
+   "label": "Total Expected Weight per Quantity",
    "default": "0",
    "fieldname": "feasible",
    "fieldtype": "Check",
-   "label": "Feasible"
+   "label": "Feasible",
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
  "modified": "2024-03-14 12:41:26.251019",
  "modified_by": "Administrator",
