@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "JO-.#####",
  "creation": "2024-03-12 12:31:03.178116",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -11,14 +12,10 @@
   "column_break_yko9",
   "customer_expected_total_weight",
   "customer_expected_amount",
-  "tab_break_xdtp",
-  "item_category",
-  "item_type",
-  "design_attachment",
-  "column_break_9zsc",
   "quantity",
-  "expected_weight_per_quantity",
   "available",
+  "available_quantity_in_stock",
+  "column_break_fmit",
   "item_details_section",
   "item_details",
   "total_weight",
@@ -43,62 +40,33 @@
   {
    "fieldname": "customer",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Customer",
-   "options": "Customer"
+   "options": "Customer",
+   "reqd": 1
   },
   {
    "fieldname": "required_date",
    "fieldtype": "Date",
-   "label": "Required Date"
+   "in_list_view": 1,
+   "label": "Required Date",
+   "reqd": 1
   },
   {
    "fieldname": "customer_expected_total_weight",
    "fieldtype": "Float",
-   "label": "Customer Expected Total Weight"
+   "in_list_view": 1,
+   "label": "Customer Expected Total Weight",
+   "reqd": 1
   },
   {
    "fieldname": "customer_expected_amount",
    "fieldtype": "Currency",
-   "label": "Customer Expected Amount"
-  },
-  {
-   "fieldname": "tab_break_xdtp",
-   "fieldtype": "Tab Break",
-   "label": "Order Items"
-  },
-  {
-   "fieldname": "item_category",
-   "fieldtype": "Link",
-   "label": "Item Category",
-   "options": "Item Category"
-  },
-  {
-   "fieldname": "item_type",
-   "fieldtype": "Link",
-   "label": "Item Type",
-   "options": "Item Type"
-  },
-  {
-   "fieldname": "quantity",
-   "fieldtype": "Int",
-   "label": "Quantity"
-  },
-  {
-   "fieldname": "expected_weight_per_quantity",
-   "fieldtype": "Float",
-   "label": "Expected Weight Per Quantity"
-  },
-  {
-   "fieldname": "design_attachment",
-   "fieldtype": "Attach",
-   "label": "Design Attachment"
+   "label": "Customer Expected Amount",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_yko9",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_9zsc",
    "fieldtype": "Column Break"
   },
   {
@@ -117,7 +85,8 @@
   {
    "fieldname": "item_details_section",
    "fieldtype": "Section Break",
-   "label": "Item Details"
+   "label": "Item Details",
+   "mandatory_depends_on": "eval:doc.available == 1"
   },
   {
    "depends_on": "eval:doc.available == 1",
@@ -128,17 +97,35 @@
   {
    "fieldname": "customer_jewellery_order",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Customer Jewellery Order",
-   "options": "Customer Jewellery Order"
+   "options": "Customer Jewellery Order",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_fmit",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.available == 1",
+   "fieldname": "available_quantity_in_stock",
+   "fieldtype": "Int",
+   "label": "Available Quantity in Stock"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "label": "Quantity "
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-15 13:00:39.862473",
+ "modified": "2024-03-15 16:25:13.302132",
  "modified_by": "Administrator",
- "module": "AuMMS",
+ "module": "AuMMS Manufacturing",
  "name": "Jewellery Order",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
