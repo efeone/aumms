@@ -50,6 +50,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Gold Weight",
+   "precision": "4",
    "reqd": 1
   },
   {
@@ -57,7 +58,8 @@
    "fieldname": "stone_weight",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Stone Weight"
+   "label": "Stone Weight",
+   "precision": "2"
   },
   {
    "fieldname": "net_weight",
@@ -86,6 +88,7 @@
    "fieldname": "making_charge",
    "fieldtype": "Currency",
    "label": "Making Charge",
+   "precision": "2",
    "reqd": 1
   },
   {
@@ -93,6 +96,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Amount",
+   "precision": "2",
    "read_only": 1
   },
   {
@@ -155,7 +159,8 @@
   {
    "fieldname": "board_rate",
    "fieldtype": "Float",
-   "label": "Board Rate"
+   "label": "Board Rate",
+   "precision": "2"
   },
   {
    "default": "0",
@@ -194,7 +199,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-08 16:00:02.227698",
+ "modified": "2024-03-16 10:17:39.861055",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Item Receipt",
