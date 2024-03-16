@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:CJO{#####}",
  "creation": "2024-03-12 12:26:20.226352",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -10,14 +11,12 @@
   "required_date",
   "column_break_r1uk",
   "customer_expected_total_weight",
+  "uom",
+  "purity",
   "customer_expected_amount",
-  "order_items_tab",
-  "section_break_byiu",
+  "order_item_details_section",
   "order_item",
   "total_expected_weight_per_quantity",
-  "description_section",
-  "item_design_attachment",
-  "item_design_description",
   "amended_from"
  ],
  "fields": [
@@ -41,6 +40,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Customer Expected Total Weight",
+   "precision": "2",
    "reqd": 1
   },
   {
@@ -62,35 +62,10 @@
    "label": "Customer Name"
   },
   {
-   "fieldname": "order_items_tab",
-   "fieldtype": "Tab Break",
-   "label": "Order Items"
-  },
-  {
-   "fieldname": "item_design_description",
-   "fieldtype": "Text Editor",
-   "label": "Item Design Description"
-  },
-  {
-   "fieldname": "item_design_attachment",
-   "fieldtype": "Attach",
-   "label": "Item Design Attachment",
-   "reqd": 1
-  },
-  {
-   "fieldname": "description_section",
-   "fieldtype": "Section Break",
-   "label": "Description"
-  },
-  {
    "fieldname": "order_item",
    "fieldtype": "Table",
    "label": "Order Item",
    "options": "Customer Jewellery Order Details"
-  },
-  {
-   "fieldname": "section_break_byiu",
-   "fieldtype": "Section Break"
   },
   {
    "fieldname": "amended_from",
@@ -107,15 +82,34 @@
    "fieldtype": "Float",
    "hidden": 1,
    "label": "Total Expected Weight Per Quantity"
+  },
+  {
+   "default": "Gram",
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "purity",
+   "fieldtype": "Link",
+   "label": "Purity",
+   "options": "Purity"
+  },
+  {
+   "fieldname": "order_item_details_section",
+   "fieldtype": "Section Break",
+   "label": "Order Item Details"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-15 15:39:49.434112",
+ "modified": "2024-03-16 14:18:28.844830",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Customer Jewellery Order",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
