@@ -11,13 +11,14 @@
   "jewellery_order",
   "column_break_bonn",
   "priority",
+  "required_date",
   "available",
   "section_break_opjm",
-  "raw_material_details"
+  "raw_material_details",
+  "amended_from"
  ],
  "fields": [
   {
-   "depends_on": "eval:doc.raw_material_request_type==\"Manufacturing Request\"",
    "fieldname": "manufacturing_request",
    "fieldtype": "Link",
    "label": "Manufacturing Request",
@@ -59,16 +60,31 @@
    "label": "Available"
   },
   {
-   "depends_on": "eval:doc.raw_material_request_type==\"Manufacturing Request\"",
    "fieldname": "jewellery_order",
    "fieldtype": "Link",
    "label": "Jewellery Order",
    "options": "Jewellery Order"
+  },
+  {
+   "fieldname": "required_date",
+   "fieldtype": "Date",
+   "label": "Required Date"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Raw Material Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2024-03-16 12:13:16.888086",
+ "modified": "2024-03-18 12:18:20.191314",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Request",
