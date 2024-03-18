@@ -9,10 +9,14 @@
   "customer_jewellery_order",
   "customer",
   "required_date",
-  "design_attachment",
+  "uom",
+  "purity",
+  "category",
   "column_break_yko9",
+  "type",
   "customer_expected_total_weight",
   "customer_expected_amount",
+  "design_attachment",
   "quantity",
   "stock_available",
   "available_quantity_in_stock",
@@ -114,12 +118,36 @@
    "fieldtype": "Float",
    "label": "Total Weight",
    "mandatory_depends_on": "stock_available"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "purity",
+   "fieldtype": "Link",
+   "label": "Purity",
+   "options": "Purity"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Link",
+   "label": "Category",
+   "options": "Item Category"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Link",
+   "label": "Type",
+   "options": "Item Type"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-18 23:32:26.283831",
+ "modified": "2024-03-18 15:39:38.594173",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Jewellery Order",
