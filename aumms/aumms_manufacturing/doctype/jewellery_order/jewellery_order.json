@@ -9,23 +9,23 @@
   "customer_jewellery_order",
   "customer",
   "required_date",
+  "design_attachment",
   "column_break_yko9",
   "customer_expected_total_weight",
   "customer_expected_amount",
   "quantity",
-  "available",
+  "stock_available",
   "available_quantity_in_stock",
-  "column_break_fmit",
-  "item_details_section",
+  "section_break_oyix",
   "item_details",
   "total_weight",
-  "section_break_oyix",
   "amended_from"
  ],
  "fields": [
   {
    "fieldname": "section_break_oyix",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Item Details"
   },
   {
    "fieldname": "amended_from",
@@ -70,31 +70,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "0",
-   "fieldname": "available",
-   "fieldtype": "Check",
-   "label": "Available"
-  },
-  {
-   "depends_on": "eval:doc.available == 1",
-   "fieldname": "item_details",
-   "fieldtype": "Table",
-   "label": "Item Details",
-   "options": "Jewellery Order Items"
-  },
-  {
-   "fieldname": "item_details_section",
-   "fieldtype": "Section Break",
-   "label": "Item Details",
-   "mandatory_depends_on": "eval:doc.available == 1"
-  },
-  {
-   "depends_on": "eval:doc.available == 1",
-   "fieldname": "total_weight",
-   "fieldtype": "Float",
-   "label": "Total Weight"
-  },
-  {
    "fieldname": "customer_jewellery_order",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -103,25 +78,48 @@
    "reqd": 1
   },
   {
-   "fieldname": "column_break_fmit",
-   "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "eval:doc.available == 1",
-   "fieldname": "available_quantity_in_stock",
-   "fieldtype": "Int",
-   "label": "Available Quantity in Stock"
-  },
-  {
    "fieldname": "quantity",
    "fieldtype": "Int",
    "label": "Quantity "
+  },
+  {
+   "fieldname": "design_attachment",
+   "fieldtype": "Attach",
+   "label": "Design Attachment"
+  },
+  {
+   "depends_on": "stock_available",
+   "fieldname": "available_quantity_in_stock",
+   "fieldtype": "Int",
+   "label": "Available Quantity in Stock",
+   "mandatory_depends_on": "stock_available"
+  },
+  {
+   "default": "0",
+   "fieldname": "stock_available",
+   "fieldtype": "Check",
+   "label": "Stock Available"
+  },
+  {
+   "depends_on": "stock_available",
+   "fieldname": "item_details",
+   "fieldtype": "Table",
+   "label": "Item Details",
+   "mandatory_depends_on": "stock_available",
+   "options": "Jewellery Order Items"
+  },
+  {
+   "depends_on": "stock_available",
+   "fieldname": "total_weight",
+   "fieldtype": "Float",
+   "label": "Total Weight",
+   "mandatory_depends_on": "stock_available"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-15 16:25:13.302132",
+ "modified": "2024-03-18 23:32:26.283831",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Jewellery Order",
