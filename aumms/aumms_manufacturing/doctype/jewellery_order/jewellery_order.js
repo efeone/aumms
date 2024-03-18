@@ -11,8 +11,9 @@ frappe.ui.form.on("Jewellery Order", {
      frm.set_df_property('customer_expected_amount', 'read_only', 1)
      frm.set_df_property('total_weight', 'read_only', 1)
      frm.set_df_property('quantity', 'read_only', 1)
+		 frm.set_df_property('design_attachment', 'read_only', 1)
    }
-	},
+ },
   available_quantity_in_stock: function(frm) {
     limit_item_details(frm)
   }
