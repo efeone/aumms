@@ -11,6 +11,15 @@ frappe.ui.form.on("Customer Jewellery Order", {
   purity: function (frm) {
     calculate_customer_expected_amount(frm);
   },
+  refresh: function(frm){
+    frm.set_query('uom',() => {
+ 			 return {
+ 					 filters: {
+ 							 "is_purity_uom": 1
+ 					 }
+ 			 }
+ 	 });
+  }
 });
 
 frappe.ui.form.on("Customer Jewellery Order Details", {

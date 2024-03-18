@@ -41,7 +41,12 @@ frappe.ui.form.on("Jewellery Order Items",{
 });
 
 function limit_item_details(frm) {
-  limit = frm.doc.quantity - frm.doc.available_quantity_in_stock
+	if(frm.doc.quantity >= frm.doc.available_quantity_in_stock){
+		limit = frm.doc.quantity - frm.doc.available_quantity_in_stock
+	}
+	else if(frm.doc.quantity <= frm.doc.available_quantity_in_stoc){
+		limit = frm.doc.quantity
+	}
   if (frm.doc.item_details.length >= limit)  {
     $(".btn.btn-xs.btn-secondary.grid-add-row").hide();
   }
