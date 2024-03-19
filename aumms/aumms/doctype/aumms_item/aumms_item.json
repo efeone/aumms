@@ -14,19 +14,20 @@
   "item_group",
   "item_type",
   "stock_uom",
-  "purity",
+  "item_category",
   "column_break_36khf",
   "disabled",
   "is_stock_item",
   "is_stone_item",
   "stone_type",
   "under_manufacturing",
+  "purity",
   "purity_percentage",
   "making_charge_section",
   "making_charge_based_on",
+  "making_charge",
   "column_break_44ppd",
   "making_charge_percentage",
-  "making_charge",
   "is_purity_item",
   "description_section",
   "description",
@@ -343,11 +344,17 @@
   {
    "fieldname": "column_break_44ppd",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "item_category",
+   "fieldtype": "Link",
+   "label": "Item Category",
+   "options": "Item Category"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-01 12:24:55.450845",
+ "modified": "2024-03-19 12:25:05.569530",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS Item",
@@ -391,6 +398,7 @@
    "write": 1
   }
  ],
+ "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

@@ -50,7 +50,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Gold Weight",
-   "precision": "4",
+   "precision": "3",
    "reqd": 1
   },
   {
@@ -85,6 +85,7 @@
    "read_only": 1
   },
   {
+   "depends_on": "eval:doc.making_chargein_percentage",
    "fieldname": "making_charge",
    "fieldtype": "Currency",
    "label": "Making Charge",
@@ -115,6 +116,7 @@
    "fieldname": "making_chargein_percentage",
    "fieldtype": "Percent",
    "label": "Making Charge(In Percentage)",
+   "precision": "1",
    "reqd": 1
   },
   {
@@ -199,7 +201,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-16 10:17:39.861055",
+ "modified": "2024-03-19 12:55:24.185896",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Item Receipt",

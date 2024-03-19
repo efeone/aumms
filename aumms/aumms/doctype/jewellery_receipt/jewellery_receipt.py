@@ -54,6 +54,7 @@ class JewelleryReceipt(Document):
             aumms_item.weight_uom = item_detail.uom
             aumms_item.has_stone = item_detail.has_stone
             aumms_item.gold_weight = item_detail.gold_weight
+            aumms_item.item_category = item_detail.item_category
 
             if item_detail.has_stone:
                 if item_detail.single_stone:

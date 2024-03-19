@@ -66,6 +66,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Board Rate",
+   "precision": "2",
    "reqd": 1
   },
   {
@@ -118,7 +119,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-08 16:36:04.062301",
+ "modified": "2024-03-19 12:52:08.855007",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Receipt",

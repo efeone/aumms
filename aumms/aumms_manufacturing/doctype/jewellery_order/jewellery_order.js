@@ -2,28 +2,38 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Jewellery Order", {
-	refresh : function(frm) {
-    if (!frm.is_new()){
-     frm.set_df_property('customer_jewellery_order', 'read_only', 1)
-     frm.set_df_property('customer', 'read_only', 1)
-     frm.set_df_property('required_date', 'read_only', 1)
-     frm.set_df_property('customer_expected_total_weight', 'read_only', 1)
-     frm.set_df_property('customer_expected_amount', 'read_only', 1)
-     frm.set_df_property('total_weight', 'read_only', 1)
-     frm.set_df_property('quantity', 'read_only', 1)
-		 frm.set_df_property('design_attachment', 'read_only', 1)
-   }
-	 frm.set_query('uom',()=>{
-		 return{
-			 filters : {
-				 "is_purity_uom" : 1
-			 }
-		 }
-	 });
- },
-  available_quantity_in_stock: function(frm) {
-    limit_item_details(frm)
-  }
+	refresh: function(frm) {
+		if (!frm.is_new()){
+			frm.set_df_property('customer_jewellery_order', 'read_only', 1)
+			frm.set_df_property('customer', 'read_only', 1)
+			frm.set_df_property('required_date', 'read_only', 1)
+			frm.set_df_property('customer_expected_total_weight', 'read_only', 1)
+			frm.set_df_property('customer_expected_amount', 'read_only', 1)
+			frm.set_df_property('total_weight', 'read_only', 1)
+			frm.set_df_property('quantity', 'read_only', 1)
+			frm.set_df_property('design_attachment', 'read_only', 1)
+		}
+		frm.set_query('uom',()=>{
+			return {
+				filters: {
+					"is_purity_uom": 1
+				}
+			}
+		});
+		frm.set_query("item_code", "item_details", ()=> {
+			return {
+				filters: {
+					"item_type": frm.doc.type, // Corrected the missing comma here
+					"item_category": frm.doc.category,
+					"purity":frm.doc.purity
+				}
+			}
+		});
+		},
+
+		available_quantity_in_stock: function(frm) {
+			limit_item_details(frm)
+		}
 });
 
 frappe.ui.form.on("Jewellery Order Items",{
