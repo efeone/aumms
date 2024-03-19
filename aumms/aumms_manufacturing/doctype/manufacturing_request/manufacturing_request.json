@@ -11,7 +11,11 @@
   "required_date",
   "quantity",
   "jewellery_order",
+  "uom",
+  "purity",
   "column_break_jgee",
+  "category",
+  "type",
   "manufacturing_request",
   "amended_from",
   "total_weight",
@@ -92,12 +96,40 @@
   {
    "fieldname": "column_break_jgee",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": ".uom",
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "fetch_from": ".purity",
+   "fieldname": "purity",
+   "fieldtype": "Link",
+   "label": "Purity",
+   "options": "Purity"
+  },
+  {
+   "fetch_from": ".category",
+   "fieldname": "category",
+   "fieldtype": "Link",
+   "label": "Category",
+   "options": "Item Category"
+  },
+  {
+   "fetch_from": ".type",
+   "fieldname": "type",
+   "fieldtype": "Link",
+   "label": "Type",
+   "options": "Item Type"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-16 15:31:05.555311",
+ "modified": "2024-03-19 10:58:36.712652",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request",

@@ -8,7 +8,7 @@ from frappe.model.document import Document
 class RawMaterialRequest(Document):
 
     def on_submit(self):
-        if self.stock_available == 0:
+        if self.available == 0:
             if self.raw_material_request_type == 'Raw Material Request':
                 self.create_manufacturing_request()
 
