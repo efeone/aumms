@@ -8,7 +8,8 @@ from frappe.model.document import Document
 class JewelleryOrder(Document):
 
 	def on_submit(self):
-		self.create_manufacturing_request()
+		if self.quantity > self.available_quantity_in_stock:
+			self.create_manufacturing_request()
 
 	def create_manufacturing_request(self):
 	    """Create Manufacturing Request For Jewellery Order"""

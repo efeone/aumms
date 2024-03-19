@@ -32,13 +32,15 @@ class CustomerJewelleryOrder(Document):
                 new_jewellery_order.customer = self.customer
                 new_jewellery_order.required_date = self.required_date
                 new_jewellery_order.customer_expected_total_weight = (
-                    self.customer_expected_total_weight
+                    item.expected_weight_per_quantity
                 )
                 new_jewellery_order.customer_expected_amount = (
                     self.customer_expected_amount
                 )
-                new_jewellery_order.item_category = item.item_category
-                new_jewellery_order.item_type = item.item_type
+                new_jewellery_order.uom = self.uom
+                new_jewellery_order.purity = self.purity
+                new_jewellery_order.category = item.item_category
+                new_jewellery_order.type = item.item_type
                 new_jewellery_order.quantity = item.item_quantity
                 new_jewellery_order.expected_weight_per_quantity = (
                     item.expected_weight_per_quantity
