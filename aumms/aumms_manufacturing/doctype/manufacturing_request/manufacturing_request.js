@@ -10,5 +10,12 @@ frappe.ui.form.on("Manufacturing Request", {
 				}
 			}
 		});
-  }
+  },
+  select_raw_material: function(frm) {
+    frappe.model.open_mapped_doc({
+        method: "aumms.aumms_manufacturing.doctype.manufacturing_request.manufacturing_request.create_required_raw_material",
+        source_name: frm.doc.name,
+        frm: cur_frm
+    });
+}
 });

@@ -13,14 +13,15 @@
   "jewellery_order",
   "uom",
   "purity",
+  "design_attachment",
   "column_break_jgee",
   "category",
   "type",
   "manufacturing_request",
   "amended_from",
   "total_weight",
-  "design_attachment",
-  "row_material_available"
+  "select_raw_material",
+  "raw_material"
  ],
  "fields": [
   {
@@ -117,12 +118,23 @@
    "fieldtype": "Link",
    "label": "Type",
    "options": "Item Type"
+  },
+  {
+   "fieldname": "select_raw_material",
+   "fieldtype": "Button",
+   "label": "Select Raw Material"
+  },
+  {
+   "fieldname": "raw_material",
+   "fieldtype": "Link",
+   "label": "Raw Material",
+   "options": "Raw Material Required"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-19 10:58:36.712652",
+ "modified": "2024-03-20 16:18:24.357347",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request",
