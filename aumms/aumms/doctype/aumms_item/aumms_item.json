@@ -19,11 +19,11 @@
   "disabled",
   "is_stock_item",
   "is_stone_item",
+  "is_raw_material",
   "stone_type",
   "under_manufacturing",
   "purity",
   "purity_percentage",
-  "is_raw_material",
   "making_charge_section",
   "making_charge_based_on",
   "making_charge",
@@ -51,11 +51,7 @@
   "is_sales_item",
   "unit_of_measure_conversion",
   "uoms",
-  "item",
-  "serial_nos_and_batches_section",
-  "has_batch_no",
-  "column_break_uuup",
-  "has_serial_no"
+  "item"
  ],
  "fields": [
   {
@@ -365,7 +361,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-20 11:15:19.775647",
+ "modified": "2024-03-20 12:26:08.046316",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS Item",

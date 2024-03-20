@@ -30,9 +30,7 @@
   "purity",
   "board_rate",
   "amount_without_making_charge",
-  "amount",
-  "has_batch_no",
-  "has_serial_no"
+  "amount"
  ],
  "fields": [
   {
@@ -198,24 +196,12 @@
    "fieldname": "multi_stone",
    "fieldtype": "Check",
    "label": "Multi Stone"
-  },
-  {
-   "default": "0",
-   "fieldname": "has_batch_no",
-   "fieldtype": "Check",
-   "label": "Has Batch No"
-  },
-  {
-   "default": "0",
-   "fieldname": "has_serial_no",
-   "fieldtype": "Check",
-   "label": " Has Serial No"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-19 16:57:39.164548",
+ "modified": "2024-03-20 11:55:02.622652",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Item Receipt",
