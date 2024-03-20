@@ -95,8 +95,7 @@ def create_or_update_item(self, item=None):
 		item_doc.set(aumms_item_field, self.get(aumms_item_field))
 
 	item_doc.is_aumms_item = 1
-	item_doc.has_batch_no = self.has_batch_no
-	item_doc.has_serial_no = self.has_serial_no
+	item_doc.custom_is_raw_material = self.is_raw_material
 
 
 	#Clear and Set UOMs to Item
