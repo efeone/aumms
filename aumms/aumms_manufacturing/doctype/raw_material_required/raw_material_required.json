@@ -1,0 +1,105 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-20 12:22:05.372427",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "jewellery_order",
+  "manufacturing_request",
+  "item_required_date",
+  "column_break_amkz",
+  "raw_material_required_date",
+  "total_weight",
+  "raw_materials_section",
+  "raw_material_details",
+  "total_raw_material_weight",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "jewellery_order",
+   "fieldtype": "Link",
+   "label": "Jewellery Order",
+   "options": "Jewellery Order"
+  },
+  {
+   "fieldname": "manufacturing_request",
+   "fieldtype": "Link",
+   "label": "Manufacturing Request",
+   "options": "Manufacturing Request"
+  },
+  {
+   "fetch_from": "jewellery_order.required_date",
+   "fieldname": "item_required_date",
+   "fieldtype": "Date",
+   "label": "Item Required Date"
+  },
+  {
+   "fieldname": "total_weight",
+   "fieldtype": "Float",
+   "label": "Total Weight",
+   "precision": "2"
+  },
+  {
+   "fieldname": "total_raw_material_weight",
+   "fieldtype": "Float",
+   "label": "Total Raw Material Weight"
+  },
+  {
+   "fieldname": "column_break_amkz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "raw_materials_section",
+   "fieldtype": "Section Break",
+   "label": "Raw Materials "
+  },
+  {
+   "fieldname": "raw_material_details",
+   "fieldtype": "Table",
+   "label": "Raw Material Details",
+   "options": "Raw Material Details"
+  },
+  {
+   "fieldname": "raw_material_required_date",
+   "fieldtype": "Date",
+   "label": "Raw Material Required Date"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Required Raw Material",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-03-20 12:43:29.952336",
+ "modified_by": "Administrator",
+ "module": "AuMMS Manufacturing",
+ "name": "Raw Material Required",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
