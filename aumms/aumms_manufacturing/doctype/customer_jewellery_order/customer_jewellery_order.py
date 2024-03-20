@@ -26,6 +26,7 @@ class CustomerJewelleryOrder(Document):
             "Jewellery Order", {"customer_jewellery_order": self.name}
         )
         if not jewellery_order_exist:
+            jewellery_order_count = 0
             for item in self.order_item:
                 new_jewellery_order = frappe.new_doc("Jewellery Order")
                 new_jewellery_order.customer_jewellery_order = self.name
@@ -49,11 +50,12 @@ class CustomerJewelleryOrder(Document):
                 )
                 new_jewellery_order.design_attachment = item.item_design_attachment
                 new_jewellery_order.insert(ignore_permissions=True)
-                frappe.msgprint(
-                    f"Jewellery Order {new_jewellery_order.name} Created.",
-                    indicator="green",
-                    alert=1,
-                )
+                jewellery_order_count += 1
+            frappe.msgprint(
+                f"{jewellery_order_count} Jewellery Orders Created.",
+                indicator="green",
+                alert=1,
+            )
         else:
             frappe.throw(_(f"Jewellery Order is already exist for {self.name}"))
 
