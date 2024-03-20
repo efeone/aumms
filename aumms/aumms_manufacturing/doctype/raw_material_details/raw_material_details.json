@@ -7,9 +7,10 @@
  "engine": "InnoDB",
  "field_order": [
   "item_name",
-  "item_group",
-  "uom",
+  "item_type",
   "weight",
+  "column_break_6dux",
+  "uom",
   "quantity"
  ],
  "fields": [
@@ -19,13 +20,6 @@
    "in_list_view": 1,
    "label": "Item Name",
    "options": "AuMMS Item"
-  },
-  {
-   "fieldname": "item_group",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Item Group",
-   "options": "AuMMS Item Group"
   },
   {
    "fieldname": "uom",
@@ -45,12 +39,23 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Quantity"
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Type",
+   "options": "Item Type"
+  },
+  {
+   "fieldname": "column_break_6dux",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-15 15:44:18.348610",
+ "modified": "2024-03-20 12:04:46.513752",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Details",
