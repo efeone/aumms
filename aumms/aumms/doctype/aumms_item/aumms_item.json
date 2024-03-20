@@ -23,6 +23,7 @@
   "under_manufacturing",
   "purity",
   "purity_percentage",
+  "is_raw_material",
   "making_charge_section",
   "making_charge_based_on",
   "making_charge",
@@ -350,11 +351,17 @@
    "fieldtype": "Link",
    "label": "Item Category",
    "options": "Item Category"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_raw_material",
+   "fieldtype": "Check",
+   "label": "Is Raw Material"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-19 12:25:05.569530",
+ "modified": "2024-03-20 11:15:19.775647",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS Item",
