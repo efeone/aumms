@@ -14,12 +14,12 @@ class AuMMSItem(Document):
 		"""
 		self.validate_stone_weight()
 		self.validate_stone_charge()"""
-		
+
 		if self.is_new():
 			self.validate_item_name()
 			self.validate_item_code()
 		self.validate_gross_wt_stone_wt_and_charge()
-	
+
 	"""def validate_stone_weight(self):
 		if not self.stone_weight and self.is_stone_item:
 			frappe.throw(_('Please Enter Stone weight'))
@@ -27,7 +27,7 @@ class AuMMSItem(Document):
 	def validate_stone_charge(self):
 		if not self.stone_charge and self.is_stone_item:
 			frappe.throw(_('Please Enter Stone Charge'))"""
-	
+
 	def after_insert(self):
 		''' Method to create Item from AuMMS Item '''
 		create_or_update_item(self)
@@ -95,6 +95,9 @@ def create_or_update_item(self, item=None):
 		item_doc.set(aumms_item_field, self.get(aumms_item_field))
 
 	item_doc.is_aumms_item = 1
+	item_doc.has_batch_no = self.has_batch_no
+	item_doc.has_serial_no = self.has_serial_no
+
 
 	#Clear and Set UOMs to Item
 	item_doc.uoms = []

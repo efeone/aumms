@@ -50,7 +50,11 @@
   "is_sales_item",
   "unit_of_measure_conversion",
   "uoms",
-  "item"
+  "item",
+  "serial_nos_and_batches_section",
+  "has_batch_no",
+  "column_break_uuup",
+  "has_serial_no"
  ],
  "fields": [
   {

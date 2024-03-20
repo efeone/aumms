@@ -20,7 +20,7 @@
   "amended_from",
   "total_weight",
   "design_attachment",
-  "available"
+  "row_material_available"
  ],
  "fields": [
   {
@@ -48,18 +48,11 @@
    "options": "Jewellery Order"
   },
   {
-   "depends_on": "eval:doc.raw_material_request_type==\"Jewellery Order\"",
+   "depends_on": "eval:doc.raw_material_request_type==\"Raw Material Request\"",
    "fieldname": "manufacturing_request",
    "fieldtype": "Link",
    "label": "Manufacturing Request",
    "options": "Manufacturing Request"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:doc.raw_material_request_type==\"Jewellery Order\"",
-   "fieldname": "available",
-   "fieldtype": "Check",
-   "label": "Available"
   },
   {
    "fieldname": "amended_from",
