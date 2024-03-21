@@ -23,9 +23,8 @@ frappe.ui.form.on("Jewellery Order", {
 		frm.set_query("item_code", "item_details", ()=> {
 			return {
 				filters: {
-					"item_type": frm.doc.type, // Corrected the missing comma here
-					"item_category": frm.doc.category,
-					"purity":frm.doc.purity
+					"item_type": frm.doc.type,
+					"item_category": frm.doc.category
 				}
 			}
 		});

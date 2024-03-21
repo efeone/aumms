@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "RM-.#####",
  "creation": "2024-03-20 12:22:05.372427",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -10,6 +11,7 @@
   "item_required_date",
   "column_break_amkz",
   "raw_material_required_date",
+  "total_quantity",
   "total_weight",
   "raw_materials_section",
   "raw_material_details",
@@ -71,19 +73,26 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Required Raw Material",
+   "options": "Raw Material Required",
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "total_quantity",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Total Quantity"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-20 12:43:29.952336",
+ "modified": "2024-03-20 15:50:42.960339",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Required",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

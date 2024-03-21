@@ -3,24 +3,31 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-# from aumms.aumms_manufacturing.doctype.raw_material_request.raw_material_request import create_manufacturing_request
+from frappe.model.mapper import get_mapped_doc
 
 
 class ManufacturingRequest(Document):
-	def on_submit(self):
-		if self.raw_material_request_type == 'Jewellery Order':
-			self.create_raw_material_request()
+	pass
 
+@frappe.whitelist()
+def create_required_raw_material(source_name, target_doc=None):
+    def set_missing_values(source, target):
+        target.jewellery_order = source.jewellery_order
+        target.manufacturing_request = source.name
+        target.item_required_date = source.required_date
+        target.total_quantity = source.quantity
+        target.total_weight = source.total_weight
 
-	def create_raw_material_request(self):
-		raw_material_request_exists = frappe.db.exists('Raw Material Request', {'manufacturing_request' : self.name})
-		if not raw_material_request_exists:
-			raw_material_request = frappe.new_doc('Raw Material Request')
-			raw_material_request.raw_material_request_type = "Jewellery Order"
-			raw_material_request.manufacturing_request = self.name
-			raw_material_request.jewellery_order = self.jewellery_order
-			raw_material_request.required_date = self.required_date
-			raw_material_request.insert(ignore_permissions = True)
-			frappe.msgprint(f"Raw Material Request {raw_material_request.name} created.",indicator="green", alert=1 )
-		else:
-			frappe.throw(_('Manufacturing Request {0} does not exists'.format(self.name)))
+    doc = get_mapped_doc(
+        'Manufacturing Request',
+        source_name,
+        {
+            'Manufacturing Request': {
+                'doctype': 'Raw Material Required',
+            },
+        },
+        target_doc,
+        set_missing_values
+    )
+
+    return doc
