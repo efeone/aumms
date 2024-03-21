@@ -1,0 +1,84 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:stage",
+ "creation": "2024-03-21 14:41:34.355567",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "stage",
+  "default_workstation",
+  "expected_execution_time",
+  "column_break_gfyw",
+  "raw_materials_available_for_the_process",
+  "previous_stage_completed",
+  "raw_material_from_the_perivious_stage"
+ ],
+ "fields": [
+  {
+   "fieldname": "default_workstation",
+   "fieldtype": "Link",
+   "label": "Default Workstation",
+   "options": "Workstation"
+  },
+  {
+   "fieldname": "expected_execution_time",
+   "fieldtype": "Float",
+   "label": "Expected Execution Time( in hours)"
+  },
+  {
+   "default": "0",
+   "fieldname": "raw_materials_available_for_the_process",
+   "fieldtype": "Check",
+   "label": "Raw Materials Available for the Process"
+  },
+  {
+   "default": "0",
+   "fieldname": "previous_stage_completed",
+   "fieldtype": "Check",
+   "label": "Previous Stage Completed"
+  },
+  {
+   "default": "0",
+   "fieldname": "raw_material_from_the_perivious_stage",
+   "fieldtype": "Check",
+   "label": "Raw Material from the perivious Stage"
+  },
+  {
+   "fieldname": "column_break_gfyw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "stage",
+   "fieldtype": "Data",
+   "label": "Stage",
+   "unique": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-03-21 14:57:45.899054",
+ "modified_by": "Administrator",
+ "module": "AuMMS Manufacturing",
+ "name": "Manufacturing Stage",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
