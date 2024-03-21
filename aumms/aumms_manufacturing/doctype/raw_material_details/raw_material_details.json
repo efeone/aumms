@@ -8,10 +8,9 @@
  "field_order": [
   "item_name",
   "item_type",
-  "weight",
   "column_break_6dux",
-  "uom",
-  "quantity"
+  "quantity",
+  "available_quantity_in_stock"
  ],
  "fields": [
   {
@@ -19,22 +18,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Item Name",
-   "options": "AuMMS Item"
-  },
-  {
-   "fetch_from": "item_name.weight_uom",
-   "fieldname": "uom",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "UOM",
-   "options": "UOM"
-  },
-  {
-   "fetch_from": "item_name.weight_per_unit",
-   "fieldname": "weight",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Weight"
+   "options": "Item"
   },
   {
    "fieldname": "quantity",
@@ -53,12 +37,17 @@
   {
    "fieldname": "column_break_6dux",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "available_quantity_in_stock",
+   "fieldtype": "Int",
+   "label": "Available Quantity in Stock"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-20 15:08:36.822673",
+ "modified": "2024-03-21 14:56:57.861385",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Details",

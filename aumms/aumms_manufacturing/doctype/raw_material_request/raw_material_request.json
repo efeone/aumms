@@ -9,10 +9,15 @@
   "raw_material_request_type",
   "manufacturing_request",
   "jewellery_order",
-  "column_break_bonn",
-  "priority",
+  "required_quantity",
   "required_date",
-  "available",
+  "column_break_bonn",
+  "item_name",
+  "item_type",
+  "weight",
+  "uom",
+  "not_available",
+  "priority",
   "section_break_opjm",
   "raw_material_details",
   "amended_from"
@@ -37,6 +42,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.not_available",
    "fieldname": "priority",
    "fieldtype": "Select",
    "label": "Priority",
@@ -52,12 +58,6 @@
    "fieldtype": "Table",
    "label": "Raw material Details",
    "options": "Raw Material Details"
-  },
-  {
-   "default": "0",
-   "fieldname": "available",
-   "fieldtype": "Check",
-   "label": "Available"
   },
   {
    "fieldname": "jewellery_order",
@@ -79,12 +79,46 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "required_quantity",
+   "fieldtype": "Int",
+   "label": "Required Quantity"
+  },
+  {
+   "default": "0",
+   "fieldname": "not_available",
+   "fieldtype": "Check",
+   "label": "Not available"
+  },
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Link",
+   "label": "Item Name",
+   "options": "AuMMS Item"
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type"
+  },
+  {
+   "fieldname": "weight",
+   "fieldtype": "Float",
+   "label": "Weight"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-18 12:18:20.191314",
+ "modified": "2024-03-21 11:10:15.955125",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Request",

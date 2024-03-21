@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestRawMaterialRequired(FrappeTestCase):
+class TestRawMaterialBundle(FrappeTestCase):
 	pass
