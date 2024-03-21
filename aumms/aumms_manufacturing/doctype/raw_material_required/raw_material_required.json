@@ -14,7 +14,7 @@
   "total_quantity",
   "total_weight",
   "raw_materials_section",
-  "raw_material_details",
+  "raw_materials",
   "total_raw_material_weight",
   "amended_from"
  ],
@@ -22,26 +22,34 @@
   {
    "fieldname": "jewellery_order",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Jewellery Order",
-   "options": "Jewellery Order"
+   "options": "Jewellery Order",
+   "reqd": 1
   },
   {
    "fieldname": "manufacturing_request",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Manufacturing Request",
-   "options": "Manufacturing Request"
+   "options": "Manufacturing Request",
+   "reqd": 1
   },
   {
-   "fetch_from": "jewellery_order.required_date",
+   "fetch_from": ".required_date",
    "fieldname": "item_required_date",
    "fieldtype": "Date",
-   "label": "Item Required Date"
+   "in_list_view": 1,
+   "label": "Item Required Date",
+   "reqd": 1
   },
   {
    "fieldname": "total_weight",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "Total Weight",
-   "precision": "2"
+   "precision": "2",
+   "reqd": 1
   },
   {
    "fieldname": "total_raw_material_weight",
@@ -56,12 +64,6 @@
    "fieldname": "raw_materials_section",
    "fieldtype": "Section Break",
    "label": "Raw Materials "
-  },
-  {
-   "fieldname": "raw_material_details",
-   "fieldtype": "Table",
-   "label": "Raw Material Details",
-   "options": "Raw Material Details"
   },
   {
    "fieldname": "raw_material_required_date",
@@ -79,16 +81,17 @@
    "search_index": 1
   },
   {
-   "fieldname": "total_quantity",
-   "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Total Quantity"
+   "fieldname": "raw_materials",
+   "fieldtype": "Table",
+   "label": "Raw Materials",
+   "options": "Raw Material Details",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-20 15:50:42.960339",
+ "modified": "2024-03-20 15:39:03.693208",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Required",
