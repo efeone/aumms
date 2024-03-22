@@ -1,0 +1,53 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-21 15:45:17.322228",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "stage",
+  "default_workstation",
+  "column_break_1pvp",
+  "required_time"
+ ],
+ "fields": [
+  {
+   "fetch_from": "stage.default_workstation",
+   "fieldname": "default_workstation",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Default Workstation"
+  },
+  {
+   "fieldname": "stage",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Stage",
+   "options": "Manufacturing Stage"
+  },
+  {
+   "fetch_from": "stage.expected_execution_time",
+   "fieldname": "required_time",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Required Time"
+  },
+  {
+   "fieldname": "column_break_1pvp",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-03-22 16:51:21.272004",
+ "modified_by": "Administrator",
+ "module": "AuMMS Manufacturing",
+ "name": "Manufacturing Stage Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

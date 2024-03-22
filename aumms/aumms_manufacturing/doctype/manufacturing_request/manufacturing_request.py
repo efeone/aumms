@@ -23,7 +23,7 @@ def create_required_raw_material(source_name, target_doc=None):
         source_name,
         {
             'Manufacturing Request': {
-                'doctype': 'Raw Material Required',
+                'doctype': 'Raw Material Bundle',
             },
         },
         target_doc,

@@ -7,6 +7,11 @@ from frappe.model.document import Document
 
 
 class RawMaterialBundle(Document):
+	def autoname(self):
+		for raw_material_details in self.get("raw_material_details"):
+			raw_material_details.raw_name = f"{raw_material_details.item_name}-{raw_material_details.item_type}-{raw_material_details.quantity}"
+
+
 	def on_submit(self):
 		self.create_raw_materiel_request()
 

@@ -11,6 +11,7 @@
   "jewellery_order",
   "required_quantity",
   "required_date",
+  "raw_material_bundle",
   "column_break_bonn",
   "item_name",
   "item_type",
@@ -113,12 +114,17 @@
    "fieldtype": "Link",
    "label": "UOM",
    "options": "UOM"
+  },
+  {
+   "fieldname": "raw_material_bundle",
+   "fieldtype": "Data",
+   "label": "Raw Material Bundle"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-21 11:10:15.955125",
+ "modified": "2024-03-22 14:20:54.799386",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Request",
