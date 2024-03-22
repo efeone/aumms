@@ -20,7 +20,10 @@ class JewelleryOrder(Document):
 			new_manufacturing_request.jewellery_order = self.name
 			new_manufacturing_request.jewellery_order_design = self.design_attachment
 			new_manufacturing_request.required_date = self.required_date
-			new_manufacturing_request.total_weight = self.customer_expected_total_weight - self.total_weight
+			if self.customer_expected_total_weight >=  self.total_weight:
+				new_manufacturing_request.total_weight = self.customer_expected_total_weight - self.total_weight
+			else :
+				new_manufacturing_request.total_weight = self.total_weight - self.customer_expected_total_weight
 			new_manufacturing_request.uom = self.uom
 			new_manufacturing_request.purity = self.purity
 			new_manufacturing_request.type = self.type

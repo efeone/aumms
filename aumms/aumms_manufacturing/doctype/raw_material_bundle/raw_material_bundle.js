@@ -10,5 +10,18 @@ frappe.ui.form.on("Raw Material Bundle", {
 				}
 			}
 		});
+		if(frm.doc.manufacturing_request){
+			frappe.call({
+				method : 'aumms.aumms_manufacturing.doctype.raw_material_bundle.raw_material_bundle.show_raw_materiel_request_name',
+				args :{
+					doc : frm.doc.name
+				},
+				callback : function(r){
+					frm.refresh_fields()
+				}
+
+			})
+		}
+
 	},
 });
