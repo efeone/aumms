@@ -43,25 +43,19 @@
    "fieldname": "available_quantity_in_stock",
    "fieldtype": "Int",
    "label": "Available Quantity in Stock"
-<<<<<<< HEAD
-=======
   },
   {
    "fieldname": "raw_materiel_request",
    "fieldtype": "Link",
    "label": "Raw Materiel Request",
    "options": "Raw Material Request"
->>>>>>> 57d2515 (fix : Fixed Conflict)
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
-<<<<<<< HEAD
  "modified": "2024-03-21 14:56:57.861385",
-=======
  "modified": "2024-03-22 09:29:06.471809",
->>>>>>> 57d2515 (fix : Fixed Conflict)
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Details",

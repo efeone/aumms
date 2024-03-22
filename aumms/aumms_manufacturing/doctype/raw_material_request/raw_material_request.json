@@ -107,25 +107,18 @@
    "fieldtype": "Link",
    "label": "UOM",
    "options": "UOM"
-<<<<<<< HEAD
-=======
   },
   {
    "fieldname": "raw_materiel_bundle",
    "fieldtype": "Link",
    "label": "Raw Materiel Bundle",
    "options": "Raw Material Bundle"
->>>>>>> 57d2515 (fix : Fixed Conflict)
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2024-03-21 11:10:15.955125",
-=======
  "modified": "2024-03-22 09:32:22.268585",
->>>>>>> 57d2515 (fix : Fixed Conflict)
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Request",
