@@ -11,8 +11,7 @@
   "jewellery_order",
   "column_break_bonn",
   "priority",
-  "required_date",
-  "available",
+  "raw_materiel_bundle",
   "section_break_opjm",
   "raw_material_details",
   "amended_from"
@@ -79,12 +78,52 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "required_quantity",
+   "fieldtype": "Int",
+   "label": "Required Quantity"
+  },
+  {
+   "default": "0",
+   "fieldname": "not_available",
+   "fieldtype": "Check",
+   "label": "Not available"
+  },
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Link",
+   "label": "Item Name",
+   "options": "AuMMS Item"
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type"
+  },
+  {
+   "fieldname": "weight",
+   "fieldtype": "Float",
+   "label": "Weight"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "raw_materiel_bundle",
+   "fieldtype": "Link",
+   "label": "Raw Materiel Bundle",
+   "options": "Raw Material Bundle"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-18 12:18:20.191314",
+ "modified": "2024-03-22 09:32:22.268585",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Request",

@@ -10,8 +10,9 @@
   "item_type",
   "weight",
   "column_break_6dux",
-  "uom",
-  "quantity"
+  "quantity",
+  "available_quantity_in_stock",
+  "raw_materiel_request"
  ],
  "fields": [
   {
@@ -53,12 +54,23 @@
   {
    "fieldname": "column_break_6dux",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "available_quantity_in_stock",
+   "fieldtype": "Int",
+   "label": "Available Quantity in Stock"
+  },
+  {
+   "fieldname": "raw_materiel_request",
+   "fieldtype": "Link",
+   "label": "Raw Materiel Request",
+   "options": "Raw Material Request"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-20 15:08:36.822673",
+ "modified": "2024-03-22 09:29:06.471809",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Details",
