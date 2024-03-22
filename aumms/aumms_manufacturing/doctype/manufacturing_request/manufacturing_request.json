@@ -134,11 +134,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
-<<<<<<< Updated upstream
  "modified": "2024-03-21 14:18:30.348034",
-=======
- "modified": "2024-03-21 10:35:08.805082",
->>>>>>> Stashed changes
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request",
