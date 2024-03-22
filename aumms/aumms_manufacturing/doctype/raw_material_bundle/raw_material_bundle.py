@@ -26,20 +26,5 @@ class RawMaterialBundle(Document):
 					new_raw_materiel_request.insert(ignore_permissions=True)
 					raw_materiel_count += 1
 			frappe.msgprint(f"{raw_materiel_count} Raw Material Request Created.",indicator="green",alert=1,)
-			if frappe.db.exists('Raw Material Request', {'raw_materiel_bundle': self.name}):
-				raw_material_doc = frappe.get_doc('Raw Material Request', {'raw_materiel_bundle': self.name})
-				for raw_material in self.raw_material_details :
-					raw_material.raw_material = raw_material_doc.raw_materiel_bundle
-			else:
-				frappe.throw(_(f"Raw Materiel Bundle not Exists for Raw Materiel Request {raw_material_doc.name}"))
 		else:
 			frappe.throw(_(f"Raw Material Request is already exist for {self.name}"))
-
-@frappe.whitelist()
-def show_raw_materiel_request_name(doc):
-	if frappe.db.exists('Raw Material Request', {"raw_materiel_bundle": doc.name,  "manufacturing_request" : doc. manufacturing_request}):
-		raw_materiel_doc = frappe.get_doc('Raw Material Request', {"raw_materiel_bundle": doc.name, "manufacturing_request" : doc. manufacturing_request})
-		if raw_materiel_doc:
-			for raw_material in doc.raw_material_details:
-				frappe.db.set_value('Raw Materiel Bundle',doc.name, 'raw_materiel_request',raw_materiel_doc.name  )
-				doc.save()
