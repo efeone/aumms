@@ -117,14 +117,15 @@
   },
   {
    "fieldname": "raw_material_bundle",
-   "fieldtype": "Data",
-   "label": "Raw Material Bundle"
+   "fieldtype": "Link",
+   "label": "Raw Material Bundle",
+   "options": "Raw Material Bundle"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-22 14:20:54.799386",
+ "modified": "2024-03-23 15:26:33.533030",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Request",
