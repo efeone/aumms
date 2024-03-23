@@ -3,12 +3,14 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.model.mapper import get_mapped_doc
-
+from aumms.aumms.utils import create_notification_log
 
 class ManufacturingRequest(Document):
 	def before_insert(self):
 		self.update_mingr_stages()
+
+	def before_submit(self):
+		self.send_notification_to_owner()
 
 	def update_mingr_stages(self):
 		if self.category:
@@ -20,12 +22,23 @@ class ManufacturingRequest(Document):
 					'workstation': stage.default_workstation
 				})
 
-	@frappe.whitelist()
-	def update_previous_stage(self, idx):
-		for stage in self.manufacturing_request_stage:
-			if stage.idx == idx:
-				if stage.awaiting_raw_material:
-					prev_row = stage.idx - 1
-					for row in self.manufacturing_request_stage:
-						if row.idx == prev_row:
-							return row.manufacturing_stage
+
+
+	def send_notification_to_owner(self):
+		for manufacturing_request in self.manufacturing_request_stage:
+			if manufacturing_request.assigned_to:
+				subject = "Manufacturing Stage Assigned"
+				content = f"Manufacturing Stage {manufacturing_request.manufacturing_stage} is Assigned to {manufacturing_request.assigned_to}"
+				for_user = self.owner
+				create_notification_log(self.doctype, self.name, for_user, subject, content, 'Alert')
+
+
+@frappe.whitelist()
+def update_previous_stage(self, idx):
+	for stage in self.manufacturing_request_stage:
+		if stage.idx == idx:
+			if stage.awaiting_raw_material:
+				prev_row = stage.idx - 1
+				for row in self.manufacturing_request_stage:
+					if row.idx == prev_row:
+						return row.manufacturing_stage
