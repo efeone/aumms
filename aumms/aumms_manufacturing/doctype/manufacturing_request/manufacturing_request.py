@@ -9,7 +9,7 @@ from frappe.model.mapper import get_mapped_doc
 class ManufacturingRequest(Document):
 	def before_insert(self):
 		self.update_mingr_stages()
-	
+
 	def update_mingr_stages(self):
 		if self.category:
 			category_doc = frappe.get_doc('Item Category', self.category)
@@ -20,27 +20,12 @@ class ManufacturingRequest(Document):
 					'workstation': stage.default_workstation
 				})
 
-@frappe.whitelist()
-def create_required_raw_material(source_name, target_doc=None):
-	doc = get_mapped_doc(
-		'Manufacturing Request',
-		source_name,
-		{
-			'Manufacturing Request': {
-				'doctype': 'Raw Material Bundle',
-				"field_map": {
-					"name": "manufacturing_request",
-					"required_date": "item_required_date"
-				}
-			},
-			'Manufacturing Request Stage': {
-				'doctype': 'Raw Material Bundle',
-				"field_map": {
-					"quantity": "total_quantity",
-					"total_weight": "total_weight"
-				}
-			}
-		},
-		target_doc
-	)
-	return doc
+	@frappe.whitelist()
+	def update_previous_stage(self, idx):
+		for stage in self.manufacturing_request_stage:
+			if stage.idx == idx:
+				if stage.awaiting_raw_material:
+					prev_row = stage.idx - 1
+					for row in self.manufacturing_request_stage:
+						if row.idx == prev_row:
+							return row.manufacturing_stage

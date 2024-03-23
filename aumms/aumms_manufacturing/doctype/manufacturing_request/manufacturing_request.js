@@ -22,5 +22,15 @@ frappe.ui.form.on("Manufacturing Request", {
           }
         ]
       })
+    },
+    awaiting_raw_material: function(frm, cdt, cdn) {
+      row = locals[cdt][cdn]
+      if (row.awaiting_raw_material) {
+        frm.call('update_previous_stage', {idx:row.idx}).then(r=>{
+          console.log(r.message);
+          row.previous_stage = r.message
+          frm.refresh_fields()
+        })
+      }
     }
 });
