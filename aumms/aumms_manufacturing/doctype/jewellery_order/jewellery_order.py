@@ -35,12 +35,6 @@ class JewelleryOrder(Document):
 			else:
 				total_quantity = self.quantity
 			new_manufacturing_request.quantity = total_quantity
-			# if self.category:
-			# 	category_doc = frappe.get_doc('Item Category',{'item_category': self.category})
-			# 	for stage in category_doc.stages:
-			# 		new_manufacturing_request.manufacturing_request_stage.append('stages',{
-			# 		 "stage" : stage.stage,
-			# 		})
 			new_manufacturing_request.category = self.category
 			new_manufacturing_request.insert(ignore_permissions=True)
 			frappe.msgprint(f"Manufacturing Request {new_manufacturing_request.name} Created.", indicator="green", alert=1)
