@@ -11,9 +11,9 @@
   "default_workstation",
   "expected_execution_time",
   "column_break_gfyw",
-  "raw_materials_available_for_the_process",
+  "raw_material_available",
   "previous_stage_completed",
-  "raw_material_from_the_perivious_stage"
+  "awaiting_raw_material"
  ],
  "fields": [
   {
@@ -29,21 +29,9 @@
   },
   {
    "default": "0",
-   "fieldname": "raw_materials_available_for_the_process",
-   "fieldtype": "Check",
-   "label": "Raw Materials Available for the Process"
-  },
-  {
-   "default": "0",
    "fieldname": "previous_stage_completed",
    "fieldtype": "Check",
    "label": "Previous Stage Completed"
-  },
-  {
-   "default": "0",
-   "fieldname": "raw_material_from_the_perivious_stage",
-   "fieldtype": "Check",
-   "label": "Raw Material from the perivious Stage"
   },
   {
    "fieldname": "column_break_gfyw",
@@ -54,11 +42,23 @@
    "fieldtype": "Data",
    "label": "Stage",
    "unique": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "awaiting_raw_material",
+   "fieldtype": "Check",
+   "label": "Awaiting Raw Material"
+  },
+  {
+   "default": "0",
+   "fieldname": "raw_material_available",
+   "fieldtype": "Check",
+   "label": "Raw Material available"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-21 14:57:45.899054",
+ "modified": "2024-03-23 10:31:52.617761",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Stage",
