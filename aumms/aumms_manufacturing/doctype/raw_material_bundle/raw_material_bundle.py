@@ -29,6 +29,7 @@ class RawMaterialBundle(Document):
 					new_raw_materiel_request.required_quantity = raw_material.quantity - raw_material.available_quantity_in_stock
 					new_raw_materiel_request.item_name = raw_material.item_name
 					new_raw_materiel_request.item_type = raw_material.item_type
+					new_raw_materiel_request.raw_material_bundle = raw_material.raw_material_id
 					new_raw_materiel_request.insert(ignore_permissions=True)
 					raw_materiel_count += 1
 			frappe.msgprint(f"{raw_materiel_count} Raw Material Request Created.",indicator="green",alert=1,)
