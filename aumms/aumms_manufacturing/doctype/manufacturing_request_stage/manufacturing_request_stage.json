@@ -7,13 +7,14 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "manufacturing_stage",
   "awaiting_raw_material",
   "child_name",
+  "select_raw_material",
   "completed",
   "custom_column_break_lwydq",
   "assigned_to",
-  "workstation",
-  "raw_material_bundle"
+  "workstation"
  ],
  "fields": [
   {
@@ -43,26 +44,33 @@
   {
    "fieldname": "assigned_to",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Assigned To",
    "options": "Smith"
   },
   {
    "fieldname": "workstation",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Workstation",
    "options": "Workstation"
   },
   {
-   "fieldname": "raw_material_bundle",
+   "fieldname": "manufacturing_stage",
    "fieldtype": "Link",
-   "label": "Raw Material Bundle",
-   "options": "Raw Material Required"
+   "label": "Manufacturing Stage",
+   "options": "Manufacturing Stage"
+  },
+  {
+   "fieldname": "select_raw_material",
+   "fieldtype": "Button",
+   "label": "Select Raw materiel"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-22 12:28:44.446996",
+ "modified": "2024-03-22 20:17:11.848888",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request Stage",

@@ -11,23 +11,25 @@ class ManufacturingRequest(Document):
 
 @frappe.whitelist()
 def create_required_raw_material(source_name, target_doc=None):
-    def set_missing_values(source, target):
-        target.jewellery_order = source.jewellery_order
-        target.manufacturing_request = source.name
-        target.item_required_date = source.required_date
-        target.total_quantity = source.quantity
-        target.total_weight = source.total_weight
-
-    doc = get_mapped_doc(
-        'Manufacturing Request',
-        source_name,
-        {
-            'Manufacturing Request': {
-                'doctype': 'Raw Material Bundle',
-            },
-        },
-        target_doc,
-        set_missing_values
-    )
-
-    return doc
+	doc = get_mapped_doc(
+		'Manufacturing Request',
+		source_name,
+		{
+			'Manufacturing Request': {
+				'doctype': 'Raw Material Bundle',
+				"field_map": {
+					"name": "manufacturing_request",
+					"required_date": "item_required_date"
+				}
+			},
+			'Manufacturing Request Stage': {
+				'doctype': 'Raw Material Bundle',
+				"field_map": {
+					"quantity": "total_quantity",
+					"total_weight": "total_weight"
+				}
+			}
+		},
+		target_doc
+	)
+	return doc

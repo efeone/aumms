@@ -20,8 +20,8 @@
   "type",
   "amended_from",
   "total_weight",
-  "select_raw_material",
-  "raw_material"
+  "section_break_sjns",
+  "manufacturing_request_stage"
  ],
  "fields": [
   {
@@ -120,21 +120,20 @@
    "options": "Item Type"
   },
   {
-   "fieldname": "select_raw_material",
-   "fieldtype": "Button",
-   "label": "Select Raw Material"
+   "fieldname": "section_break_sjns",
+   "fieldtype": "Section Break"
   },
   {
-   "fieldname": "raw_material",
-   "fieldtype": "Link",
-   "label": "Raw Material",
-   "options": "Raw Material Bundle"
+   "fieldname": "manufacturing_request_stage",
+   "fieldtype": "Table",
+   "label": "Manufacturing Request Stage",
+   "options": "Manufacturing Request Stage"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-22 16:47:42.432773",
+ "modified": "2024-03-22 16:57:52.143369",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request",
