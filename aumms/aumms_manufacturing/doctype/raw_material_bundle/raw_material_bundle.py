@@ -23,6 +23,7 @@ class RawMaterialBundle(Document):
 				if raw_material.quantity > raw_material.available_quantity_in_stock:
 					new_raw_materiel_request = frappe.new_doc('Raw Material Request')
 					new_raw_materiel_request.raw_material_request_type = "Manufacturing Request"
+					new_raw_materiel_request.raw_materiel_bundle = self.name
 					new_raw_materiel_request.manufacturing_request = self.manufacturing_request
 					new_raw_materiel_request.required_date = self.item_required_date
 					new_raw_materiel_request.required_quantity = raw_material.quantity - raw_material.available_quantity_in_stock
