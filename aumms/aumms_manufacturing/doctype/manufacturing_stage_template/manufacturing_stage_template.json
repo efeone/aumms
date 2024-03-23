@@ -1,42 +1,35 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:item_category",
- "creation": "2024-02-16 11:29:28.576791",
+ "autoname": "field:manufacturing_stage_template",
+ "creation": "2024-03-21 15:24:49.255557",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "item_category",
   "manufacturing_stage_template",
-  "stages"
+  "manufacturing_stages"
  ],
  "fields": [
   {
-   "fieldname": "item_category",
+   "fieldname": "manufacturing_stage_template",
    "fieldtype": "Data",
-   "label": "Item Category",
+   "label": "Manufacturing Stage Template",
    "unique": 1
   },
   {
-   "fieldname": "manufacturing_stage_template",
-   "fieldtype": "Link",
-   "label": "Manufacturing Stage Template",
-   "options": "Manufacturing Stage Template"
-  },
-  {
-   "fieldname": "stages",
+   "fieldname": "manufacturing_stages",
    "fieldtype": "Table",
-   "label": "Stages",
+   "label": "Manufacturing Stages",
    "options": "Manufacturing Stage Table"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-22 16:44:06.331704",
+ "modified": "2024-03-22 16:53:26.409118",
  "modified_by": "Administrator",
- "module": "AuMMS",
- "name": "Item Category",
- "naming_rule": "By fieldname",
+ "module": "AuMMS Manufacturing",
+ "name": "Manufacturing Stage Template",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

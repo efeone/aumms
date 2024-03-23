@@ -8,16 +8,16 @@
  "field_order": [
   "raw_material_request_type",
   "raw_material_request",
+  "manufacturing_request",
+  "jewellery_order",
   "required_date",
   "quantity",
-  "jewellery_order",
-  "uom",
-  "purity",
   "design_attachment",
   "column_break_jgee",
+  "purity",
+  "uom",
   "category",
   "type",
-  "manufacturing_request",
   "amended_from",
   "total_weight",
   "select_raw_material",
@@ -41,7 +41,6 @@
    "options": "Raw Material Request"
   },
   {
-   "depends_on": "eval:doc.raw_material_request_type==\"Jewellery Order\"",
    "fieldname": "jewellery_order",
    "fieldtype": "Link",
    "label": "Jewellery Order",
@@ -50,6 +49,7 @@
   },
   {
    "depends_on": "eval:doc.raw_material_request_type==\"Raw Material Request\"",
+   "fetch_from": "raw_material_request.manufacturing_request",
    "fieldname": "manufacturing_request",
    "fieldtype": "Link",
    "label": "Manufacturing Request",
@@ -92,28 +92,28 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": ".uom",
+   "fetch_from": "jewellery_order.uom",
    "fieldname": "uom",
    "fieldtype": "Link",
    "label": "UOM",
    "options": "UOM"
   },
   {
-   "fetch_from": ".purity",
+   "fetch_from": "jewellery_order.purity",
    "fieldname": "purity",
    "fieldtype": "Link",
    "label": "Purity",
    "options": "Purity"
   },
   {
-   "fetch_from": ".category",
+   "fetch_from": "jewellery_order.category",
    "fieldname": "category",
    "fieldtype": "Link",
    "label": "Category",
    "options": "Item Category"
   },
   {
-   "fetch_from": ".type",
+   "fetch_from": "jewellery_order.type",
    "fieldname": "type",
    "fieldtype": "Link",
    "label": "Type",
@@ -134,7 +134,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-21 14:18:30.348034",
+ "modified": "2024-03-22 16:47:42.432773",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request",
