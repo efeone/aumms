@@ -7,7 +7,18 @@ from frappe.model.mapper import get_mapped_doc
 
 
 class ManufacturingRequest(Document):
-	pass
+	def before_insert(self):
+		self.update_mingr_stages()
+	
+	def update_mingr_stages(self):
+		if self.category:
+			category_doc = frappe.get_doc('Item Category', self.category)
+			for stage in category_doc.stages:
+				self.append('manufacturing_request_stage', {
+					'manufacturing_stage': stage.stage,
+					'required_time': stage.required_time,
+					'workstation': stage.default_workstation
+				})
 
 @frappe.whitelist()
 def create_required_raw_material(source_name, target_doc=None):
