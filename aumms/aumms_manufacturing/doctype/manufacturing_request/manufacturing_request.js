@@ -13,18 +13,15 @@ frappe.ui.form.on("Manufacturing Request", {
   },
   });
   frappe.ui.form.on("Manufacturing Request Stage", {
-    select_raw_material: function(frm) {
+    select_raw_material: function(frm, cdt , cdn) {
+      let row = locals[cdt][cdn]
       frappe.new_doc('Raw Material Bundle', {
         'manufacturing_request': frm.doc.name,
-        'raw_material_details': [
-          {
-            'quantity': frm.doc.quantity
-          }
-        ]
+        'manufacturing_stage' : row.manufacturing_stage,
       })
     },
     awaiting_raw_material: function(frm, cdt, cdn) {
-      row = locals[cdt][cdn]
+      let row = locals[cdt][cdn]
       if (row.awaiting_raw_material) {
         frm.call('update_previous_stage', {idx:row.idx}).then(r=>{
           row.previous_stage = r.message

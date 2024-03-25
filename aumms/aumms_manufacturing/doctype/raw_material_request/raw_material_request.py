@@ -10,7 +10,7 @@ class RawMaterialRequest(Document):
 
     def on_submit(self):
         if self.not_available == 1:
-            if self.raw_material_request_type == 'Raw Material Request':
+            if self.raw_material_request_type == 'Manufacturing Request':
                 self.create_manufacturing_request()
                 self.create_purchase_request()
 
