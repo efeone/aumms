@@ -20,6 +20,7 @@ class RawMaterialRequest(Document):
             manufacturing_request.raw_material_request = self.name
             manufacturing_request.required_date = self.required_date
             manufacturing_request.total_weight = self.total_weight
+            manufacturing_request.jewellery_order = self.jewellery_order
             manufacturing_request.insert(ignore_permissions=True)
             frappe.msgprint(f"Manufacturing Request {manufacturing_request.name} created.", indicator="green", alert=1)
         else:

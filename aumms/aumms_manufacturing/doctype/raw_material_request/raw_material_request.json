@@ -107,7 +107,8 @@
   {
    "fieldname": "weight",
    "fieldtype": "Float",
-   "label": "Weight"
+   "label": "Weight",
+   "precision": "2"
   },
   {
    "fieldname": "uom",
@@ -117,14 +118,15 @@
   },
   {
    "fieldname": "raw_material_bundle",
-   "fieldtype": "Data",
-   "label": "Raw Material Bundle"
+   "fieldtype": "Link",
+   "label": "Raw Material Bundle",
+   "options": "Raw Material Bundle"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-22 14:20:54.799386",
+ "modified": "2024-03-25 11:05:47.387099",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Request",
