@@ -19,11 +19,11 @@
   "disabled",
   "is_stock_item",
   "is_stone_item",
-  "is_raw_material",
   "stone_type",
   "under_manufacturing",
   "purity",
   "purity_percentage",
+  "is_raw_material",
   "making_charge_section",
   "making_charge_based_on",
   "making_charge",
@@ -117,7 +117,8 @@
    "fieldname": "making_charge_percentage",
    "fieldtype": "Percent",
    "label": "Making Charge Percentage",
-   "mandatory_depends_on": "eval: doc.making_charge_based_on == 'Percentage'"
+   "mandatory_depends_on": "eval: doc.making_charge_based_on == 'Percentage'",
+   "precision": "2"
   },
   {
    "depends_on": "eval: doc.making_charge_based_on == 'Fixed' && doc.is_purity_item",
@@ -126,7 +127,8 @@
    "fieldname": "making_charge",
    "fieldtype": "Currency",
    "label": "Making Charge",
-   "mandatory_depends_on": "eval: doc.making_charge_based_on == 'Fixed'"
+   "mandatory_depends_on": "eval: doc.making_charge_based_on == 'Fixed'",
+   "precision": "2"
   },
   {
    "default": "0",
@@ -152,6 +154,7 @@
    "fieldname": "purity_percentage",
    "fieldtype": "Percent",
    "label": "Purity Percentage",
+   "precision": "2",
    "read_only": 1
   },
   {
@@ -182,6 +185,7 @@
    "fieldname": "weight_per_unit",
    "fieldtype": "Float",
    "label": "Net Weight",
+   "precision": "3",
    "read_only": 1
   },
   {
@@ -274,7 +278,8 @@
    "fieldtype": "Float",
    "label": "Gold Weight",
    "mandatory_depends_on": "(eval:doc.has_stone == 0)||(eval:doc.is_stone == 0)",
-   "non_negative": 1
+   "non_negative": 1,
+   "precision": "3"
   },
   {
    "fieldname": "column_break_mjcg9",
@@ -328,6 +333,7 @@
    "fieldtype": "Currency",
    "label": "Stone Charge",
    "mandatory_depends_on": "eval:(doc.has_stone || doc.is_stone_item)",
+   "precision": "2",
    "read_only_depends_on": "has_stone"
   },
   {
@@ -350,6 +356,7 @@
    "fieldname": "item_category",
    "fieldtype": "Link",
    "label": "Item Category",
+   "mandatory_depends_on": "eval:doc.is_raw_material",
    "options": "Item Category"
   },
   {
@@ -361,7 +368,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-20 12:26:08.046316",
+ "modified": "2024-03-25 10:24:04.299554",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS Item",
