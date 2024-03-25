@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Raw Material Request", {
   setup : function(frm){
-    frm.set_query('uom', 'raw_material_details', ()=>{
+    frm.set_query('uom', ()=>{
       return{
         filters :{
           "is_purity_uom" : 1
