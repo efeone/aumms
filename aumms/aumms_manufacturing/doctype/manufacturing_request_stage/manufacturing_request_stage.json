@@ -77,9 +77,10 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval:doc.is_awaiting_raw_material",
+   "depends_on": "eval:doc.awaiting_raw_material",
    "fieldname": "previous_stage",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Previous Stage",
    "options": "Manufacturing Stage"
   }
@@ -87,7 +88,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-23 14:59:38.081111",
+ "modified": "2024-03-23 16:38:29.655223",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request Stage",
