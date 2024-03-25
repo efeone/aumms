@@ -12,6 +12,7 @@
   "required_quantity",
   "required_date",
   "raw_material_bundle",
+  "bundle_id",
   "column_break_bonn",
   "item_name",
   "item_type",
@@ -96,7 +97,7 @@
    "fieldname": "item_name",
    "fieldtype": "Link",
    "label": "Item Name",
-   "options": "AuMMS Item"
+   "options": "Item"
   },
   {
    "fieldname": "item_type",
@@ -110,6 +111,7 @@
    "label": "Weight"
   },
   {
+   "fetch_from": "manufacturing_request.uom",
    "fieldname": "uom",
    "fieldtype": "Link",
    "label": "UOM",
@@ -120,12 +122,17 @@
    "fieldtype": "Link",
    "label": "Raw Material Bundle",
    "options": "Raw Material Bundle"
+  },
+  {
+   "fieldname": "bundle_id",
+   "fieldtype": "Data",
+   "label": "Bundle Id"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-23 15:26:33.533030",
+ "modified": "2024-03-25 15:39:00.102663",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Request",

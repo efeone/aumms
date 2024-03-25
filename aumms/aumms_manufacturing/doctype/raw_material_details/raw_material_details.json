@@ -43,18 +43,20 @@
   {
    "fieldname": "available_quantity_in_stock",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Available Quantity in Stock"
   },
   {
    "fieldname": "raw_material_id",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Raw Material Id"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-25 10:02:31.768494",
+ "modified": "2024-03-25 15:22:08.809601",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Details",
