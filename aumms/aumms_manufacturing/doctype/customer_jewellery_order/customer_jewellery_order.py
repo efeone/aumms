@@ -8,14 +8,13 @@ from frappe.model.document import Document
 
 class CustomerJewelleryOrder(Document):
     def validate(self):
-        if (
-            self.total_expected_weight_per_quantity
-            != self.customer_expected_total_weight
-        ):
+        total_expected_weight_per_quantity = 0
+        for item in self.order_item:
+            total_expected_weight_per_quantity += item.item_quantity * item.expected_weight_per_quantity
+
+        if total_expected_weight_per_quantity != self.customer_expected_total_weight:
             frappe.throw(
-                _(
-                    "The Sum of Expected Weights Per Quantity must be Equal to Customer Expected Weight"
-                )
+                _("The Sum of Expected Weights Per Quantity must be Equal to Customer Expected Weight")
             )
 
     def on_submit(self):
