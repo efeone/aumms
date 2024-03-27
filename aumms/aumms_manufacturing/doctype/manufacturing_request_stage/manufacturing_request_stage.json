@@ -29,6 +29,7 @@
    "default": "0",
    "fieldname": "completed",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "Completed"
   },
   {
@@ -43,6 +44,7 @@
    "options": "Smith"
   },
   {
+   "fetch_from": "manufacturing_stage.default_workstation",
    "fieldname": "workstation",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -76,14 +78,6 @@
    "label": "Required Time",
    "read_only": 1
   },
-  {
-   "depends_on": "eval:doc.awaiting_raw_material",
-   "fieldname": "previous_stage",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Previous Stage",
-   "options": "Manufacturing Stage"
-  }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,

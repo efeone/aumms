@@ -29,7 +29,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": " Raw Material Request Type",
-   "options": "\nJewellery Order\nRaw Material Request",
+   "options": "\nJewellery Order\nManufacturing Request\nRaw Material Request",
    "reqd": 1
   },
   {
@@ -133,7 +133,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-22 16:57:52.143369",
+ "modified": "2024-03-26 15:43:17.350389",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request",

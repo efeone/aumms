@@ -37,8 +37,12 @@ class CustomerJewelleryOrder(Document):
                 new_jewellery_order.customer_expected_total_weight = (
                     item.expected_weight_per_quantity
                 )
+                latest_board_rate = frappe.get_last_doc(
+                    "Board Rate", {"purity": self.purity, "uom": "Gram"}
+                )
+                board_rate_value = latest_board_rate.board_rate
                 new_jewellery_order.customer_expected_amount = (
-                    self.customer_expected_amount
+                    item.expected_weight_per_quantity * latest_board_rate.board_rate
                 )
                 new_jewellery_order.uom = self.uom
                 new_jewellery_order.purity = self.purity
