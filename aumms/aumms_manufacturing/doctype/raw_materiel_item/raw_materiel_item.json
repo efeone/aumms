@@ -1,0 +1,74 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-25 13:26:30.113782",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_details_section",
+  "item_code",
+  "item_type",
+  "column_break_aald",
+  "source_ware_house",
+  "required_quandity",
+  "allow_alternative_item"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_details_section",
+   "fieldtype": "Section Break",
+   "label": "Item Details"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_aald",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "source_ware_house",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Source Ware House",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "required_quandity",
+   "fieldtype": "Int",
+   "label": "Required Quandity",
+   "non_negative": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_alternative_item",
+   "fieldtype": "Check",
+   "label": "Allow Alternative Item"
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-03-27 11:16:27.291789",
+ "modified_by": "Administrator",
+ "module": "AuMMS Manufacturing",
+ "name": "Raw Materiel Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

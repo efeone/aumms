@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-25 14:40:57.721238",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "scrap_item_code",
+  "scrap_item_name",
+  "quantity",
+  "column_break_zsmo",
+  "uom",
+  "required_quantity",
+  "raw_material_bundle"
+ ],
+ "fields": [
+  {
+   "fieldname": "scrap_item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Scrap Item Code",
+   "options": "Item"
+  },
+  {
+   "fetch_from": "scrap_item_code.item_name",
+   "fieldname": "scrap_item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Scrap Item Name"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Quantity",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "column_break_zsmo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "required_quantity",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Required Quantity"
+  },
+  {
+   "fieldname": "raw_material_bundle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Raw Material Bundle",
+   "options": "Raw Material Bundle"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-03-27 09:45:20.180788",
+ "modified_by": "Administrator",
+ "module": "AuMMS Manufacturing",
+ "name": "Scrap Item Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

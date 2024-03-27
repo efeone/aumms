@@ -4,6 +4,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from aumms.aumms.utils import create_notification_log
+from frappe.desk.form.assign_to import add as add_assignment
 
 class ManufacturingRequest(Document):
 	def before_insert(self):
@@ -42,3 +43,20 @@ class ManufacturingRequest(Document):
 					for row in self.manufacturing_request_stage:
 						if row.idx == prev_row:
 							return row.manufacturing_stage
+
+	@frappe.whitelist()
+	def create_jewellery_job_card(self, stage_row_id):
+		stage = frappe.get_doc('Manufacturing Request Stage', stage_row_id)
+		jewellery_job_card_exists = frappe.db.exists('Jewellery Job Card', {'manufacturing_request': self.manufacturing_request,'manufacturing_stage': stage.manufacturing_stage })
+		if not jewellery_job_card_exists:
+			smith_email = frappe.db.get_value('Smith', stage.assigned_to, 'email')
+			new_jewellery_job_card = frappe.new_doc('Jewellery Job Card')
+			new_jewellery_job_card.manufacturing_request = self.name
+			new_jewellery_job_card.assign_to = stage.assigned_to
+			new_jewellery_job_card.work_station = stage.workstation
+			new_jewellery_job_card.manufacturing_stage = stage.manufacturing_stage
+			new_jewellery_job_card.flags.ignore_mandatory = True
+			new_jewellery_job_card.save(ignore_permissions=True)
+			if smith_email:
+				add_assignment({"doctype": "Jewellery Job Card", "name": new_jewellery_job_card.name, "assign_to": [smith_email]})
+			frappe.msgprint("Jewellery Job Card Orders Created.", indicator="green", alert=1)

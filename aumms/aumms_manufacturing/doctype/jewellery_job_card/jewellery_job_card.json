@@ -1,0 +1,183 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2024-03-25 12:52:32.113627",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "details_section",
+  "naming_series",
+  "manufacturing_request",
+  "posting_date",
+  "manufacturing_stage",
+  "column_break_ymuw",
+  "company",
+  "assign_to",
+  "work_station",
+  "actual_time_section",
+  "expected_start_date",
+  "expected_tim_requiredin_min",
+  "column_break_pwsq",
+  "expected_end_date",
+  "tab_2_tab",
+  "raw_material_item_section",
+  "item_details",
+  "scrap_item_tab",
+  "scrap_item_details_column",
+  "table_gzos",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "default": "J-JOB.#####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Naming Series",
+   "options": "J-JOB.#####",
+   "reqd": 1
+  },
+  {
+   "fieldname": "manufacturing_request",
+   "fieldtype": "Link",
+   "label": "Manufacturing Request",
+   "options": "Manufacturing Request",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "assign_to",
+   "fieldtype": "Link",
+   "label": "Assign To",
+   "options": "Smith",
+   "reqd": 1
+  },
+  {
+   "fieldname": "details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "column_break_ymuw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "actual_time_section",
+   "fieldtype": "Section Break",
+   "label": "Actual Time"
+  },
+  {
+   "fieldname": "expected_start_date",
+   "fieldtype": "Date",
+   "label": "Expected Start Date"
+  },
+  {
+   "fieldname": "expected_tim_requiredin_min",
+   "fieldtype": "Time",
+   "label": "Expected Tim Required(In Min)"
+  },
+  {
+   "fieldname": "column_break_pwsq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "expected_end_date",
+   "fieldtype": "Date",
+   "label": "Expected End Date"
+  },
+  {
+   "fieldname": "tab_2_tab",
+   "fieldtype": "Tab Break",
+   "label": "Raw Material"
+  },
+  {
+   "fieldname": "raw_material_item_section",
+   "fieldtype": "Section Break",
+   "label": "Raw Material Item"
+  },
+  {
+   "fieldname": "item_details",
+   "fieldtype": "Table",
+   "label": "Item Details",
+   "options": "Raw Materiel Item"
+  },
+  {
+   "fieldname": "scrap_item_tab",
+   "fieldtype": "Tab Break",
+   "label": "Scrap Item"
+  },
+  {
+   "fieldname": "scrap_item_details_column",
+   "fieldtype": "Column Break",
+   "label": "Scrap Item details"
+  },
+  {
+   "fieldname": "table_gzos",
+   "fieldtype": "Table",
+   "options": "Scrap Item Details"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Jewellery Job Card",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "work_station",
+   "fieldtype": "Link",
+   "label": "Work Station",
+   "options": "Workstation",
+   "reqd": 1
+  },
+  {
+   "fieldname": "manufacturing_stage",
+   "fieldtype": "Link",
+   "label": "Manufacturing Stage",
+   "options": "Manufacturing Stage",
+   "reqd": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-03-26 12:52:38.675939",
+ "modified_by": "Administrator",
+ "module": "AuMMS Manufacturing",
+ "name": "Jewellery Job Card",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
