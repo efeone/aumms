@@ -61,6 +61,7 @@
    "options": "Raw Material Details"
   },
   {
+   "fetch_from": "manufacturing_request.jewellery_order",
    "fieldname": "jewellery_order",
    "fieldtype": "Link",
    "label": "Jewellery Order",
@@ -105,6 +106,7 @@
    "options": "Item Type"
   },
   {
+   "fetch_from": "jewellery_order.total_weight",
    "fieldname": "weight",
    "fieldtype": "Float",
    "label": "Weight"
@@ -120,12 +122,23 @@
    "fieldtype": "Link",
    "label": "Raw Material Bundle",
    "options": "Raw Material Bundle"
+  },
+  {
+   "fieldname": "bundle_id",
+   "fieldtype": "Data",
+   "label": "Bundle Id"
+  },
+  {
+   "fieldname": "raw_material_request",
+   "fieldtype": "Link",
+   "label": "Raw Material Request",
+   "options": "Raw Material Request"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-23 15:26:33.533030",
+ "modified": "2024-03-26 17:09:11.270377",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Request",

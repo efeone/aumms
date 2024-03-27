@@ -34,4 +34,4 @@ class RawMaterialBundle(Document):
 					new_raw_materiel_request.raw_material_bundle = raw_material.raw_material_id
 					new_raw_materiel_request.insert(ignore_permissions=True)
 					raw_materiel_count += 1
-		frappe.msgprint(f"{raw_materiel_count} Raw Material Requests Created.", indicator="green", alert=1)
+				frappe.msgprint(f"Raw Material Requests Created.", indicator="green", alert=1)
