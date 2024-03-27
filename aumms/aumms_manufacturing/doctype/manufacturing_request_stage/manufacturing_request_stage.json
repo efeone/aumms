@@ -77,7 +77,7 @@
    "fieldtype": "Data",
    "label": "Required Time",
    "read_only": 1
-  },
+  }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
