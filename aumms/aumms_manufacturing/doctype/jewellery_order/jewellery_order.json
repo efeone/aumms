@@ -104,7 +104,7 @@
    "label": "Stock Available"
   },
   {
-   "depends_on": "stock_available",
+   "depends_on": "eval:doc.stock_available",
    "fieldname": "item_details",
    "fieldtype": "Table",
    "label": "Item Details",
@@ -112,7 +112,7 @@
    "options": "Jewellery Order Items"
   },
   {
-   "depends_on": "eval.doc.stock_available",
+   "depends_on": "eval:doc.stock_available",
    "fieldname": "total_weight",
    "fieldtype": "Float",
    "label": "Total Weight",
@@ -147,7 +147,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-22 15:47:56.312721",
+ "modified": "2024-03-27 21:46:45.721652",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Jewellery Order",

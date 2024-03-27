@@ -108,7 +108,7 @@
    "options": "Item Type"
   },
   {
-   "fetch_from": "jewellery_order.total_weight",
+   "fetch_from": "item_name.weight_per_unit",
    "fieldname": "weight",
    "fieldtype": "Float",
    "label": "Weight"
@@ -142,7 +142,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:11:46.770274",
+ "modified": "2024-03-27 21:42:53.463001",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Request",
