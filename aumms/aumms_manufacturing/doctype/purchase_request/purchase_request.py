@@ -20,8 +20,3 @@ def create_purchase_order(purchase_request):
 		frappe.msgprint("Purchase Order created.", indicator="green", alert=1)
 	else:
 		frappe.throw(_('Purchase Request {0} does not exist'.format(self.name)))
-
-
-	# purchase_order.insert(ignore_permissions=True)
-	# purchase_order.submit()
-	# return 'Purchase Order Created.'
