@@ -10,5 +10,25 @@ frappe.ui.form.on("Raw Material Request", {
         }
       }
     })
+  },
+  refresh :function(frm){
+    if (frm.doc.not_available) {
+      frm.add_custom_button(__('Issue Raw Material'), function ()
+      {
+            // frm.trigger("create_manufacturing_request");
+      }, __("Action"));
+      frm.add_custom_button(__('Manufacturing Request'), function ()
+      {
+        frm.call('create_manufacturing_request').then(r => {
+          frm.refresh_fields();
+        });
+      }, __("Action"));
+      frm.add_custom_button(__('Purchase Order'), function ()
+      {
+        frm.call('create_purchase_order').then(r => {
+          frm.refresh_fields();
+        });
+      }, __("Action"));
+    }
   }
 });
