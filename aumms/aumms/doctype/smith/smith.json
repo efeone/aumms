@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:S{######}",
+ "autoname": "format:{S}-{smith_name}",
  "creation": "2023-10-24 09:54:51.116100",
  "default_view": "List",
  "doctype": "DocType",
@@ -112,7 +112,7 @@
    "label": "Is Head of smith"
   },
   {
-   "fetch_from": "employee.company_email",
+   "fetch_from": "employee.user_id",
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Email",
@@ -124,11 +124,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-01 12:37:37.497689",
+ "modified": "2024-03-27 11:41:48.505165",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Smith",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
