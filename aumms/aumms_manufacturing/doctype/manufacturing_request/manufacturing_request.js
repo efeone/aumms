@@ -20,6 +20,11 @@ frappe.ui.form.on("Manufacturing Request", {
         'manufacturing_stage' : row.manufacturing_stage,
       })
     },
+    create_job_card: function(frm, cdt, cdn) {
+      frm.call('create_jewellery_job_card', { 'stage_row_id': cdn }).then(r => {
+          frm.refresh_fields();
+      });
+    },
     awaiting_raw_material: function(frm, cdt, cdn) {
       let row = locals[cdt][cdn]
       if (row.awaiting_raw_material) {

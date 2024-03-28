@@ -10,6 +10,7 @@
   "naming_series",
   "manufacturing_request",
   "posting_date",
+  "manufacturing_stage",
   "column_break_ymuw",
   "company",
   "assign_to",
@@ -145,11 +146,18 @@
    "label": "Work Station",
    "options": "Workstation",
    "reqd": 1
+  },
+  {
+   "fieldname": "manufacturing_stage",
+   "fieldtype": "Link",
+   "label": "Manufacturing Stage",
+   "options": "Manufacturing Stage",
+   "reqd": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-25 16:15:24.939545",
+ "modified": "2024-03-26 12:52:38.675939",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Jewellery Job Card",
