@@ -48,6 +48,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Customer Expected Amount",
+   "precision": "2",
    "reqd": 1
   },
   {
@@ -80,8 +81,8 @@
   {
    "fieldname": "total_expected_weight_per_quantity",
    "fieldtype": "Float",
-   "hidden": 1,
-   "label": "Total Expected Weight Per Quantity"
+   "label": "Total Expected Weight Per Quantity",
+   "precision": "2"
   },
   {
    "default": "Gram",
@@ -105,7 +106,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-16 14:18:28.844830",
+ "modified": "2024-03-28 10:18:46.791134",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Customer Jewellery Order",
