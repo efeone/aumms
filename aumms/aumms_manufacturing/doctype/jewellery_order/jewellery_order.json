@@ -60,7 +60,8 @@
    "fieldname": "customer_expected_total_weight",
    "fieldtype": "Float",
    "label": "Customer Expected Total Weight",
-   "precision": "2"
+   "precision": "2",
+   "reqd": 1
   },
   {
    "fieldname": "customer_expected_amount",
@@ -83,7 +84,8 @@
   {
    "fieldname": "quantity",
    "fieldtype": "Int",
-   "label": "Quantity "
+   "label": "Quantity ",
+   "reqd": 1
   },
   {
    "fieldname": "design_attachment",
@@ -91,11 +93,11 @@
    "label": "Design Attachment"
   },
   {
-   "depends_on": "stock_available",
+   "depends_on": "eval:doc.stock_available",
    "fieldname": "available_quantity_in_stock",
    "fieldtype": "Int",
    "label": "Available Quantity in Stock",
-   "mandatory_depends_on": "stock_available"
+   "mandatory_depends_on": "eval:doc.stock_available"
   },
   {
    "default": "0",
@@ -116,38 +118,43 @@
    "fieldname": "total_weight",
    "fieldtype": "Float",
    "label": "Total Weight",
-   "mandatory_depends_on": "eval.doc.stock_available"
+   "mandatory_depends_on": "eval:doc.stock_available",
+   "precision": "2"
   },
   {
    "fetch_from": ".uom",
    "fieldname": "uom",
    "fieldtype": "Link",
    "label": "UOM",
-   "options": "UOM"
+   "options": "UOM",
+   "reqd": 1
   },
   {
    "fieldname": "purity",
    "fieldtype": "Link",
    "label": "Purity",
-   "options": "Purity"
+   "options": "Purity",
+   "reqd": 1
   },
   {
    "fieldname": "category",
    "fieldtype": "Link",
    "label": "Category",
-   "options": "Item Category"
+   "options": "Item Category",
+   "reqd": 1
   },
   {
    "fieldname": "type",
    "fieldtype": "Link",
    "label": "Type",
-   "options": "Item Type"
+   "options": "Item Type",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 21:46:45.721652",
+ "modified": "2024-03-28 10:44:24.201920",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Jewellery Order",

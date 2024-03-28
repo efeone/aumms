@@ -65,7 +65,8 @@
    "fieldname": "order_item",
    "fieldtype": "Table",
    "label": "Order Item",
-   "options": "Customer Jewellery Order Details"
+   "options": "Customer Jewellery Order Details",
+   "reqd": 1
   },
   {
    "fieldname": "amended_from",
@@ -80,21 +81,23 @@
   {
    "fieldname": "total_expected_weight_per_quantity",
    "fieldtype": "Float",
-   "hidden": 1,
-   "label": "Total Expected Weight Per Quantity"
+   "label": "Total Expected Weight Per Quantity",
+   "read_only": 1
   },
   {
    "default": "Gram",
    "fieldname": "uom",
    "fieldtype": "Link",
    "label": "UOM",
-   "options": "UOM"
+   "options": "UOM",
+   "reqd": 1
   },
   {
    "fieldname": "purity",
    "fieldtype": "Link",
    "label": "Purity",
-   "options": "Purity"
+   "options": "Purity",
+   "reqd": 1
   },
   {
    "fieldname": "order_item_details_section",
@@ -105,7 +108,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-16 14:18:28.844830",
+ "modified": "2024-03-28 10:18:03.583369",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Customer Jewellery Order",
