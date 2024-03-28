@@ -16,6 +16,7 @@
   "column_break_jgee",
   "purity",
   "uom",
+  "item_name",
   "category",
   "type",
   "amended_from",
@@ -48,7 +49,7 @@
    "options": "Jewellery Order"
   },
   {
-   "depends_on": "eval:doc.raw_material_request_type==\"Raw Material Request\"",
+   "depends_on": "eval:doc.raw_material_request_type=='Raw Material Request'",
    "fetch_from": "raw_material_request.manufacturing_request",
    "fieldname": "manufacturing_request",
    "fieldtype": "Link",
@@ -92,28 +93,30 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "jewellery_order.uom",
+   "fetch_from": ".uom",
    "fieldname": "uom",
    "fieldtype": "Link",
    "label": "UOM",
    "options": "UOM"
   },
   {
-   "fetch_from": "jewellery_order.purity",
+   "depends_on": "eval:doc.raw_material_request_type == \"Jewellery Order\"",
+   "fetch_from": ".purity",
    "fieldname": "purity",
    "fieldtype": "Link",
    "label": "Purity",
    "options": "Purity"
   },
   {
-   "fetch_from": "jewellery_order.category",
+   "depends_on": "eval:doc.raw_material_request_type == \"Jewellery Order\"",
+   "fetch_from": ".category",
    "fieldname": "category",
    "fieldtype": "Link",
    "label": "Category",
    "options": "Item Category"
   },
   {
-   "fetch_from": "jewellery_order.type",
+   "fetch_from": ".type",
    "fieldname": "type",
    "fieldtype": "Link",
    "label": "Type",
@@ -128,12 +131,18 @@
    "fieldtype": "Table",
    "label": "Manufacturing Request Stage",
    "options": "Manufacturing Request Stage"
+  },
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Link",
+   "label": "Item name",
+   "options": "Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-26 15:43:17.350389",
+ "modified": "2024-03-27 21:24:19.613025",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request",
