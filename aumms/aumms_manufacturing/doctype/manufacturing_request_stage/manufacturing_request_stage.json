@@ -9,14 +9,14 @@
  "field_order": [
   "manufacturing_stage",
   "awaiting_raw_material",
-  "previous_stage",
   "select_raw_material",
   "completed",
   "create_job_card",
   "custom_column_break_lwydq",
   "assigned_to",
   "workstation",
-  "required_time"
+  "required_time",
+  "previous_stage"
  ],
  "fields": [
   {
@@ -97,7 +97,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-27 11:12:29.862138",
+ "modified": "2024-03-28 10:44:58.175133",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request Stage",
