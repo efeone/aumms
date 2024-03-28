@@ -18,15 +18,19 @@
   {
    "fieldname": "manufacturing_request",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Manufacturing Request",
    "options": "Manufacturing Request",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fetch_from": "manufacturing_request.required_date",
    "fieldname": "item_required_date",
    "fieldtype": "Date",
-   "label": "Item Required Date"
+   "in_list_view": 1,
+   "label": "Item Required Date",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_amkz",
@@ -41,7 +45,8 @@
    "fieldname": "raw_material_details",
    "fieldtype": "Table",
    "label": "Raw Material Details",
-   "options": "Raw Material Details"
+   "options": "Raw Material Details",
+   "reqd": 1
   },
   {
    "fieldname": "amended_from",
@@ -56,14 +61,16 @@
   {
    "fieldname": "manufacturing_stage",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Manufacturing Stage",
-   "options": "Manufacturing Stage"
+   "options": "Manufacturing Stage",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-26 12:54:58.652116",
+ "modified": "2024-03-28 10:51:55.280068",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Bundle",

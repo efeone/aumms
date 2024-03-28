@@ -25,6 +25,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Weight",
+   "precision": "2",
    "reqd": 1
   },
   {
@@ -38,7 +39,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-20 17:15:51.008843",
+ "modified": "2024-03-28 10:27:20.853180",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Jewellery Order Items",
