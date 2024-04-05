@@ -105,13 +105,14 @@
    "fieldname": "making_chargein_percentage",
    "fieldtype": "Percent",
    "label": "Making Charge(In Percentage)",
+   "precision": "1",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-04 10:55:34.811720",
+ "modified": "2024-04-05 12:42:35.025919",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Customer Jewellery Order",

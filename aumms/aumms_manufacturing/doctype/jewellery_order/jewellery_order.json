@@ -7,21 +7,27 @@
  "engine": "InnoDB",
  "field_order": [
   "order_from",
+  "column_break_brrz",
   "customer_jewellery_order",
-  "order_item",
   "jewellery_stock_request",
-  "customer",
+  "section_break_bfta",
+  "order_item",
+  "column_break_ddfm",
   "required_date",
-  "purity",
-  "column_break_yko9",
-  "expected_total_weight",
-  "category",
+  "section_break_eqq9",
   "type",
+  "uom",
+  "category",
+  "column_break_23a2",
+  "purity",
   "quantity",
   "available_item_quantity",
+  "column_break_yko9",
+  "expected_total_weight",
   "weight_of_available_item",
   "finished",
   "section_break_mem2",
+  "column_break_5zxp",
   "design",
   "design_description",
   "jewellery_order_item_details_tab",
@@ -39,15 +45,6 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
-  },
-  {
-   "depends_on": "eval:doc.order_from == 'Customer Jewellery Order'",
-   "fieldname": "customer",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Customer",
-   "options": "Customer",
-   "reqd": 1
   },
   {
    "fieldname": "required_date",
@@ -175,12 +172,42 @@
    "label": "Jewellery Order Items",
    "mandatory_depends_on": "stock_available",
    "options": "Jewellery Order Item"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "section_break_bfta",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_eqq9",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_brrz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ddfm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_23a2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_5zxp",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-04 17:07:46.369045",
+ "modified": "2024-04-05 13:49:01.329342",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Jewellery Order",

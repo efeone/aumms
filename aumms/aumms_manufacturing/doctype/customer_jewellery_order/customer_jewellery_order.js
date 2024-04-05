@@ -109,9 +109,10 @@ function calculate_totals(frm , cdt, cdn) {
   var total_amount = 0;
   var total_making_charge = 0
   frm.doc.order_item.forEach(function (d) {
-    total_weightage += d.expected_weight_per_quantity;
+    total_weightage += d.expected_weight_per_quantity * d.qty;
     total_amount += d.amount;
     total_making_charge += d.making_chargein_percentage;
+
   });
   frm.set_value("expected_total_weight", total_weightage);
   frm.set_value("expected_total_amount", total_amount);
