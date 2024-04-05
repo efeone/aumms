@@ -17,7 +17,6 @@
   "status",
   "purity",
   "uom",
-  "item_name",
   "category",
   "type",
   "amended_from",
@@ -98,7 +97,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": ".uom",
    "fieldname": "uom",
    "fieldtype": "Link",
    "label": "UOM",
@@ -106,7 +104,6 @@
   },
   {
    "depends_on": "eval:doc.raw_material_request_type == \"Jewellery Order\"",
-   "fetch_from": ".purity",
    "fieldname": "purity",
    "fieldtype": "Link",
    "label": "Purity",
@@ -114,14 +111,12 @@
   },
   {
    "depends_on": "eval:doc.raw_material_request_type == \"Jewellery Order\"",
-   "fetch_from": ".category",
    "fieldname": "category",
    "fieldtype": "Link",
    "label": "Category",
    "options": "Item Category"
   },
   {
-   "fetch_from": ".type",
    "fieldname": "type",
    "fieldtype": "Link",
    "label": "Type",
@@ -140,12 +135,6 @@
    "options": "Manufacturing Request Stage"
   },
   {
-   "fieldname": "item_name",
-   "fieldtype": "Link",
-   "label": "Item name",
-   "options": "Item"
-  },
-  {
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
@@ -155,7 +144,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-28 16:30:54.188555",
+ "modified": "2024-04-05 15:06:30.845225",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request",

@@ -8,16 +8,18 @@
  "field_order": [
   "raw_material_request_type",
   "manufacturing_request",
-  "jewellery_order",
-  "required_date",
-  "raw_material_bundle",
-  "bundle_id",
   "column_break_bonn",
-  "required_quantity",
-  "item_name",
-  "item_type",
+  "jewellery_order",
+  "raw_material_bundle",
+  "section_break_z7w6",
   "weight",
+  "required_date",
+  "item_type",
+  "column_break_0boq",
+  "bundle_id",
   "uom",
+  "required_quantity",
+  "column_break_dw7z",
   "not_available",
   "priority",
   "supplier",
@@ -96,26 +98,18 @@
    "label": "Not available"
   },
   {
-   "fieldname": "item_name",
-   "fieldtype": "Link",
-   "label": "Item Name",
-   "options": "Item"
-  },
-  {
    "fieldname": "item_type",
    "fieldtype": "Link",
    "label": "Item Type",
    "options": "Item Type"
   },
   {
-   "fetch_from": "item_name.weight_per_unit",
    "fieldname": "weight",
    "fieldtype": "Float",
    "label": "Weight",
    "precision": "2"
   },
   {
-   "fetch_from": "jewellery_order.uom",
    "fieldname": "uom",
    "fieldtype": "Link",
    "label": "UOM",
@@ -138,12 +132,24 @@
    "fieldtype": "Link",
    "label": "Supplier",
    "options": "Supplier"
+  },
+  {
+   "fieldname": "column_break_dw7z",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_z7w6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_0boq",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-28 10:31:30.917990",
+ "modified": "2024-04-05 15:52:31.294133",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Raw Material Request",
