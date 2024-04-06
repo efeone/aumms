@@ -1,27 +1,29 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "MR-.####",
+ "autoname": "format:{MR}-{#####}-{purity}-{uom}-{category}-{type}-{total_weight}",
  "creation": "2024-03-14 10:03:40.820137",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "raw_material_request_type",
   "raw_material_request",
+  "column_break_i3eg",
   "manufacturing_request",
   "jewellery_order",
+  "section_break_hpbr",
   "required_date",
   "quantity",
-  "design_attachment",
-  "column_break_jgee",
-  "status",
   "purity",
-  "uom",
-  "item_name",
+  "column_break_jgee",
   "category",
-  "type",
-  "amended_from",
+  "uom",
   "total_weight",
+  "column_break_jclf",
+  "status",
+  "type",
+  "design_attachment",
+  "amended_from",
   "section_break_sjns",
   "manufacturing_request_stage"
  ],
@@ -150,16 +152,28 @@
    "fieldtype": "Select",
    "label": "Status",
    "options": "Open\nCompleted\nCancelled"
+  },
+  {
+   "fieldname": "column_break_i3eg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_hpbr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_jclf",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-28 16:30:54.188555",
+ "modified": "2024-04-05 15:04:07.689855",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
