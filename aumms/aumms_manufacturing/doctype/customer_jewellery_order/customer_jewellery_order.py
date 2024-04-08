@@ -17,7 +17,7 @@ class CustomerJewelleryOrder(Document):
         )
         if not jewellery_order_exist:
             jewellery_order_count = 0
-            for item in self.order_item:
+            for item in self.customer_jewellery_order_items:
                 new_jewellery_order = frappe.new_doc("Jewellery Order")
                 new_jewellery_order.order_from = "Customer Jewellery Order"
                 new_jewellery_order.customer_jewellery_order = self.name
@@ -43,6 +43,7 @@ class CustomerJewelleryOrder(Document):
                 new_jewellery_order.insert(ignore_permissions=True)
                 item.jewellery_order_created = 1
                 jewellery_order_count += 1
+                frappe.db.set_value(item.doctype, item.name, 'jewellery_order_created', 1)
             frappe.msgprint(
                 f"{jewellery_order_count} Jewellery Orders Created.",
                 indicator="green",

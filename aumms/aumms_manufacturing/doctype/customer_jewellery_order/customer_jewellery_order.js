@@ -12,14 +12,14 @@ frappe.ui.form.on("Customer Jewellery Order", {
  	 })
  },
  purity : function(frm){
-   frm.events.update_order_item_table(frm);
+   frm.events.update_customer_jewellery_order_items_table(frm);
  },
  making_chargein_percentage : function(frm){
-   frm.events.update_order_item_table(frm);
+   frm.events.update_customer_jewellery_order_items_table(frm);
  },
- update_order_item_table: function(frm){
-   if(frm.doc.order_item){
-     frm.doc.order_item.forEach(function(item){
+ update_customer_jewellery_order_items_table: function(frm){
+   if(frm.doc.customer_jewellery_order_items){
+     frm.doc.customer_jewellery_order_items.forEach(function(item){
        frappe.model.set_value(item.doctype, item.name, 'purity', frm.doc.purity);
        frappe.model.set_value(item.doctype, item.name, 'making_chargein_percentage', frm.doc.making_chargein_percentage);
      });
@@ -28,7 +28,7 @@ frappe.ui.form.on("Customer Jewellery Order", {
  }
 });
 
-frappe.ui.form.on("Customer Jewellery Order Details", {
+frappe.ui.form.on("Customer Jewellery Order Detail", {
   purity: function(frm, cdt, cdn){
     get_board_rate(frm, cdt, cdn)
   },
@@ -60,7 +60,7 @@ frappe.ui.form.on("Customer Jewellery Order Details", {
     calculate_totals(frm)
   },
   order_item_add : function(frm, cdt, cdn){
-    frm.events.update_order_item_table(frm);
+    frm.events.update_customer_jewellery_order_items_table(frm);
   }
 });
 
@@ -80,7 +80,7 @@ function get_board_rate(frm, cdt, cdn){
           let board_rate = r.message
           console.log(board_rate);
           frappe.model.set_value(cdt, cdn, 'board_rate', board_rate);
-          frm.refresh_field('order_item');
+          frm.refresh_field('customer_jewellery_order_items');
         }
       }
     });
@@ -101,14 +101,14 @@ function calculate_amount(frm, cdt, cdn){
   else{
     frappe.model.set_value(cdt, cdn, 'amount', 0);
   }
-  frm.refresh_field('order_item');
+  frm.refresh_field('customer_jewellery_order_items');
 }
 
 function calculate_totals(frm , cdt, cdn) {
   var total_weightage = 0;
   var total_amount = 0;
   var total_making_charge = 0
-  frm.doc.order_item.forEach(function (d) {
+  frm.doc.customer_jewellery_order_items.forEach(function (d) {
     total_weightage += d.expected_weight_per_quantity * d.qty;
     total_amount += d.amount;
     total_making_charge += d.making_chargein_percentage;

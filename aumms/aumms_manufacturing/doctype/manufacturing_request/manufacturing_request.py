@@ -7,9 +7,6 @@ from aumms.aumms.utils import create_notification_log
 from frappe.desk.form.assign_to import add as add_assignment
 
 class ManufacturingRequest(Document):
-	
-	def autoname(self):
-		self.name = f"{self.purity}-{self.uom}-{self.category}-{self.type}-{self.total_weight}"
 
 	def before_insert(self):
 		self.update_manufacturing_stages()

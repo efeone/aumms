@@ -16,7 +16,7 @@
   "expected_total_amount",
   "out_for_delivery",
   "order_item_details_section",
-  "order_item",
+  "customer_jewellery_order_items",
   "amended_from"
  ],
  "fields": [
@@ -38,13 +38,6 @@
   {
    "fieldname": "column_break_r1uk",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "order_item",
-   "fieldtype": "Table",
-   "label": "Order Item",
-   "options": "Customer Jewellery Order Details",
-   "reqd": 1
   },
   {
    "fieldname": "amended_from",
@@ -105,14 +98,21 @@
    "fieldname": "making_chargein_percentage",
    "fieldtype": "Percent",
    "label": "Making Charge(In Percentage)",
-   "precision": "1",
+   "precision": "2",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer_jewellery_order_items",
+   "fieldtype": "Table",
+   "label": "Customer Jewellery Order Items",
+   "options": "Customer Jewellery Order Detail",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-05 12:42:35.025919",
+ "modified": "2024-04-08 10:00:27.980812",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Customer Jewellery Order",
