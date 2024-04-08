@@ -1,54 +1,49 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{MR}-{#####}-{purity}-{uom}-{category}-{type}-{total_weight}",
+ "autoname": "format:{MR}-{#####}-{purity}-{uom}-{category}-{type}-{expected_weight}",
  "creation": "2024-03-14 10:03:40.820137",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "raw_material_request_type",
-  "raw_material_request",
+  "request_form",
+  "jewellery_order_item",
   "column_break_i3eg",
-  "manufacturing_request",
   "jewellery_order",
+  "manufacturing_request",
+  "raw_material_request",
   "section_break_hpbr",
-  "required_date",
-  "quantity",
-  "purity",
-  "column_break_jgee",
-  "category",
-  "uom",
-  "total_weight",
-  "column_break_jclf",
-  "status",
   "type",
-  "design_attachment",
-  "amended_from",
+  "category",
+  "purity",
+  "uom",
+  "column_break_1l2l",
+  "required_date",
+  "expected_weight",
+  "quantity",
+  "finished",
+  "section_break_1jdd",
+  "design",
+  "design_description",
   "section_break_sjns",
-  "manufacturing_request_stage"
+  "manufacturing_request_stages",
+  "amended_from"
  ],
  "fields": [
   {
-   "fieldname": "raw_material_request_type",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": " Raw Material Request Type",
-   "options": "\nJewellery Order\nManufacturing Request\nRaw Material Request",
-   "reqd": 1
-  },
-  {
-   "depends_on": "eval:doc.raw_material_request_type==\"Raw Material Request\"",
+   "depends_on": "eval:doc.request_form ==\"Raw Material Request\"",
    "fieldname": "raw_material_request",
    "fieldtype": "Link",
    "label": "Raw Material Request",
-   "mandatory_depends_on": "eval:doc.raw_material_request_type==\"Raw Material Request\"",
+   "mandatory_depends_on": "eval:doc.request_form ==\"Raw Material Request\"",
    "options": "Raw Material Request"
   },
   {
+   "depends_on": "eval:doc.request_form ==\"Jewellery Order\"",
    "fieldname": "jewellery_order",
    "fieldtype": "Link",
    "label": "Jewellery Order",
-   "mandatory_depends_on": "eval:doc.raw_material_request_type==\"Jewellery Order\"",
+   "mandatory_depends_on": "eval:doc.request_form ==\"Jewellery Order\"",
    "options": "Jewellery Order"
   },
   {
@@ -70,54 +65,20 @@
    "search_index": 1
   },
   {
-   "depends_on": "eval:doc.raw_material_request_type == \"Jewellery Order\"",
-   "fieldname": "design_attachment",
-   "fieldtype": "Attach",
-   "label": "Design Attachment"
-  },
-  {
    "fieldname": "required_date",
    "fieldtype": "Date",
-   "label": "Required Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "total_weight",
-   "fieldtype": "Float",
-   "label": "Total Weight ",
-   "non_negative": 1,
-   "precision": "3",
-   "reqd": 1
+   "label": "Required Date"
   },
   {
    "fieldname": "quantity",
    "fieldtype": "Int",
-   "label": "Quantity",
-   "reqd": 1
+   "label": "Quantity"
   },
   {
-   "fieldname": "column_break_jgee",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "uom",
-   "fieldtype": "Link",
-   "label": "UOM",
-   "options": "UOM"
-  },
-  {
-   "depends_on": "eval:doc.raw_material_request_type == \"Jewellery Order\"",
    "fieldname": "purity",
    "fieldtype": "Link",
    "label": "Purity",
    "options": "Purity"
-  },
-  {
-   "depends_on": "eval:doc.raw_material_request_type == \"Jewellery Order\"",
-   "fieldname": "category",
-   "fieldtype": "Link",
-   "label": "Category",
-   "options": "Item Category"
   },
   {
    "fieldname": "type",
@@ -130,20 +91,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "eval:doc.category",
-   "fieldname": "manufacturing_request_stage",
-   "fieldtype": "Table",
-   "label": "Manufacturing Request Stage",
-   "mandatory_depends_on": "eval:doc.category",
-   "options": "Manufacturing Request Stage"
-  },
-  {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "Open\nCompleted\nCancelled"
-  },
-  {
    "fieldname": "column_break_i3eg",
    "fieldtype": "Column Break"
   },
@@ -152,14 +99,76 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "column_break_jclf",
+   "depends_on": "eval:doc.category",
+   "fieldname": "manufacturing_request_stages",
+   "fieldtype": "Table",
+   "label": "Manufacturing Request Stages",
+   "mandatory_depends_on": "eval:doc.category",
+   "options": "Manufacturing Request Stage"
+  },
+  {
+   "fieldname": "request_form",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Request From",
+   "options": "\nJewellery Order\nRaw Material Request",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.request_form ==\"Jewellery Order\"",
+   "fieldname": "jewellery_order_item",
+   "fieldtype": "Data",
+   "label": "Jewellery Order Item",
+   "mandatory_depends_on": "eval:doc.request_form ==\"Jewellery Order\""
+  },
+  {
+   "fieldname": "expected_weight",
+   "fieldtype": "Float",
+   "label": "Expected Weight",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "fieldname": "design_description",
+   "fieldtype": "Text",
+   "label": "Design Description"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Link",
+   "label": "Category",
+   "options": "Item Category"
+  },
+  {
+   "default": "0",
+   "fieldname": "finished",
+   "fieldtype": "Check",
+   "label": "Finished"
+  },
+  {
+   "fieldname": "column_break_1l2l",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_1jdd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "design",
+   "fieldtype": "Attach",
+   "label": "Design"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-06 10:21:06.665338",
+ "modified": "2024-04-08 14:38:15.313305",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request",
