@@ -6,18 +6,7 @@ frappe.ui.form.on("Jewellery Order", {
 		let total_qty = frm.doc.jewellery_order_items.filter(function(row) {
 			return row.is_available == 1;
 		}).length;
-
 		frm.set_value('available_item_quantity', total_qty);
-
-		if (!frm.is_new()) {
-			frm.set_df_property('customer_jewellery_order', 'read_only', 1);
-			frm.set_df_property('customer', 'read_only', 1);
-			frm.set_df_property('required_date', 'read_only', 1);
-			frm.set_df_property('expected_total_weight', 'read_only', 1);
-			frm.set_df_property('quantity', 'read_only', 1);
-			frm.set_df_property('design', 'read_only', 1);
-		}
-
 		frm.set_query('uom', () => {
 			return {
 				filters: {
@@ -47,23 +36,16 @@ frappe.ui.form.on("Jewellery Order Item",{
 		 if (d.is_available) {
           total_weightage += d.weight;
     	}
-   })
-   frm.set_value('weight_of_available_item',total_weightage)
-   frm.doc.item_details.forEach(function(d){
-		 if (d.is_available) {
-			  total_weightage += d.weight;
-
-		 }
-   })
-	 frm.set_value('weight_of_available_item',total_weightage)
+   });
+   frm.set_value('weight_of_available_item',total_weightage);
  },
- item_details_remove:function(frm){
+ jewellery_order_items_remove:function(frm){
 	 	let d = locals[cdt][cdn];
      var total_weightage = 0
      frm.doc.jewellery_order_items.forEach(function(d){
 	       total_weightage += d.weight;
      })
-     frm.set_value("weight_of_available_item",total_weightage)
+     frm.set_value("weight_of_available_item",total_weightage);
    },
    jewellery_order_items_add: function(frm)  {
     limit_item_details(frm)

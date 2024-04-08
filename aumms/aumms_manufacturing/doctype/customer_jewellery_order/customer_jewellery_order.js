@@ -46,7 +46,7 @@ frappe.ui.form.on("Customer Jewellery Order Details", {
     let d = locals[cdt][cdn];
     calculate_amount(frm, cdt, cdn);
   },
-  expected_weight_per_quantity: function (frm, cdt, cdn) {
+  weight: function (frm, cdt, cdn) {
     let d = locals[cdt][cdn];
     calculate_amount(frm, cdt, cdn);
     calculate_totals(frm);
@@ -89,8 +89,8 @@ function get_board_rate(frm, cdt, cdn){
 
 function calculate_amount(frm, cdt, cdn){
   var child=locals[cdt][cdn];
-  if(child.qty && child.expected_weight_per_quantity && child.board_rate){
-    frappe.model.set_value(cdt, cdn, 'amount_without_making_charge', child.qty * child.expected_weight_per_quantity * child.board_rate);
+  if(child.qty && child.weight && child.board_rate){
+    frappe.model.set_value(cdt, cdn, 'amount_without_making_charge', child.qty * child.weight * child.board_rate);
   }
   else {
     frappe.model.set_value(cdt, cdn, 'amount_without_making_charge', 0);
@@ -109,7 +109,7 @@ function calculate_totals(frm , cdt, cdn) {
   var total_amount = 0;
   var total_making_charge = 0
   frm.doc.order_item.forEach(function (d) {
-    total_weightage += d.expected_weight_per_quantity * d.qty;
+    total_weightage += d.weight * d.qty;
     total_amount += d.amount;
     total_making_charge += d.making_chargein_percentage;
 
