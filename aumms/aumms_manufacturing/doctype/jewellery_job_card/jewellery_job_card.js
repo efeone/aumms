@@ -4,7 +4,7 @@
 frappe.ui.form.on("Jewellery Job Card", {
   refresh: function(frm){
     create_custom_buttons(frm);
-  },
+  }
 });
 
 let create_custom_buttons = function(frm){
@@ -36,3 +36,28 @@ let create_custom_buttons = function(frm){
     }).addClass("btn-primary");
   }
 }
+
+frappe.ui.form.on("Job Time", {
+  duration : function(frm, cdt, cdn){
+    let total_duration = 0
+    if(frm.doc.job_time){
+      frm.doc.job_time.forEach(function(d){
+        if(d.duration){
+          total_duration += d.duration || 0
+        }
+      });
+    }
+    frm.set_value('duration',total_duration);
+  },
+  job_time_remove : function(frm, cdt, cdn){
+    let total_duration = 0
+    if(frm.doc.job_time){
+      frm.doc.job_time.forEach(function(d){
+        if(d.duration){
+          total_duration += d.duration || 0
+        }
+      });
+    }
+    frm.set_value('duration',total_duration);
+  }
+});

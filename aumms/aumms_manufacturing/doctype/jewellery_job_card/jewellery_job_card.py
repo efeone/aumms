@@ -4,8 +4,8 @@
 import frappe
 from frappe.model.document import Document
 
-
 class JewelleryJobCard(Document):
+
     def before_insert(self):
         self.update_item_table()
 
