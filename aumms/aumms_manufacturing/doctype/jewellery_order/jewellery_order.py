@@ -11,7 +11,7 @@ class JewelleryOrder(Document):
         self.jewellery_order_finished(finished = 1)
 
     def on_cancel(self):
-        self.jewellery_order_finished(finished = 0) 
+        self.jewellery_order_finished(finished = 0)
 
     def on_update(self):
         self.out_for_delivery_check()
@@ -42,6 +42,7 @@ class JewelleryOrder(Document):
 	                new_manufacturing_request.quantity = 1
 	                new_manufacturing_request.category = self.category
 	                new_manufacturing_request.design_description = self.design_description
+	                new_manufacturing_request.keep_metal_ledger = True
 	                new_manufacturing_request.jewellery_order_item = item.name
 	                new_manufacturing_request.insert(ignore_permissions=True)
 	                manufacturing_request_count += 1

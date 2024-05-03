@@ -14,7 +14,6 @@
   "create_raw_material_bundle",
   "raw_material_bundle_created",
   "raw_material_available",
-  "expected_execution_time",
   "smith",
   "smith_warehouse",
   "custom_column_break_lwydq",
@@ -25,7 +24,8 @@
   "product",
   "weight",
   "previous_stage_product",
-  "previous_stage_weight"
+  "previous_stage_weight",
+  "expected_execution_time"
  ],
  "fields": [
   {
@@ -134,12 +134,13 @@
   },
   {
    "fieldname": "expected_execution_time",
-   "fieldtype": "Time",
+   "fieldtype": "Float",
    "label": "Expected Execution Time",
    "read_only": 1
   },
   {
    "default": "All Smith Warehouse",
+   "fetch_from": "smith.custom_warehouse",
    "fieldname": "smith_warehouse",
    "fieldtype": "Link",
    "label": "Smith Warehouse",
@@ -172,7 +173,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-02 11:46:33.926245",
+ "modified": "2024-05-02 16:07:22.687542",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing  Stage",

@@ -17,12 +17,16 @@
   "section_break_hpbr",
   "type",
   "category",
+  "posting_date",
+  "posting_time",
   "column_break_ky2t",
   "purity",
   "uom",
+  "party_link",
   "column_break_1l2l",
   "expected_weight",
   "weight",
+  "keep_metal_ledger",
   "column_break_izcc",
   "quantity",
   "supervisor_warehouse",
@@ -198,6 +202,7 @@
    "label": "Weight"
   },
   {
+   "default": "All Smith Warehouse - SJL",
    "fieldname": "supervisor_warehouse",
    "fieldtype": "Link",
    "label": "Supervisor Warehouse",
@@ -206,6 +211,33 @@
   {
    "fieldname": "column_break_izcc",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "hidden": 1,
+   "label": "Posting Date"
+  },
+  {
+   "default": "Now",
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "hidden": 1,
+   "label": "Posting Time"
+  },
+  {
+   "fieldname": "party_link",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Party Link",
+   "options": "Party Link"
+  },
+  {
+   "default": "0",
+   "fieldname": "keep_metal_ledger",
+   "fieldtype": "Check",
+   "label": "Keep Metal Ledger"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -220,7 +252,7 @@
    "link_fieldname": "manufacturing_request"
   }
  ],
- "modified": "2024-04-29 14:41:06.261685",
+ "modified": "2024-05-02 15:30:51.957904",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request",

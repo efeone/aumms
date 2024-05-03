@@ -15,18 +15,18 @@
   "type",
   "category",
   "purity",
-  "uom",
   "column_break_8lq7",
   "company",
   "work_station",
   "supervisor_warehouse",
-  "expected_execution_time",
   "column_break_tgsz",
   "smith",
   "smith_warehouse",
   "expected_weight",
+  "keep_metal_ledger",
   "column_break_ojtc",
   "required_date",
+  "uom",
   "raw_material_from_previous_stage_only",
   "section_break_qjuc",
   "job_time",
@@ -54,10 +54,9 @@
   },
   {
    "fieldname": "manufacturing_request",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Manufacturing Request",
-   "options": "Manufacturing Request",
    "reqd": 1
   },
   {
@@ -128,7 +127,8 @@
   {
    "fieldname": "expected_weight",
    "fieldtype": "Float",
-   "label": "Expected Weight"
+   "label": "Expected Weight",
+   "precision": "1"
   },
   {
    "fieldname": "purity",
@@ -199,12 +199,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "stage",
-   "fieldtype": "Link",
-   "label": "Stage",
-   "options": "Manufacturing  Stage"
-  },
-  {
    "fieldname": "uom",
    "fieldtype": "Link",
    "label": "UOM",
@@ -223,18 +217,6 @@
    "options": "Warehouse"
   },
   {
-   "default": "Today",
-   "fieldname": "expected_execution_time",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Expected Execution Time",
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_ojtc",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "raw_materiel_items_tab",
    "fieldtype": "Tab Break",
    "label": "Raw Materiel Items",
@@ -250,11 +232,27 @@
    "fieldtype": "Tab Break",
    "label": "Scrap Item Details",
    "options": "Scrap Item Detail"
+  },
+  {
+   "fieldname": "stage",
+   "fieldtype": "Link",
+   "label": "Stage",
+   "options": "Manufacturing Stage"
+  },
+  {
+   "fieldname": "column_break_ojtc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "keep_metal_ledger",
+   "fieldtype": "Check",
+   "label": "Keep Metal Ledger"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-05-02 10:31:17.979043",
+ "modified": "2024-05-03 09:40:41.587688",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Jewellery Job Card",

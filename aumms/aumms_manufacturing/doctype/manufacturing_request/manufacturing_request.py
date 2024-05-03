@@ -3,7 +3,6 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from aumms.aumms.utils import create_notification_log
 from frappe.desk.form.assign_to import add as add_assignment
 
 class ManufacturingRequest(Document):
@@ -93,7 +92,7 @@ class ManufacturingRequest(Document):
 	@frappe.whitelist()
 	def create_jewellery_job_card(self, stage_row_id):
 	    stage = frappe.get_doc('Manufacturing  Stage', stage_row_id)
-	    jewellery_job_card_exists = frappe.db.exists('Jewellery Job Card', {'manufacturing_request': self.name,'manufacturing_stage': stage.manufacturing_stage})
+	    jewellery_job_card_exists = frappe.db.exists('Jewellery Job Card', {'manufacturing_request': self.name, 'manufacturing_stage': stage.manufacturing_stage})
 	    if not jewellery_job_card_exists:
 	        smith_email = frappe.db.get_value('Employee', stage.smith, 'user_id')
 	        new_jewellery_job_card = frappe.new_doc('Jewellery Job Card')
@@ -108,11 +107,11 @@ class ManufacturingRequest(Document):
 	        new_jewellery_job_card.category = self.category
 	        new_jewellery_job_card.smith_warehouse = stage.smith_warehouse
 	        new_jewellery_job_card.expected_execution_time = stage.expected_execution_time
-	        new_jewellery_job_card.manufacturing_stage = stage.manufacturing_stage
+	        new_jewellery_job_card.manufacturing_request = stage.manufacturing_stage
 	        new_jewellery_job_card.stage = stage.manufacturing_stage
 	        new_jewellery_job_card.supervisor_warehouse = self.supervisor_warehouse
-	        new_jewellery_job_card.keep_metal_ledger = True
 	        new_jewellery_job_card.raw_material_from_previous_stage_only = stage.is_raw_material_from_previous_stage_only
+	        new_jewellery_job_card.keep_metal_ledger = True
 	        new_jewellery_job_card.flags.ignore_mandatory = True
 	        new_jewellery_job_card.save(ignore_permissions=True)
 	        frappe.db.set_value(stage.doctype, stage.name, 'job_card_created', 1)

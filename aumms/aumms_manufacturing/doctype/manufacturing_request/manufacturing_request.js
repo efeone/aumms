@@ -39,13 +39,11 @@ frappe.ui.form.on("Manufacturing  Stage", {
       'manufacturing_stage' : row.name,
     })
   },
-
   create_job_card: function(frm, cdt, cdn) {
     frm.call('create_jewellery_job_card', { 'stage_row_id': cdn }).then(r => {
       frm.refresh_fields();
     });
   },
-
   previous_stage_completed: function(frm, cdt, cdn) {
     let row = locals[cdt][cdn]
     if (row.previous_stage_completed) {
