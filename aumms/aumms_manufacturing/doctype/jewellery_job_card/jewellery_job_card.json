@@ -298,7 +298,9 @@
    "fieldname": "product_weight",
    "fieldtype": "Float",
    "label": "Product Weight",
-   "precision": "1"
+   "mandatory_depends_on": " eval:doc.docstatus == 0",
+   "precision": "1",
+   "reqd": 1
   },
   {
    "fieldname": "product_details_section",
@@ -308,7 +310,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-05-09 15:25:56.603760",
+ "modified": "2024-05-10 16:20:19.901811",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Jewellery Job Card",

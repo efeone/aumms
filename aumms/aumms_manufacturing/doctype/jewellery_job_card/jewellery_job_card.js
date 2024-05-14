@@ -13,6 +13,12 @@ frappe.ui.form.on("Jewellery Job Card", {
   },
   onload: function(frm) {
     frm.get_field('item_details').grid.cannot_add_rows = true;
+  },
+  validate: function(frm) {
+    if (frm.doc.docstatus ==0 && !frm.doc.product_weight) {
+      frappe.throw('Product Weight is mandatory.');
+      frappe.validated = false;
+    }
   }
 });
 

@@ -167,7 +167,7 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval:doc.previous_stage_completed == 1",
+   "depends_on": "eval:doc.previous_stage_completed == 1 && doc.is_first_stage == 0",
    "fieldname": "previous_stage_weight",
    "fieldtype": "Float",
    "label": "Previous Stage Weight",
@@ -189,7 +189,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-10 13:01:39.150002",
+ "modified": "2024-05-10 16:18:14.767651",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing  Stage",

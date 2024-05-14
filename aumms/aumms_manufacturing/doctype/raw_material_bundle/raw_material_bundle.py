@@ -73,4 +73,4 @@ def create_raw_material_request(docname):
 
         else:
             frappe.throw(_("Raw Material Request already exists for item {0}").format(raw_material.item))
-    frappe.msgprint(f"{raw_material_request_count} Manufacturing Requests Created.", indicator="green", alert=True)
+    frappe.msgprint(f"{raw_material_request_count} Raw Material Requests Created.", indicator="green", alert=True)
