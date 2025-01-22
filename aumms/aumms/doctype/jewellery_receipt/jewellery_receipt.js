@@ -188,6 +188,7 @@ frappe.ui.form.on("Jewellery Item Receipt", {
         d.amount_without_making_charge * (d.making_chargein_percentage / 100);
       frappe.model.set_value(cdt, cdn, "making_charge", making_charge);
     }
+    frm.call("calculate_item_details")
   },
   making_chargein_percentage: function (frm, cdt, cdn) {
     let d = locals[cdt][cdn];
@@ -237,13 +238,17 @@ frappe.ui.form.on("Jewellery Item Receipt", {
     else row.stone_charge = row.rate * row.stone_weight;
 
     row.stone = "";
-    row.stone_uom = "";
+    row.stone_uom = "Gram";
     row.stone_weight = "";
     row.rate = "";
 
     frm.refresh_field("item_wise_stone_details");
     frm.refresh_field("item_details");
+    frm.call("calculate_item_details")
   },
+  board_rate: function(frm) {
+    frm.call("calculate_item_details")
+  }
 });
 
 let create_multi_stone = function (frm, cdt, cdn) {
