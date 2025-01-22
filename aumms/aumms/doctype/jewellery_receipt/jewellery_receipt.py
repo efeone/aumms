@@ -19,6 +19,12 @@ class JewelleryReceipt(Document):
 
 	def validate(self):
 		self.validate_date()
+  
+	def before_save(self):
+		total_gold_weight = 0
+		for item in self.item_details:
+			total_gold_weight += item.gold_weight
+		self.total_gold_weight = total_gold_weight
 
 	def on_submit(self):
 		self.create_item()

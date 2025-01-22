@@ -107,28 +107,46 @@ frappe.ui.form.on("Jewellery Receipt", {
     if (quantity < cur_items_len) {
       frm.doc.item_details.splice(quantity);
     } else {
-      for (var i = cur_items_len; i < quantity; i++) {
-        let row = frm.add_child("item_details", {
-          item_category: frm.doc.item_category,
-          item_type: frm.doc.item_type,
-          item_group: frm.doc.item_group,
-          purity: frm.doc.purity,
-          board_rate: frm.doc.board_rate,
+      frappe.db
+        .get_value(
+          "Item Sub Category",
+          frm.doc.item_sub_category,
+          "making_charge_in_percentage"
+        )
+        .then((r) => {
+          console.log("here1");
+          console.log(cur_items_len);
+          console.log(quantity);
+          
+          
+          for (var i = cur_items_len; i < quantity; i++) {
+            console.log("loop");
+            
+            frm.add_child("item_details", {
+              item_category: frm.doc.item_category,
+              item_type: frm.doc.item_type,
+              item_group: frm.doc.item_group,
+              purity: frm.doc.purity,
+              board_rate: frm.doc.board_rate,
+              making_chargein_percentage: r.message.making_charge_in_percentage,
+            });
+            frm.refresh_fields()
+          }
         });
-      }
+      
     }
 
     frm.refresh_field("item_details");
   },
 });
 frappe.ui.form.on("Jewellery Item Receipt", {
-  form_render: function (frm, cdt, cdn) {
-    let d = locals[cdt][cdn];
-    if (d.has_stone) {
-      let net_weight = d.gold_weight + d.stone_weight;
-      frappe.model.set_value(cdt, cdn, "net_weight", net_weight);
-    }
-  },
+  // form_render: function (frm, cdt, cdn) {
+  //   let d = locals[cdt][cdn];
+  //   if (d.has_stone) {
+  //     let net_weight = d.gold_weight + d.stone_weight;
+  //     frappe.model.set_value(cdt, cdn, "net_weight", net_weight);
+  //   }
+  // }, kept for future reference
   stone_weight: function (frm, cdt, cdn) {
     let d = locals[cdt][cdn];
     if (d.single_stone) {
@@ -154,7 +172,7 @@ frappe.ui.form.on("Jewellery Item Receipt", {
   },
   gold_weight: function (frm, cdt, cdn) {
     let d = locals[cdt][cdn];
-    if (!d.has_stone) {
+    if (!d.has_stone || !d.stone_charge) {
       let net_weight = d.gold_weight;
       frappe.model.set_value(cdt, cdn, "net_weight", net_weight);
       let amount_without_making_charge = d.gold_weight * frm.doc.board_rate;
