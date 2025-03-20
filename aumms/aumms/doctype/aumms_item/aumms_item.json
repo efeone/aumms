@@ -369,7 +369,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-05 12:06:59.188117",
+ "modified": "2025-03-19 13:09:02.575621",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS Item",
@@ -413,7 +413,6 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

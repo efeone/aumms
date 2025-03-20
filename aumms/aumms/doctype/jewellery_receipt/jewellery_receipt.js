@@ -130,11 +130,8 @@ frappe.ui.form.on("Jewellery Receipt", {
           console.log("here1");
           console.log(cur_items_len);
           console.log(quantity);
-          
-          
           for (var i = cur_items_len; i < quantity; i++) {
             console.log("loop");
-            
             frm.add_child("item_details", {
               item_category: frm.doc.item_category,
               item_type: frm.doc.item_type,
@@ -146,7 +143,7 @@ frappe.ui.form.on("Jewellery Receipt", {
             frm.refresh_fields()
           }
         });
-      
+
     }
 
     frm.refresh_field("item_details");
@@ -462,6 +459,24 @@ frappe.ui.form.on("Item Wise Stone Details", {
   },
   rate: function (frm, cdt, cdn) {
   update_stone_weight_and_charge(frm);
+  }
+});
+
+frappe.ui.form.on("Jewellery Receipt", {
+  refresh: function (frm) {
+    frm.doc.item_details?.forEach(row => frm.events.set_stone_fields_mandatory(frm, row));
+  },
+  set_stone_fields_mandatory: function (frm, row) {
+    ["stone", "stone_uom", "stone_weight", "rate"].forEach(field =>
+      frm.fields_dict["item_details"].grid.update_docfield_property(field, "reqd", row.has_stone)
+    );
+    frm.refresh_field("item_details");
+  }
+});
+
+frappe.ui.form.on("Jewellery Item Receipt", {
+  has_stone: function (frm, cdt, cdn) {
+    frm.events.set_stone_fields_mandatory(frm, locals[cdt][cdn]);
   }
 });
 
