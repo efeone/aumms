@@ -1,51 +1,30 @@
 import frappe
 
 def payment_entry_on_submit(doc, method):
-    ''' Method to trigger on_submit of payment entry '''
-    if doc.references:
-        jewellery_invoice = False
-        for row in doc.references:
-            if row.reference_name:
-                if row.reference_doctype == 'Sales Invoice':
-                    jewellery_invoice = get_jewellery_invoice(row.reference_doctype, row.reference_name, 'sales_invoice')
-                if row.reference_doctype == 'Sales Order':
-                    jewellery_invoice = get_jewellery_invoice(row.reference_doctype, row.reference_name, 'sales_order')
-                if jewellery_invoice:
-                    #Update Status if reference doctype is Sales Order or Sales Invoice
-                    update_jewellery_invoice(jewellery_invoice)
+    ''' Method to trigger on_submit of Payment Entry '''
+    update_linked_jewellery_invoice(doc)
 
-def get_jewellery_invoice(reference_doctype, reference_name, reference_field):
-    ''' Method to get Jewellery Invoice with reference mentioned in Payment Entry '''
-    invoice_id = False
-    if frappe.db.exists('Jewellery Invoice', { reference_field:reference_name }):
-        invoice_id = frappe.db.get_value('Jewellery Invoice', { reference_field:reference_name })
-    return invoice_id
+def payment_entry_on_cancel(doc, method):
+    ''' Method to trigger on_cancel of Payment Entry '''
+    update_linked_jewellery_invoice(doc)
 
-def update_jewellery_invoice(invoice_id):
-    ''' Method to set Jewellery Invoice status based on Payment Entry '''
-    jewellery_invoice_status = ['Unpaid', 'Paid', 'Partly Paid', 'Overdue']
-    if frappe.db.exists('Jewellery Invoice', invoice_id):
-        sales_order, sales_invoice = frappe.db.get_value('Jewellery Invoice', invoice_id, ['sales_order', 'sales_invoice'])
-        total = frappe.db.get_value("Jewellery Invoice", invoice_id, 'rounded_total')
-        if sales_invoice:
-            #Checking status and amount for Sales Invoice
-            outstanding_amount = frappe.db.get_value('Sales Invoice', sales_invoice, 'outstanding_amount')
-            status = frappe.db.get_value('Sales Invoice', sales_invoice, 'status')
-            frappe.db.set_value("Jewellery Invoice", invoice_id, 'outstanding_amount', float(outstanding_amount))
-            frappe.db.set_value("Jewellery Invoice", invoice_id, 'paid_amount', float(total) - float(outstanding_amount))
-            if status in jewellery_invoice_status:
-                frappe.db.set_value("Jewellery Invoice", invoice_id, 'status', status)
-        elif sales_order:
-            #Checking status and amount for Sales Order
-            advance_paid = frappe.db.get_value('Sales Order', sales_order, 'advance_paid')
-            outstanding_amount = float(total) - float(advance_paid)
-            frappe.db.set_value("Jewellery Invoice", invoice_id, 'paid_amount', float(advance_paid))
-            frappe.db.set_value("Jewellery Invoice", invoice_id, 'outstanding_amount', float(outstanding_amount))
-            if outstanding_amount>0:
-                if advance_paid>0:
-                    frappe.db.set_value("Jewellery Invoice", invoice_id, 'status', 'Partly Paid')
-                else:
-                    frappe.db.set_value("Jewellery Invoice", invoice_id, 'status', 'Unpaid')
-            else:
-                frappe.db.set_value("Jewellery Invoice", invoice_id, 'status', 'Paid')
-        frappe.db.commit()
+def update_linked_jewellery_invoice(doc):
+    ''' Method to recalculate the settlement of the Jewellery Invoice this payment belongs to '''
+    jewellery_invoice = doc.get('jewellery_invoice') or resolve_from_references(doc)
+    if not jewellery_invoice or not frappe.db.exists('Jewellery Invoice', jewellery_invoice):
+        return
+    if not doc.get('jewellery_invoice'):
+        # Backfill so a Payment Entry raised outside the Jewellery Invoice is counted from now on
+        doc.db_set('jewellery_invoice', jewellery_invoice, update_modified=False)
+    frappe.get_doc('Jewellery Invoice', jewellery_invoice).update_settlement()
+
+def resolve_from_references(doc):
+    ''' Method to find the Jewellery Invoice behind the Sales Order or Sales Invoice referenced '''
+    reference_fields = { 'Sales Invoice': 'sales_invoice', 'Sales Order': 'sales_order' }
+    for row in doc.get('references') or []:
+        reference_field = reference_fields.get(row.reference_doctype)
+        if reference_field and row.reference_name:
+            jewellery_invoice = frappe.db.get_value('Jewellery Invoice', { reference_field: row.reference_name })
+            if jewellery_invoice:
+                return jewellery_invoice
+    return None

@@ -11,6 +11,7 @@ def after_install():
     create_custom_fields(get_sales_invoice_custom_fields(), ignore_validate=True)
     create_custom_fields(get_jewellery_invoice_custom_fields(), ignore_validate=True)
     create_custom_fields(get_sales_order_custom_fields(), ignore_validate=True)
+    create_custom_fields(get_payment_entry_custom_fields(), ignore_validate=True)
 
 def after_migrate():
     after_install()
@@ -207,6 +208,27 @@ def get_jewellery_invoice_custom_fields():
         ]
     }
 
+
+
+def get_payment_entry_custom_fields():
+    '''
+    Custom fields that need to be added to the Payment Entry Doctype
+    '''
+    return {
+        "Payment Entry": [
+            {
+                "fieldname": "jewellery_invoice",
+                "fieldtype": "Link",
+                "label": "Jewellery Invoice",
+                "options": "Jewellery Invoice",
+                "insert_after": "party_name",
+                "read_only": 1,
+                "no_copy": 1,
+                "allow_on_submit": 1,
+                "search_index": 1
+            }
+        ]
+    }
 
 
 def get_sales_order_custom_fields():

@@ -54,8 +54,9 @@ frappe.ui.form.on('Jewellery Invoice', {
         frappe.call({
             method: 'aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.get_sales_taxes_and_charges_details',
             args: {
+                //Tax is charged on the net total, so any discount comes off before the rate
                 sales_taxes_and_charges_template: frm.doc.sales_taxes_and_charges_template,
-                total_gold_amount : frm.doc.total_gold_amount,
+                total_gold_amount : flt(frm.doc.total_gold_amount) - flt(frm.doc.discount_amount),
                 jewellery_invoice: frm.doc.name
             },
             callback: function(response) {
@@ -175,19 +176,14 @@ frappe.ui.form.on('Jewellery Invoice Item', {
   },
   making_charge_percentage: function(frm, cdt, cdn){
     let d = locals[cdt][cdn];
-    if (d.making_charge_percentage){
-      var making_charge = d.amount_with_out_making_charge * d.making_charge_percentage * 0.01
-      //set making_charge while changing of making_charge_percentage
-      frappe.model.set_value(d.doctype, d.name, 'making_charge', making_charge);
-    }
+    set_making_charge(d);
     frm.refresh_field('items')
   },
   amount_with_out_making_charge: function(frm, cdt, cdn){
     let d = locals[cdt][cdn];
     if (d.amount_with_out_making_charge){
       frappe.model.set_value(d.doctype, d.name, 'net_amount_with_out_making_charge', d.amount_with_out_making_charge + d.stone_charge);
-      let making_charge = d.amount_with_out_making_charge * d.making_charge_percentage * 0.01
-      frappe.model.set_value(d.doctype, d.name, 'making_charge', making_charge);//set making_charge while changing of amount_with_out_making_charge
+      set_making_charge(d);
       let rate = (d.net_amount_with_out_making_charge + d.making_charge)/d.gold_weight
       if (rate)
       {
@@ -378,8 +374,11 @@ let set_missing_delivery_dates = function(frm){
 }
 
 let create_custom_buttons = function(frm){
-  if(frm.doc.outstanding_amount > 0){
-    frm.add_custom_button('Payment', () => {
+  let outstanding_amount = flt(frm.doc.outstanding_amount);
+  if(Math.abs(outstanding_amount) > 0.005){
+    //A positive outstanding is received from the customer, a negative one is paid back
+    let label = outstanding_amount > 0 ? __('Receive Payment') : __('Pay Customer');
+    frm.add_custom_button(label, () => {
       make_payment(frm);
     }, 'Create');
   }
@@ -432,9 +431,19 @@ let create_custom_buttons = function(frm){
 }
 
 let make_payment = function(frm){
+  let outstanding_amount = flt(frm.doc.outstanding_amount);
+  let due = Math.abs(outstanding_amount);
+  let direction = outstanding_amount > 0
+    ? __('Receivable from customer: {0}', [format_currency(due, frm.doc.currency)])
+    : __('Refund due to customer: {0}', [format_currency(due, frm.doc.currency)]);
   let d = new frappe.ui.Dialog({
-    title: 'Payment Entry',
+    title: outstanding_amount > 0 ? __('Receive Payment') : __('Pay Customer'),
     fields: [
+      {
+        fieldname: 'direction',
+        fieldtype: 'HTML',
+        options: `<p class="text-muted">${direction}</p>`
+      },
       {
           label: 'Mode of Payment',
           fieldname: 'mode_of_payment',
@@ -465,44 +474,51 @@ let make_payment = function(frm){
         label: 'Payment Amount',
         fieldname: 'amount',
         fieldtype: 'Currency',
-        default: frm.doc.outstanding_amount,
-        reqd: 1
+        default: due,
+        reqd: 1,
+        onchange: function(){
+          d.set_value('balance', due - flt(d.get_value('amount')));
+        }
       },
       {
         label: 'Balance Amount',
         fieldname: 'balance',
         fieldtype: 'Currency',
-        default: frm.doc.outstanding_amount,
+        default: 0,
         read_only: 1
       }
     ],
     primary_action_label: 'Submit',
     primary_action(values) {//Create Payment Entry
-      if (values.amount) {
-        if (parseFloat(values.amount) <= parseFloat(frm.doc.outstanding_amount)) {
-          frappe.call({
-            method: 'aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.create_payment_entry',
-            args: {
-              'mode_of_payment':values.mode_of_payment,
-              'amount': values.amount,
-              'docname': frm.doc.name,
-              'reference_no': values.reference_no,
-              'reference_date': values.reference_date,
-              'posting_date': values.posting_date
-            },
-            btn: $('.primary-action'),
-            freeze: true,
-            callback: function(r) {
-              if (r.message){
-                frm.reload_doc()
-              }
-            }
-          })
-        } else {
-          frappe.throw(__('Amount of payment cannot exceed total amount'))
-        }
+      let amount = flt(values.amount);
+      if (!amount || amount <= 0) {
+        frappe.msgprint(__('Enter a payment amount.'));
+        return;
       }
-      d.hide();
+      if (amount > due + 0.005) {
+        frappe.msgprint(__('Amount of payment cannot exceed {0}', [format_currency(due, frm.doc.currency)]));
+        return;
+      }
+      frappe.call({
+        method: 'aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.create_payment_entry',
+        args: {
+          'mode_of_payment':values.mode_of_payment,
+          'amount': amount,
+          'docname': frm.doc.name,
+          'reference_no': values.reference_no,
+          'reference_date': values.reference_date,
+          'posting_date': values.posting_date
+        },
+        btn: $('.primary-action'),
+        freeze: true,
+        callback: function(r) {
+          //Keep the dialog open when the server rejected the amount
+          if (r.message){
+            d.hide();
+            frm.reload_doc()
+          }
+        }
+      })
     }
   });
   d.show();
@@ -692,23 +708,45 @@ frappe.ui.form.on('Jewellery Invoice', {
   custom_discount_final: function(frm) {
       calculate_total(frm);
   },
+  discount_amount: function(frm) {
+    calculate_total(frm);
+  },
+  custom_total_taxes_and_charges: function(frm) {
+    calculate_total(frm);
+  },
+  disable_rounded_total: function(frm) {
+    calculate_total(frm);
+  },
   total_gold_amount: function(frm) {
     calculate_total(frm);
   }
 });
 
 function calculate_total(frm) {
+  //Mirrors set_total_amount on the server. item.amount already carries the board rate,
+  //the stone charge and the making charge, so it is the one figure to total.
   let total_amount = 0;
-  let discount = frm.doc.custom_discount_final || 0;
+  let total_making_charge = 0;
 
-  frm.doc.items.forEach(function(item) {
-      total_amount += (item.board_rate || 0) * (item.gold_weight || 0) + (item.making_charge || 0);
+  (frm.doc.items || []).forEach(function(item) {
+      total_amount += flt(item.amount);
+      total_making_charge += flt(item.making_charge);
   });
 
-  let grand_total = total_amount + discount;
+  let net_total = total_amount - flt(frm.doc.discount_amount);
+  let grand_total = net_total + flt(frm.doc.custom_total_taxes_and_charges);
 
+  frm.set_value('total_making_charge', total_making_charge);
   frm.set_value('grand_total', grand_total);
-  frm.set_value('rounded_total', frm.doc.disable_rounded_total ? grand_total : Math.round(grand_total));
+  if (frm.doc.disable_rounded_total) {
+    frm.set_value('rounded_total', grand_total);
+    frm.set_value('rounding_adjustment', 0);
+  } else {
+    let rounded_total = Math.round(grand_total);
+    frm.set_value('rounded_total', rounded_total);
+    //Only the difference made by rounding belongs here
+    frm.set_value('rounding_adjustment', flt(rounded_total - grand_total, precision('rounding_adjustment')));
+  }
 }
 
 
@@ -839,14 +877,21 @@ function fetch_and_set_making_charge(frm, row) {
 
 // Update the making charge in the row
 function update_making_charge(frm, row, making_charge) {
-  frappe.model.set_value(
-      row.doctype, 
-      row.name, 
-      'making_charge', 
-      making_charge
-  );
-  
+  //Keep the fetched amount, it is what a Fixed making charge is read from
+  frappe.model.set_value(row.doctype, row.name, 'is_fixed_making_charge', making_charge);
+  set_making_charge(row);
   frm.refresh_field('items');
+}
+
+// Set the making charge of a row from whichever basis the item uses
+function set_making_charge(row) {
+  //A Fixed making charge is an amount on the item, a Percentage one is worked out per row.
+  //Applying the percentage formula to a Fixed item multiplies by a zero percentage and
+  //silently wipes the charge, which then goes missing from the totals.
+  let making_charge = row.making_charge_based_on === 'Fixed'
+    ? flt(row.is_fixed_making_charge)
+    : flt(row.amount_with_out_making_charge) * flt(row.making_charge_percentage) * 0.01;
+  frappe.model.set_value(row.doctype, row.name, 'making_charge', making_charge);
 }
 
 

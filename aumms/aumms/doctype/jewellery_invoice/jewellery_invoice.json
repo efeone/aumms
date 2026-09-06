@@ -31,12 +31,14 @@
   "sales_taxes_and_charges_template",
   "totals_section",
   "currency",
+  "total_making_charge",
   "grand_total",
   "rounding_adjustment",
   "rounded_total",
   "disable_rounded_total",
   "column_break_omoat",
   "paid_amount",
+  "net_amount",
   "outstanding_amount",
   "in_words",
   "advances_tab",
@@ -120,6 +122,15 @@
   },
   {
    "default": "0",
+   "description": "Total making charge on the items, already included in Grand Total.",
+   "fieldname": "total_making_charge",
+   "fieldtype": "Currency",
+   "label": "Total Making Charge",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
    "fieldname": "grand_total",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -192,7 +203,7 @@
    "in_standard_filter": 1,
    "label": "Status",
    "no_copy": 1,
-   "options": "Estimate\nOrdered\nAdvance Received\nInvoiced\nDelivered\nUnpaid\nPaid\nPartly Paid\nOverdue",
+   "options": "Estimate\nOrdered\nAdvance Received\nInvoiced\nDelivered\nUnpaid\nPaid\nPartly Paid\nOverdue\nTo Pay\nPartly Refunded\nRefunded",
    "print_hide": 1,
    "read_only": 1,
    "reqd": 1,
@@ -224,17 +235,32 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "paid_amount",
    "fieldtype": "Currency",
    "label": "Paid Amount",
+   "no_copy": 1,
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
+   "description": "Sales total minus purchase total. Positive: receivable from customer. Negative: payable to customer.",
+   "fieldname": "net_amount",
+   "fieldtype": "Currency",
+   "label": "Net Amount",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "description": "Positive: receivable from customer. Negative: payable to customer.",
    "fieldname": "outstanding_amount",
    "fieldtype": "Currency",
    "label": "Outstanding Amount",
+   "no_copy": 1,
    "read_only": 1
   },
   {

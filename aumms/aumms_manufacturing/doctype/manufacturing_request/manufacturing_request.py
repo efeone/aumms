@@ -38,7 +38,7 @@ class ManufacturingRequest(Document):
 					'manufacturing_stage': stage.stage,
 					'expected_execution_time': stage.required_time,
 					'workstation': stage.default_workstation
-		        })
+				})
 
 	def send_notification_to_owner(self):
 		for stage in self.manufacturing_stages:
@@ -58,31 +58,31 @@ class ManufacturingRequest(Document):
 		frappe.db.set_value('Manufacturing Request', self.name, 'finished', finished)
 
 	def mark_as_finished_in_jewellery_order(self):
-	    if frappe.db.exists('Jewellery Order', self.jewellery_order):
-	        jewellery_order_doc = frappe.get_doc('Jewellery Order', self.jewellery_order)
-	        if self.docstatus == 1:
-	            linked_manufacturing_requests = frappe.get_all(
-	                'Manufacturing Request',
-	                filters={'jewellery_order': self.jewellery_order},
-	                fields=['name', 'docstatus']
-	            )
-	            all_submitted = all(mr['docstatus'] == 1 for mr in linked_manufacturing_requests)
-	            if all_submitted:
-	                frappe.db.set_value('Jewellery Order', self.jewellery_order, 'finished', 1)
-	                frappe.db.commit()
-	            else:
-	                frappe.msgprint("Not all Manufacturing Requests are submitted yet.")
+		if frappe.db.exists('Jewellery Order', self.jewellery_order):
+			jewellery_order_doc = frappe.get_doc('Jewellery Order', self.jewellery_order)
+			if self.docstatus == 1:
+				linked_manufacturing_requests = frappe.get_all(
+					'Manufacturing Request',
+					filters={'jewellery_order': self.jewellery_order},
+					fields=['name', 'docstatus']
+				)
+				all_submitted = all(mr['docstatus'] == 1 for mr in linked_manufacturing_requests)
+				if all_submitted:
+					frappe.db.set_value('Jewellery Order', self.jewellery_order, 'finished', 1)
+					frappe.db.commit()
+				else:
+					frappe.msgprint("Not all Manufacturing Requests are submitted yet.")
 
 	def manufacturing_request_finished(self, finished):
-	    if frappe.db.exists('Jewellery Order', self.jewellery_order):
-	        jewellery_order = frappe.get_doc('Jewellery Order', self.jewellery_order)
-	        if jewellery_order:
-	            updated = False
-	            for item in jewellery_order.jewellery_order_items:
-	                if item.weight == self.expected_weight:
-	                    item.manufacturing_request_finished = finished
-	                    frappe.db.set_value('Jewellery Order Item', item.name, 'manufacturing_request_finished', finished)
-	                    break
+		if frappe.db.exists('Jewellery Order', self.jewellery_order):
+			jewellery_order = frappe.get_doc('Jewellery Order', self.jewellery_order)
+			if jewellery_order:
+				updated = False
+				for item in jewellery_order.jewellery_order_items:
+					if item.weight == self.expected_weight:
+						item.manufacturing_request_finished = finished
+						frappe.db.set_value('Jewellery Order Item', item.name, 'manufacturing_request_finished', finished)
+						break
 
 	@frappe.whitelist()
 	def update_previous_stage(self, idx):
@@ -106,49 +106,49 @@ class ManufacturingRequest(Document):
 
 	@frappe.whitelist()
 	def create_jewellery_job_card(self, stage_row_id):
-	    first_stage, last_stage = False, False
-	    if self.manufacturing_stages:
-	        first_stage = self.manufacturing_stages[0].name
-	        last_stage = self.manufacturing_stages[-1].name
-	    stage = frappe.get_doc('Manufacturing Request Stage', stage_row_id)
-	    jewellery_job_card_exists = frappe.db.exists('Jewellery Job Card', {
-	        'manufacturing_request': self.name,
-	        'manufacturing_stage': stage.manufacturing_stage
-	    })
+		first_stage, last_stage = False, False
+		if self.manufacturing_stages:
+			first_stage = self.manufacturing_stages[0].name
+			last_stage = self.manufacturing_stages[-1].name
+		stage = frappe.get_doc('Manufacturing Request Stage', stage_row_id)
+		jewellery_job_card_exists = frappe.db.exists('Jewellery Job Card', {
+			'manufacturing_request': self.name,
+			'manufacturing_stage': stage.manufacturing_stage
+		})
 
-	    if not jewellery_job_card_exists:
-	        smith_email = frappe.db.get_value('Employee', stage.smith, 'user_id')
-	        new_jewellery_job_card = frappe.new_doc('Jewellery Job Card')
-	        new_jewellery_job_card.manufacturing_request = self.name
-	        new_jewellery_job_card.smith = stage.smith
-	        new_jewellery_job_card.work_station = stage.workstation
-	        new_jewellery_job_card.required_date = self.required_date
-	        new_jewellery_job_card.purity = self.purity
-	        new_jewellery_job_card.expected_weight = self.expected_weight
-	        new_jewellery_job_card.uom = self.uom
-	        new_jewellery_job_card.type = self.type
-	        new_jewellery_job_card.category = self.category
-	        new_jewellery_job_card.smith_warehouse = stage.smith_warehouse
-	        new_jewellery_job_card.expected_execution_time = stage.expected_execution_time
-	        new_jewellery_job_card.manufacturing_stage = stage.manufacturing_stage
-	        new_jewellery_job_card.stage = stage.manufacturing_stage
-	        new_jewellery_job_card.supervisor_warehouse = self.supervisor_warehouse
-	        new_jewellery_job_card.raw_material_from_previous_stage_only = stage.is_raw_material_from_previous_stage_only
-	        new_jewellery_job_card.keep_metal_ledger = 1
-	        if first_stage == stage_row_id:
-	            new_jewellery_job_card.is_first_stage = 1
-	        if last_stage == stage_row_id:
-	            new_jewellery_job_card.is_last_stage = 1
-	        new_jewellery_job_card.flags.ignore_mandatory = True
-	        new_jewellery_job_card.save(ignore_permissions=True)
-	        frappe.db.set_value('Jewellery Job Card', self.manufacturing_request, 'product',self.product)
-	        frappe.db.set_value(stage.doctype, stage.name, 'job_card_created', 1)
-	        if smith_email:
-	            add_assignment({
-	                "doctype": new_jewellery_job_card.doctype,
-	                "name": new_jewellery_job_card.name,
-	                "assign_to": [smith_email]
-	            })
-	        frappe.msgprint("Jewellery Job Card Created.", indicator="green", alert=1)
-	    else:
-	        frappe.throw(_("Job card already exists for this stage"))
+		if not jewellery_job_card_exists:
+			smith_email = frappe.db.get_value('Employee', stage.smith, 'user_id')
+			new_jewellery_job_card = frappe.new_doc('Jewellery Job Card')
+			new_jewellery_job_card.manufacturing_request = self.name
+			new_jewellery_job_card.smith = stage.smith
+			new_jewellery_job_card.work_station = stage.workstation
+			new_jewellery_job_card.required_date = self.required_date
+			new_jewellery_job_card.purity = self.purity
+			new_jewellery_job_card.expected_weight = self.expected_weight
+			new_jewellery_job_card.uom = self.uom
+			new_jewellery_job_card.type = self.type
+			new_jewellery_job_card.category = self.category
+			new_jewellery_job_card.smith_warehouse = stage.smith_warehouse
+			new_jewellery_job_card.expected_execution_time = stage.expected_execution_time
+			new_jewellery_job_card.manufacturing_stage = stage.manufacturing_stage
+			new_jewellery_job_card.stage = stage.manufacturing_stage
+			new_jewellery_job_card.supervisor_warehouse = self.supervisor_warehouse
+			new_jewellery_job_card.raw_material_from_previous_stage_only = stage.is_raw_material_from_previous_stage_only
+			new_jewellery_job_card.keep_metal_ledger = 1
+			if first_stage == stage_row_id:
+				new_jewellery_job_card.is_first_stage = 1
+			if last_stage == stage_row_id:
+				new_jewellery_job_card.is_last_stage = 1
+			new_jewellery_job_card.flags.ignore_mandatory = True
+			new_jewellery_job_card.save(ignore_permissions=True)
+			frappe.db.set_value('Jewellery Job Card', self.manufacturing_request, 'product',self.product)
+			frappe.db.set_value(stage.doctype, stage.name, 'job_card_created', 1)
+			if smith_email:
+				add_assignment({
+					"doctype": new_jewellery_job_card.doctype,
+					"name": new_jewellery_job_card.name,
+					"assign_to": [smith_email]
+				})
+			frappe.msgprint("Jewellery Job Card Created.", indicator="green", alert=1)
+		else:
+			frappe.throw(_("Job card already exists for this stage"))
