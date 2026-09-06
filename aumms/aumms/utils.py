@@ -48,6 +48,128 @@ def get_conversion_factor(from_uom, to_uom):
     filters = {'from_uom': from_uom, 'to_uom': to_uom}
     return frappe.db.get_value('UOM Conversion Factor', filters, 'value')
 
+def get_metal_ledger_filters(item_type, purity, stock_uom):
+    """
+        method to get the filters that identify one metal ledger series
+        args:
+            item_type: item type link
+            purity: purity link
+            stock_uom: the weight uom the series is held in
+        output: filters dict matching the live entries of that series
+    """
+    return {
+        'item_type': item_type,
+        'purity': purity,
+        'stock_uom': stock_uom,
+        'is_cancelled': 0
+    }
+
+def get_metal_qty(aumms_item_doc, item):
+    """
+        method to get the metal a row moves, and the uom that weight is held in
+        args:
+            aumms_item_doc: object of the AuMMS Item document
+            item: row of the purchase receipt or sales invoice items table
+        output: tuple of the weight moved and the weight uom it is measured in
+
+        The row quantity counts pieces, the stock uom being Nos for a finished item, so it
+        cannot go on a metal ledger as it stands. The gold weight held on the Item master is
+        the metal in one piece, stone excluded, so multiplying it by the stock quantity gives
+        the metal that actually moved. An item already stocked by weight needs no conversion.
+    """
+    weight_uom = aumms_item_doc.weight_uom or item.get('weight_uom')
+
+    if weight_uom and aumms_item_doc.stock_uom == weight_uom:
+        return flt(item.stock_qty), weight_uom
+
+    weight_per_unit = flt(aumms_item_doc.gold_weight) or flt(aumms_item_doc.weight_per_unit)
+    if not weight_per_unit or not weight_uom:
+        # message to user about set Gold Weight and Weight UOM on the item
+        frappe.throw(
+            _('Set Gold Weight and Weight UOM on Item {0} to keep a Metal Ledger for it.'.format(aumms_item_doc.name))
+        )
+
+    return weight_per_unit * flt(item.stock_qty), weight_uom
+
+def get_metal_balance_qty(item_type, purity, stock_uom, posting_date=None, posting_time=None):
+    """
+        method to get the balance a metal ledger series carries into a posting datetime
+        args:
+            item_type: item type link
+            purity: purity link
+            stock_uom: the weight uom the series is held in
+            posting_date: date the balance is read as at, the whole series if not given
+            posting_time: time the balance is read as at
+        output: balance qty of the latest live entry standing before that moment, else 0
+
+        Read on posting datetime rather than on modified time, so a back dated entry opens
+        from the balance that stood when it is posted and not from a later one.
+    """
+    conditions = ''
+    values = { 'item_type': item_type, 'purity': purity, 'stock_uom': stock_uom }
+
+    if posting_date:
+        conditions = ' AND TIMESTAMP(posting_date, posting_time) < TIMESTAMP(%(posting_date)s, %(posting_time)s)'
+        values['posting_date'] = posting_date
+        values['posting_time'] = posting_time or '00:00:00'
+
+    balance_qty = frappe.db.sql("""
+        SELECT
+            balance_qty
+        FROM
+            `tabMetal Ledger Entry`
+        WHERE
+            item_type = %(item_type)s AND purity = %(purity)s
+            AND stock_uom = %(stock_uom)s AND is_cancelled = 0 {conditions}
+        ORDER BY
+            posting_date DESC, posting_time DESC, creation DESC
+        LIMIT 1
+    """.format(conditions = conditions), values)
+
+    return flt(balance_qty[0][0]) if balance_qty else 0
+
+def repost_metal_ledger_balance(item_type, purity, stock_uom, posting_date=None, posting_time=None):
+    """
+        method to rewrite the running balance of a metal ledger series
+        args:
+            item_type: item type link
+            purity: purity link
+            stock_uom: the weight uom the series is held in
+            posting_date: date to repost from, the whole series if not given
+            posting_time: time to repost from
+
+        balance_qty is stored on each entry, so an entry added or cancelled part way through
+        a series leaves every later balance wrong. Only the entries standing at or after the
+        voucher are walked, the ones before it being untouched by the change.
+    """
+    balance_qty = get_metal_balance_qty(item_type, purity, stock_uom, posting_date, posting_time)
+
+    conditions = ''
+    values = { 'item_type': item_type, 'purity': purity, 'stock_uom': stock_uom }
+
+    if posting_date:
+        conditions = ' AND TIMESTAMP(posting_date, posting_time) >= TIMESTAMP(%(posting_date)s, %(posting_time)s)'
+        values['posting_date'] = posting_date
+        values['posting_time'] = posting_time or '00:00:00'
+
+    entries = frappe.db.sql("""
+        SELECT
+            name, in_qty, out_qty
+        FROM
+            `tabMetal Ledger Entry`
+        WHERE
+            item_type = %(item_type)s AND purity = %(purity)s
+            AND stock_uom = %(stock_uom)s AND is_cancelled = 0 {conditions}
+        ORDER BY
+            posting_date ASC, posting_time ASC, creation ASC
+    """.format(conditions = conditions), values, as_dict = 1)
+
+    for entry in entries:
+        balance_qty += flt(entry.in_qty) - flt(entry.out_qty)
+        frappe.db.set_value(
+            'Metal Ledger Entry', entry.name, 'balance_qty', balance_qty, update_modified = False
+        )
+
 @frappe.whitelist()
 def create_metal_ledger_entries(doc, method=None):
     """
@@ -87,48 +209,57 @@ def create_metal_ledger_entries(doc, method=None):
     if doc.keep_metal_ledger:
         # declare ledger_created as false
         ledger_created = 0
+        # series touched by this voucher, reposted once each after the entries are in
+        metal_ledger_series = set()
         for item in doc.items:
             
                 aumms_item_doc = frappe.get_doc("AuMMS Item", item.item_code)
 
+                # get the metal moved and the weight uom it is measured in, off the Item master
+                metal_qty, weight_uom = get_metal_qty(aumms_item_doc, item)
+
                 # set item details in fields
                 fields['item_code'] = item.item_code
                 fields['item_name'] = item.item_name
-                fields['stock_uom'] = item.weight_uom
+                fields['stock_uom'] = weight_uom
                 fields['purity'] = aumms_item_doc.purity
                 fields['purity_percentage'] = aumms_item_doc.purity_percentage
                 fields['board_rate'] = item.board_rate
                 fields['batch_no'] = item.batch_no
                 fields['item_type'] = aumms_item_doc.item_type
                 # get balance qty of the item for this party
-                filters = {
-                    'item_type': aumms_item_doc.item_type,
-                    'purity': aumms_item_doc.purity,
-                    'stock_uom': item.weight_uom,
-                    # 'party_link': doc.party_link,
-                    'is_cancelled': 0
-                    }
-                balance_qty = frappe.db.get_value('Metal Ledger Entry', filters, 'balance_qty')
+                balance_qty = get_metal_balance_qty(
+                    aumms_item_doc.item_type, aumms_item_doc.purity, weight_uom,
+                    doc.posting_date, doc.posting_time
+                )
+                metal_ledger_series.add((aumms_item_doc.item_type, aumms_item_doc.purity, weight_uom))
 
                 if doc.doctype == 'Purchase Receipt':
                     # update balance_qty
-                    balance_qty = balance_qty+item.total_weight if balance_qty else item.total_weight
-                    fields['in_qty'] = item.total_weight
+                    fields['in_qty'] = metal_qty
+                    fields['out_qty'] = 0
                     fields['outgoing_rate'] = item.rate
-                    fields['balance_qty'] = balance_qty
+                    fields['balance_qty'] = balance_qty + metal_qty
                     fields['amount'] = -item.amount
 
                 if doc.doctype == 'Sales Invoice':
                     # update balance_qty
-                    balance_qty = balance_qty-item.stock_qty if balance_qty else -item.stock_qty
                     fields['incoming_rate'] = item.rate
-                    fields['out_qty'] = item.stock_qty
-                    fields['balance_qty'] = balance_qty
+                    fields['in_qty'] = 0
+                    fields['out_qty'] = metal_qty
+                    fields['balance_qty'] = balance_qty - metal_qty
                     fields['amount'] = item.amount
 
                 # create metal ledger entry doc with fields
                 frappe.get_doc(fields).insert(ignore_permissions = 1)
                 ledger_created = 1
+
+        # a back dated voucher lands before entries that are already posted, so their balance
+        # is rewritten too. A voucher posted last of all walks only its own rows.
+        for item_type, purity, stock_uom in metal_ledger_series:
+            repost_metal_ledger_balance(
+                item_type, purity, stock_uom, doc.posting_date, doc.posting_time
+            )
 
         # alert message if metal ledger is created
         if ledger_created:
@@ -143,16 +274,25 @@ def create_metal_ledger_entries(doc, method=None):
 @frappe.whitelist()
 def cancel_metal_ledger_entries(doc, method=None):
     """
-        method to cancel metal ledger entries of this voucher and create new entries
+        method to cancel metal ledger entries of this voucher
         args:
             doc: object of purchase receipt and Sales Invoice
             method: on cancel of purchase receipt and Sales Invoice
+
+        The entries are flagged rather than reversed, the way the Stock Ledger cancels its
+        own, so the metal returns to the balance as soon as the flag is set. The balance of
+        the entries left behind is then rewritten, or the next entry of the series would open
+        from a figure that still counts the cancelled one.
     """
-    # get all Metal Ledger Entry linked with this doctype
-    ml_entries = frappe.db.get_all('Metal Ledger Entry', {
-        'voucher_type': doc.doctype,
-        'voucher_no': doc.name
-        })
+    # get all live Metal Ledger Entry linked with this doctype
+    ml_entries = frappe.get_all('Metal Ledger Entry',
+        filters = {
+            'voucher_type': doc.doctype,
+            'voucher_no': doc.name,
+            'is_cancelled': 0
+        },
+        fields = ['name', 'item_type', 'purity', 'stock_uom']
+    )
 
     for ml in ml_entries:
         # get doc of metal ledger entry
@@ -160,24 +300,26 @@ def cancel_metal_ledger_entries(doc, method=None):
         # change is_cancelled value from 0 to 1
         ml_doc.is_cancelled = 1
         # ignoring this doctype from linked metal ledger doc
-        ml_doc.ignore_linked_doctypes = (doc.doctype)
+        ml_doc.ignore_linked_doctypes = (doc.doctype,)
         # ignoring the links with this doctype
         ml_doc.flags.ignore_links = 1
         ml_doc.save(ignore_permissions = 1)
 
-        # creating new document of metal ledger entry
-        if doc.doctype == 'Purchase Receipt':
-            ml_doc.in_qty = -ml_doc.in_qty
-        if doc.doctype == 'Sales Invoice':
-            ml_doc.out_qty = -ml_doc.out_qty # updating value of qty as minus of existing qty
+    # repost once per series, so a voucher holding several rows of one series is walked once
+    for item_type, purity, stock_uom in {(ml.item_type, ml.purity, ml.stock_uom) for ml in ml_entries}:
+        repost_metal_ledger_balance(
+            item_type, purity, stock_uom, doc.posting_date, doc.posting_time
+        )
 
-        # changing outgoing rate to incoming rate
-        ml_doc.incoming_rate = ml_doc.outgoing_rate
-        ml_doc.outgoing_rate = 0
-
-        ml_doc.amount = -ml_doc.amount # updating amount value to minus of existing amount
-        # insert new metal ledger entry doc
-        ml_doc.insert(ignore_permissions = 1)
+    # alert message if metal ledger is cancelled
+    if ml_entries:
+        frappe.msgprint(
+            msg = _(
+                'Metal Ledger Entries are cancelled.'
+            ),
+            indicator = "orange",
+            alert = 1
+        )
 
 @frappe.whitelist()
 def validate_party_for_metal_transaction(doc, method=None):

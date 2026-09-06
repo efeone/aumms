@@ -146,6 +146,10 @@ def get_data(filters):
 def get_filters(filters):
 	"""Method to get filters"""
 	conditions = {}
+	# a cancelled entry is left out unless it is asked for, the way the Stock Ledger hides its
+	# own. The button on a cancelled voucher asks for them, or it would open an empty report.
+	if not filters.get("show_cancelled_entries"):
+		conditions["is_cancelled"] = 0
 	if filters.company:
 		conditions["company"] = filters.company
 	if filters.from_date and filters.to_date:

@@ -6,6 +6,7 @@ from frappe import _
 from erpnext.accounts.party import get_party_account
 from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
 from erpnext.stock.doctype.item.item import get_item_defaults
+from erpnext.stock.get_item_details import get_item_warehouse
 from frappe.contacts.doctype.address.address import get_company_address
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
@@ -284,6 +285,45 @@ class JewelleryInvoice(Document):
 			else:
 				frappe.throw('Delivery Note `{0}` not found!'.format(self.delivery_note))
 
+def set_default_warehouse(target):
+	'''
+		Method to fill in a Warehouse on the rows that are still without one.
+
+		Jewellery Invoice Item carries no Warehouse, so a row can reach the Sales Invoice or the
+		Delivery Note with the field empty. update_stock_ledger skips a row that has no
+		Warehouse, so the sale is billed but no Stock Ledger Entry is written. get_item_warehouse
+		is reused so that the Item and Item Group defaults keep precedence over the Stock
+		Settings Default Warehouse, and so the Warehouse is checked against the Company.
+	'''
+	for item in target.get('items'):
+		if item.warehouse or not item.item_code:
+			continue
+		args = frappe._dict({
+			'company': target.company,
+			'set_warehouse': target.get('set_warehouse'),
+			'warehouse': item.warehouse
+		})
+		item.warehouse = get_item_warehouse(
+			frappe.get_cached_doc('Item', item.item_code), args, overwrite_warehouse = False
+		)
+
+def set_metal_valuation_rate(target):
+	'''
+		Method to hold the Item valuation at what the metal is worth on this invoice.
+
+		Gold is bought and sold at the same board rate, so it carries no purchase cost for
+		ERPNext to value the outgoing stock from. get_valuation_rate falls back on the Item
+		valuation rate when the item has no stock history, and refuses to submit the invoice
+		when that is empty too, which is what stops an invoice for a piece never received.
+	'''
+	for item in target.get('items'):
+		#Valuation is held per stock UOM, so the row amount is spread over the stock quantity
+		#rather than read off the rate, which is quoted against the selling UOM.
+		stock_qty = flt(item.stock_qty) or flt(item.qty) * (flt(item.conversion_factor) or 1)
+		if not item.item_code or not stock_qty or not flt(item.amount):
+			continue
+		frappe.db.set_value('Item', item.item_code, 'valuation_rate', flt(item.amount) / stock_qty)
+
 def create_sales_order(source_name, sales_taxes_and_charges_template , target_doc=None):
 	''' Method to create Sales Order from Jewellery Invoice '''
 	def set_missing_values(source, target):
@@ -292,6 +332,7 @@ def create_sales_order(source_name, sales_taxes_and_charges_template , target_do
 		if transaction_type in ['Purchase', 'Exchange']:
 			keep_metal_ledger = 1
 		target.keep_metal_ledger = keep_metal_ledger
+		set_default_warehouse(target)
 		if sales_taxes_and_charges_template:
 			taxes_and_charges_details = frappe.get_doc("Sales Taxes and Charges Template", sales_taxes_and_charges_template)
 			for tax in taxes_and_charges_details.taxes:
@@ -314,7 +355,14 @@ def create_sales_order(source_name, sales_taxes_and_charges_template , target_do
 				"doctype": "Sales Order Item",
 				"field_map": {
 					'delivery_date': 'delivery_date',
-					'gold_weight': 'qty',
+					'stock_uom': 'uom',
+					'qty': 'qty',
+					'conversion_factor': 'conversion_factor',
+					'stock_qty': 'stock_qty',
+					#The row rate is quoted against a gram, while the Sales Order counts the piece in
+					#Nos, so carrying the rate across bills the price of one gram for a whole piece.
+					#The row amount is what the piece is worth, and is the rate against one of them.
+					'amount': 'rate',
 				},
 			},
 		}, target_doc, set_missing_values)
@@ -562,14 +610,22 @@ def create_payment_entry(mode_of_payment, amount, docname, posting_date=None, re
 @frappe.whitelist()
 def create_sales_invoice(source_name, jewellery_invoice, sales_taxes_and_charges_template = None, keep_metal_ledger = 0, update_stock=0, target_doc=None):
 	''' Method to create Sales Invoice from Jewellery Invoice with Sales Order reference '''
+	#frappe.call posts form encoded, so these arrive as strings. Sales Invoice.on_submit tests
+	#update_stock with `== 1`, and an uncast "1" fails that test and silently skips the Stock
+	#Ledger Entries, leaving a submitted invoice that books the revenue but never moves the stock.
+	update_stock = cint(update_stock)
+	keep_metal_ledger = cint(keep_metal_ledger)
+
 	def postprocess(source, target):
 		set_missing_values(source, target)
 
 	def set_missing_values(source, target):
 		target.flags.ignore_permissions = True
 		target.run_method("set_missing_values")
+		set_default_warehouse(target)
 		target.run_method("set_po_nos")
 		target.run_method("calculate_taxes_and_totals")
+		set_metal_valuation_rate(target)
 
 		if source.company_address:
 			target.update({"company_address": source.company_address})
@@ -680,12 +736,14 @@ def create_delivery_note(source_name, jewellery_invoice, target_doc=None):
 	''' Method to create Delivery Note from Jewellery Invoice with Sales Invoice reference '''
 	def set_missing_values(source, target):
 		target.run_method("set_missing_values")
+		set_default_warehouse(target)
 		target.run_method("set_po_nos")
 		target.run_method("calculate_taxes_and_totals")
+		set_metal_valuation_rate(target)
 
 	def update_item(source_doc, target_doc, source_parent):
-		target_doc.qty = flt(source_doc.qty) - flt(source_doc.delivered_qty)
-		target_doc.stock_qty = target_doc.qty * flt(source_doc.conversion_factor)
+		target_doc.qty = 1
+		target_doc.stock_qty = 1
 
 		target_doc.base_amount = target_doc.qty * flt(source_doc.base_rate)
 		target_doc.amount = target_doc.qty * flt(source_doc.rate)

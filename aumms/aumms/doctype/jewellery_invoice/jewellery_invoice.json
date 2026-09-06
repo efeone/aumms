@@ -21,6 +21,9 @@
   "items_section",
   "items",
   "stone_details",
+  "discounts",
+  "discount_amount",
+  "discount_column_break",
   "section_break_ypbyf",
   "total_old_gold_weight",
   "total_gold_weight",
@@ -28,7 +31,11 @@
   "column_break_mzcap",
   "total_old_gold_amount",
   "total_gold_amount",
+  "custom_taxes_and_charges",
   "sales_taxes_and_charges_template",
+  "custom_sales_taxes_and_charges",
+  "custom_total_taxes_and_charges_company_currency",
+  "custom_total_taxes_and_charges",
   "totals_section",
   "currency",
   "total_making_charge",
@@ -433,13 +440,55 @@
    "fieldtype": "Table",
    "label": "Stone Details",
    "options": "Stone Details"
+  },
+  {
+   "fieldname": "discounts",
+   "fieldtype": "Section Break",
+   "label": "Discounts"
+  },
+  {
+   "fieldname": "discount_amount",
+   "fieldtype": "Currency",
+   "label": "Discount Amount"
+  },
+  {
+   "fieldname": "discount_column_break",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "custom_taxes_and_charges",
+   "fieldtype": "Section Break",
+   "label": "Taxes and Charges"
+  },
+  {
+   "fieldname": "custom_sales_taxes_and_charges",
+   "fieldtype": "Table",
+   "label": "Sales Taxes and Charges",
+   "options": "Sales Taxes and Charges"
+  },
+  {
+   "fieldname": "custom_total_taxes_and_charges_company_currency",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Total Taxes and Charges (Company Currency)",
+   "options": "Company:company:default_currency",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "custom_total_taxes_and_charges",
+   "fieldtype": "Currency",
+   "label": "Total Taxes and Charges",
+   "options": "currency",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-07 15:49:36.562544",
+ "modified": "2026-09-06 17:08:45.408110",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Invoice",
