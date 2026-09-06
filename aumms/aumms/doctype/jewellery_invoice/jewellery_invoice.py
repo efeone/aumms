@@ -368,7 +368,9 @@ def create_sales_order(source_name, sales_taxes_and_charges_template , target_do
 		}, target_doc, set_missing_values)
 	# Carry over the discount entered on the Jewellery Invoice. rounding_adjustment is not a
 	# discount and must not be used as one, or the making charge is given away to the customer.
-	discount_amount = frappe.db.get_value('Jewellery Invoice', source_name, 'discount_amount')
+	#flt keeps a stray string out of the Sales Order, which compares the discount against
+	#the grand total and cannot do that with text
+	discount_amount = flt(frappe.db.get_value('Jewellery Invoice', source_name, 'discount_amount'))
 	if discount_amount:
 		target_doc.apply_discount_on = 'Net Total'
 		target_doc.discount_amount = discount_amount
