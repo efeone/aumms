@@ -4,32 +4,32 @@ from frappe.model.document import Document
 class JewelleryReceipt(Document):
 
 	def autoname(self):
-	    """
-	    Set a unique item code by checking existing AuMMS Items and current item details.
-	    """
-	    existing_item_codes = frappe.get_all("AuMMS Item", pluck="item_code")
+		"""
+		Set a unique item code by checking existing AuMMS Items and current item details.
+		"""
+		existing_item_codes = frappe.get_all("AuMMS Item", pluck="item_code")
 
-	    for idx, item_detail in enumerate(self.get("item_details"), start=1):
+		for idx, item_detail in enumerate(self.get("item_details"), start=1):
 
-	        item_code_parts = [self.item_category, str(item_detail.gold_weight)]
+			item_code_parts = [self.item_category, str(item_detail.gold_weight)]
 
-	        if item_detail.has_stone:
-	            for stone in self.item_wise_stone_details:
-	                if stone.reference == item_detail.idx:
-	                    item_code_parts.append(stone.stone)
+			if item_detail.has_stone:
+				for stone in self.item_wise_stone_details:
+					if stone.reference == item_detail.idx:
+						item_code_parts.append(stone.stone)
 
-	        base_item_code = "-".join(item_code_parts)
+			base_item_code = "-".join(item_code_parts)
 
-	        unique_item_code = base_item_code
-	        counter = 1
+			unique_item_code = base_item_code
+			counter = 1
 
-	        while unique_item_code in existing_item_codes or any(
-	            row.item_code == unique_item_code for row in self.get("item_details") if row != item_detail
-	        ):
-	            counter += 1
-	            unique_item_code = f"{base_item_code}-{counter}"
+			while unique_item_code in existing_item_codes or any(
+				row.item_code == unique_item_code for row in self.get("item_details") if row != item_detail
+			):
+				counter += 1
+				unique_item_code = f"{base_item_code}-{counter}"
 
-	        item_detail.item_code = unique_item_code
+			item_detail.item_code = unique_item_code
 
 	def validate(self):
 		self.validate_date()
@@ -66,7 +66,9 @@ class JewelleryReceipt(Document):
 			aumms_item.gold_weight = item_detail.gold_weight
 			aumms_item.item_category = item_detail.item_category
 			aumms_item.is_purchase_item = 1
+			aumms_item.stock_uom = "Nos"
 			aumms_item.is_sales_item = 1 if item_detail.is_sales_item else 0
+			aumms_item.sales_uom = "Nos" if item_detail.is_sales_item else ""
 
 			if item_detail.hallmarked:
 				aumms_item.hallmarked = 1
@@ -99,6 +101,7 @@ class JewelleryReceipt(Document):
 				'board_rate': self.board_rate or 0,
 				'qty': 1,
 				'uom': "Nos",
+				'stock_uom': "Nos",
 				"weight_per_unit": item_detail.gold_weight,
 				"weight_uom": item_detail.uom,
 				'base_rate': item_detail.amount,

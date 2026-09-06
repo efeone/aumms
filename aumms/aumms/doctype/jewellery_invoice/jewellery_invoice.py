@@ -493,7 +493,6 @@ def backfill_settlement():
 		except Exception:
 			frappe.log_error(title='Jewellery Invoice settlement backfill failed', message=invoice_name)
 	frappe.db.commit()
-	print('Linked {0} Payment Entries and recalculated {1} Jewellery Invoices'.format(linked_count, len(invoice_names)))
 
 def get_sales_reference(doc):
 	'''
@@ -726,7 +725,6 @@ def get_board_rate(old_item, transaction_date):
 	# Fetch the boardrate from the 'Board Rate' doctype
 	board_rate = frappe.db.get_value('Board Rate', {'old_item': old_item, 'valid_from': ('<=', transaction_date)},
 									 'board_rate', order_by='valid_from desc', as_dict=True)
-	print(board_rate)
 
 	return {'board_rate': board_rate}
 

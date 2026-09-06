@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:item_category",
  "creation": "2024-02-16 11:29:28.576791",
@@ -26,7 +27,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-06 10:32:54.453320",
+ "modified": "2026-09-06 20:32:32.348728",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Item Category",
@@ -46,6 +47,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
