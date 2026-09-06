@@ -215,7 +215,7 @@ def get_balance_qty(
 		filters_dict["item_type"] = item_type
 	if party_link:
 		filters_dict["party"] = party_link
-	print("\n", filters_dict, "\n")
+
 	ledgers = frappe.db.get_all(
 		"Metal Ledger Entry",
 		filters=filters_dict,
