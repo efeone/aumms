@@ -185,7 +185,8 @@ doc_events = {
 		'validate': 'aumms.aumms.doc_events.item_price.check_is_purity'
 	},
 	'Payment Entry':{
-		'on_submit': 'aumms.aumms.doc_events.payment_entry.payment_entry_on_submit'
+		'on_submit': 'aumms.aumms.doc_events.payment_entry.payment_entry_on_submit',
+		'on_cancel': 'aumms.aumms.doc_events.payment_entry.payment_entry_on_cancel'
 	},
     'Work Order':{
         'after_insert' : 'aumms.aumms.doc_events.work_order.change_design_analysis_status'
