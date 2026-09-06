@@ -132,6 +132,12 @@ frappe.query_reports['Metal Ledger'] = {
 			'fieldtype': 'Check',
 			'default': 1,
 			'depends_on': 'party'
+		},
+		{
+			'fieldname': 'show_cancelled_entries',
+			'label': __('Show Cancelled Entries'),
+			'fieldtype': 'Check',
+			'default': 0
 		}
 	],
 	'formatter': function (value, row, column, data, default_formatter) {
