@@ -7,13 +7,20 @@ from frappe import _
 
 class BoardRate(Document):
 	def validate(self):
-
 		# check uom is a purity uom
 		if self.uom:
 			uom_is_a_purity_uom(self.uom)
 
 		# check validation over date
 		time_validation_for_boardrate(self.date, self.time, self.item_type, self.purity)
+
+	def before_insert(self):
+		# set title for board_rate
+		self.set_title()
+
+	def set_title(self):
+		# set title for board_rate
+		self.title = self.item_type + '-' + self.purity + '-' + str(self.board_rate)
 
 def uom_is_a_purity_uom(uom):
 	"""
