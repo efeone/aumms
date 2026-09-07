@@ -102,6 +102,7 @@
    "read_only": 1
   },
   {
+   "default": "Today",
    "fieldname": "delivery_date",
    "fieldtype": "Date",
    "label": "Delivery Date"
@@ -488,7 +489,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-09-06 17:08:45.408110",
+ "modified": "2026-09-07 11:54:00.202290",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Invoice",
@@ -532,6 +533,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "status, customer_name",
  "show_name_in_global_search": 1,
  "sort_field": "modified",

@@ -171,9 +171,10 @@ frappe.ui.form.on('Sales Invoice Item', {
 
 let show_metal_ledger = function(frm) {
   //Sits beside the Stock Ledger button, so the metal a voucher moved reads off the invoice.
-  //A cancelled invoice asks for its cancelled entries, which the report otherwise hides, or
-  //the button would open an empty report.
-  if (frm.doc.docstatus > 0 && frm.doc.keep_metal_ledger) {
+  //An invoice that does not update the stock writes no metal ledger of its own, the metal
+  //leaves on the Delivery Note that follows it, so the button would open an empty report.
+  //A cancelled invoice asks for its cancelled entries, which the report otherwise hides.
+  if (frm.doc.docstatus > 0 && frm.doc.keep_metal_ledger && frm.doc.update_stock) {
     frm.add_custom_button(__('Metal Ledger'), function() {
       frappe.route_options = {
         voucher_no: frm.doc.name,

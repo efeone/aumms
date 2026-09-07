@@ -118,6 +118,8 @@ def get_custom_fields():
 		"Sales Invoice Item": get_sales_invoice_item_custom_fields(),
 		"Sales Order": get_sales_order_custom_fields(),
 		"Sales Order Item": get_sales_order_item_custom_fields(),
+		"Delivery Note": get_delivery_note_custom_fields(),
+		"Delivery Note Item": get_delivery_note_item_custom_fields(),
 		"Stock Reconciliation": get_stock_reconciliation_custom_fields(),
 		"Payment Entry": get_payment_entry_custom_fields(),
 	}
@@ -492,6 +494,28 @@ def get_sales_invoice_custom_fields():
 
 def get_sales_invoice_item_custom_fields():
 	''' Custom fields added to Sales Invoice Item '''
+	return [
+		{
+			"fieldname": "board_rate",
+			"label": "Board Rate",
+			"fieldtype": "Data",
+			"insert_after": "amount",
+		},
+	]
+
+def get_delivery_note_custom_fields():
+	''' Custom fields added to Delivery Note '''
+	return [
+		{
+			"fieldname": "keep_metal_ledger",
+			"label": "Keep Metal Ledger",
+			"fieldtype": "Check",
+			"insert_after": "set_posting_time",
+		},
+	]
+
+def get_delivery_note_item_custom_fields():
+	''' Custom fields added to Delivery Note Item '''
 	return [
 		{
 			"fieldname": "board_rate",

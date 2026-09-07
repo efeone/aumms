@@ -774,6 +774,8 @@ def create_delivery_note(source_name, jewellery_invoice, target_doc=None):
 	''' Method to create Delivery Note from Jewellery Invoice with Sales Invoice reference '''
 	def set_missing_values(source, target):
 		target.run_method("set_missing_values")
+		#The metal leaves the shop here, so this is the voucher that keeps the metal ledger
+		target.keep_metal_ledger = 1
 		set_default_warehouse(target)
 		target.run_method("set_po_nos")
 		target.run_method("calculate_taxes_and_totals")

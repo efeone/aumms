@@ -37,6 +37,7 @@ doctype_js = {
 	'Stock Settings': 'public/js/stock_settings.js',
 	'Purchase Order': 'public/js/purchase_order.js',
 	'Sales Order' : 'public/js/sales_order.js',
+	'Delivery Note' : 'public/js/delivery_note.js',
     'Job Card' : 'public/js/job_card.js'
 
 	}
@@ -178,7 +179,11 @@ doc_events = {
 		]
 	},
 	'Delivery Note': {
-		'on_cancel': 'aumms.aumms.doc_events.delivery_note.delivery_note_on_cancel'
+		'on_submit': 'aumms.aumms.utils.create_metal_ledger_entries',
+		'on_cancel': [
+			'aumms.aumms.utils.cancel_metal_ledger_entries',
+			'aumms.aumms.doc_events.delivery_note.delivery_note_on_cancel'
+		]
 	},
 	'Stock Settings' : {
 		'validate': 'aumms.aumms.doc_events.stock_settings.disable_price_list_default'

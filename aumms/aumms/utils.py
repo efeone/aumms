@@ -170,13 +170,32 @@ def repost_metal_ledger_balance(item_type, purity, stock_uom, posting_date=None,
             'Metal Ledger Entry', entry.name, 'balance_qty', balance_qty, update_modified = False
         )
 
+def moves_metal(doc):
+    """
+        method to tell whether this voucher is the one that moves the metal
+        args:
+            doc: object of the purchase receipt, sales invoice or delivery note
+        output: True if the voucher should keep a metal ledger of its own
+
+        The metal ledger follows the stock. A Sales Invoice that does not update the stock
+        is only a bill, the metal leaves on the Delivery Note that follows it, and an entry
+        on both would take the same metal out of the ledger twice.
+    """
+    if not doc.keep_metal_ledger:
+        return False
+
+    if doc.doctype == 'Sales Invoice':
+        return bool(cint(doc.update_stock))
+
+    return True
+
 @frappe.whitelist()
 def create_metal_ledger_entries(doc, method=None):
     """
         method to create metal ledger entries
         args:
-            doc: object of purchase Receipt doctype and Sales Invoice doctype
-            method: on submit of purchase reciept and Sales Invoice
+            doc: object of purchase Receipt, Sales Invoice and Delivery Note doctype
+            method: on submit of purchase reciept, Sales Invoice and Delivery Note
         output:
             new metal ledger entry doc
     """
@@ -200,13 +219,13 @@ def create_metal_ledger_entries(doc, method=None):
         fields['party_type'] = 'Supplier'
         fields['party'] = doc.supplier
 
-    # set party type and party in fields if doctype is Sales Invoice
-    if doc.doctype == 'Sales Invoice':
+    # set party type and party in fields if the metal is going out to a customer
+    if doc.doctype in ('Sales Invoice', 'Delivery Note'):
         fields['party_type'] = 'Customer'
         fields['party'] = doc.customer
 
-    # check items is keep_metal_ledger
-    if doc.keep_metal_ledger:
+    # check this voucher is the one that moves the metal
+    if moves_metal(doc):
         # declare ledger_created as false
         ledger_created = 0
         # series touched by this voucher, reposted once each after the entries are in
@@ -242,7 +261,7 @@ def create_metal_ledger_entries(doc, method=None):
                     fields['balance_qty'] = balance_qty + metal_qty
                     fields['amount'] = -item.amount
 
-                if doc.doctype == 'Sales Invoice':
+                if doc.doctype in ('Sales Invoice', 'Delivery Note'):
                     # update balance_qty
                     fields['incoming_rate'] = item.rate
                     fields['in_qty'] = 0
