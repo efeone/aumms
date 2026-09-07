@@ -172,7 +172,13 @@ doc_events = {
 		'on_submit': [
 			  'aumms.aumms.utils.create_metal_ledger_entries'
 		],
-		'on_cancel': 'aumms.aumms.utils.cancel_metal_ledger_entries'
+		'on_cancel': [
+			'aumms.aumms.utils.cancel_metal_ledger_entries',
+			'aumms.aumms.doc_events.sales_invoice.sales_invoice_on_cancel'
+		]
+	},
+	'Delivery Note': {
+		'on_cancel': 'aumms.aumms.doc_events.delivery_note.delivery_note_on_cancel'
 	},
 	'Stock Settings' : {
 		'validate': 'aumms.aumms.doc_events.stock_settings.disable_price_list_default'

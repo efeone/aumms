@@ -324,6 +324,41 @@ def set_metal_valuation_rate(target):
 			continue
 		frappe.db.set_value('Item', item.item_code, 'valuation_rate', flt(item.amount) / stock_qty)
 
+def get_sold_aumms_items(jewellery_invoice):
+	'''
+		Method to get the AuMMS Items sold on a Jewellery Invoice.
+
+		Only the Items table is read. Old Jewellery Items are bought in from the customer
+		rather than sold, and Stone Details are parts of a piece, not pieces themselves.
+	'''
+	return frappe.get_all('Jewellery Invoice Item', filters={
+		'parent': jewellery_invoice,
+		'parenttype': 'Jewellery Invoice'
+	}, pluck='item_code')
+
+def set_aumms_items_disabled(jewellery_invoice, disabled):
+	'''
+		Method to flag the sold AuMMS Items, so a piece already billed is kept out of the
+		item picker of a new Jewellery Invoice. Each piece is unique and only ever has one.
+
+		frappe.db.set_value is used so that AuMMS Item.on_update does not run. That hook
+		copies disabled on to the Item, which would then refuse the Delivery Note.
+	'''
+	for item_code in get_sold_aumms_items(jewellery_invoice):
+		frappe.db.set_value('AuMMS Item', item_code, 'disabled', cint(disabled))
+
+def set_items_disabled(jewellery_invoice, disabled):
+	'''
+		Method to flag the Items behind the sold AuMMS Items, once the piece has left.
+
+		ERPNext refuses a disabled Item in any selling document, so this waits for the
+		delivery. Until then only the AuMMS Item carries the flag.
+	'''
+	for item_code in get_sold_aumms_items(jewellery_invoice):
+		item = frappe.db.get_value('AuMMS Item', item_code, 'item')
+		if item:
+			frappe.db.set_value('Item', item, 'disabled', cint(disabled))
+
 def create_sales_order(source_name, sales_taxes_and_charges_template , target_doc=None):
 	''' Method to create Sales Order from Jewellery Invoice '''
 	def set_missing_values(source, target):
@@ -715,8 +750,11 @@ def create_sales_invoice(source_name, jewellery_invoice, sales_taxes_and_charges
 	doclist.submit()
 	if doclist:
 		frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'sales_invoice', doclist.name)
+		set_aumms_items_disabled(jewellery_invoice, 1)
 		if update_stock:
 			frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'delivered', 1)
+			#The piece leaves with the invoice, no Delivery Note is going to follow
+			set_items_disabled(jewellery_invoice, 1)
 		#Let the settlement set the status, so an amount still owed to the customer is not hidden
 		recalculate_settlement(jewellery_invoice)
 		frappe.msgprint(('Sales Invoice created'), indicator="green", alert=1)
@@ -782,6 +820,7 @@ def create_delivery_note(source_name, jewellery_invoice, target_doc=None):
 	if doclist:
 		frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'delivery_note', doclist.name)
 		frappe.db.set_value('Jewellery Invoice', jewellery_invoice, 'delivered', 1)
+		set_items_disabled(jewellery_invoice, 1)
 		#Let the settlement set the status, so an amount still owed to the customer is not hidden
 		recalculate_settlement(jewellery_invoice)
 		frappe.msgprint(('Delivery Note created'), indicator="green", alert=1)

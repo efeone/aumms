@@ -1,5 +1,19 @@
 import frappe
+from aumms.aumms.doctype.jewellery_invoice.jewellery_invoice import set_aumms_items_disabled, set_items_disabled
 from aumms.aumms.utils import *
+
+def sales_invoice_on_cancel(doc, method=None):
+    '''
+        Method to put a sold jewellery piece back on sale when the sale is cancelled.
+
+        Hooked on the Sales Invoice rather than on the Jewellery Invoice, so cancelling
+        the invoice on its own works the same way as cancelling it through the
+        Jewellery Invoice.
+    '''
+    jewellery_invoice = frappe.db.get_value('Jewellery Invoice', {'sales_invoice': doc.name}, 'name')
+    if jewellery_invoice:
+        set_aumms_items_disabled(jewellery_invoice, 0)
+        set_items_disabled(jewellery_invoice, 0)
 
 @frappe.whitelist()
 def get_item_details(item_code, item_type, date, time, purity, stock_uom):
