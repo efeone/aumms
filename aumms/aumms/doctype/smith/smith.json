@@ -112,19 +112,18 @@
    "label": "Is Head of smith"
   },
   {
-   "fetch_from": "employee.user_id",
+   "fetch_from": "employee.prefered_email",
+   "fetch_if_empty": 1,
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Email",
    "mandatory_depends_on": "eval:doc.is_head_of_smith",
-   "read_only": 1,
-   "reqd": 1,
    "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-27 11:41:48.505165",
+ "modified": "2026-09-07 12:25:48.720418",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Smith",
@@ -168,6 +167,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

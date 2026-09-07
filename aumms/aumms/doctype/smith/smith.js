@@ -4,6 +4,7 @@
 frappe.ui.form.on('Smith', {
 	refresh:function(frm) {
 		set_head_of_smith_filter_query(frm)
+		set_smith_reference_filter_query(frm)
 	},
 	smith_type: function(frm) {
 		reset_smith_fields(frm)
@@ -64,7 +65,8 @@ function set_smith_reference_filter_query(frm) {
 	}
 	frm.set_query(fieldname, () => {
 		return {
-			query: 'aumms.aumms.doctype.smith.smith.smith_reference_filter_query'
+			query: 'aumms.aumms.doctype.smith.smith.smith_reference_filter_query',
+			filters: { current_smith: frm.doc.name }
 		}
 	})
 }
