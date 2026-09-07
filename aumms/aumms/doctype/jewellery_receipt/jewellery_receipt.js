@@ -26,6 +26,7 @@ frappe.ui.form.on("Jewellery Receipt", {
       };
     });
     set_sub_category_filter(frm);
+    hide_item_details_add_row(frm);
   },
   onload: function (frm) {
     frm.fields_dict["item_wise_stone_details"].grid.cannot_add_rows = true;
@@ -479,3 +480,10 @@ function update_stone_weight_and_charge(frm) {
   });
   frm.refresh_field("item_details");
 }
+
+//Item rows are generated from the receipt quantity, they are never keyed in by hand
+let hide_item_details_add_row = function (frm) {
+  let grid = frm.get_field("item_details").grid;
+  grid.cannot_add_rows = true;
+  grid.refresh();
+};

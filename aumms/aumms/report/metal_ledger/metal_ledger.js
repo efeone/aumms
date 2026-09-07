@@ -4,16 +4,20 @@
 
 frappe.query_reports['Metal Ledger'] = {
 	onload () {
-		// fetch metal ledger uom from aumms setting and set to uom
-		frappe.db.get_single_value('Aumms Settings', 'metal_ledger_uom')
-		.then(uom => {
-			frappe.query_report.set_filter_value('uom', uom)
-		})
-		// fetch metal ledger purity from aumms setting and set to purity
-		frappe.db.get_single_value('Aumms Settings', 'metal_ledger_purity')
-		.then(purity => {
-			frappe.query_report.set_filter_value('purity', purity)
-		})
+		// A route that opens the report already says which series it wants to see, so the
+		// settings only fill in the ones it left alone.
+		if (!frappe.query_report.get_filter_value('uom')) {
+			frappe.db.get_single_value('AuMMS Settings', 'metal_ledger_uom')
+			.then(uom => {
+				frappe.query_report.set_filter_value('uom', uom)
+			})
+		}
+		if (!frappe.query_report.get_filter_value('purity')) {
+			frappe.db.get_single_value('AuMMS Settings', 'metal_ledger_purity')
+			.then(purity => {
+				frappe.query_report.set_filter_value('purity', purity)
+			})
+		}
 		frappe.query_report.refresh();
 	},
 	'filters': [
@@ -115,7 +119,7 @@ frappe.query_reports['Metal Ledger'] = {
 			'get_query': function() {
 				return {
 					'filters': {
-						'name': ['in',['Supplier', 'Customer']]
+						'name': ['in',['Supplier', 'Customer', 'Smith']]
 					}
 				}
 			}
@@ -131,7 +135,8 @@ frappe.query_reports['Metal Ledger'] = {
 			'label': __('Common Party Account'),
 			'fieldtype': 'Check',
 			'default': 1,
-			'depends_on': 'party'
+			//Only a Customer or a Supplier keeps an account that a common party can span
+			'depends_on': 'eval:doc.party && ["Customer", "Supplier"].includes(doc.party_type)'
 		},
 		{
 			'fieldname': 'show_cancelled_entries',

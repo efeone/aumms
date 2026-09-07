@@ -25,11 +25,13 @@
  ],
  "fields": [
   {
+   "default": "Internal",
    "fieldname": "smith_type",
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Smith Type",
    "options": "\nInternal\nExternal",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -123,7 +125,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-09-07 12:25:48.720418",
+ "modified": "2026-09-07 13:26:52.219525",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Smith",

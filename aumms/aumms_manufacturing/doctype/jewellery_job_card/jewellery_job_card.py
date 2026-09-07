@@ -10,8 +10,8 @@ class JewelleryJobCard(Document):
 
     def on_submit(self):
         self.mark_as_completed(completed=1)
-        self.create_metal_ledger()
-        self.create_stock_ledger()
+        # self.create_metal_ledger()
+        # self.create_stock_ledger()
         self.update_product()
         self.create_item()
         self.update_item_name()
@@ -99,9 +99,11 @@ class JewelleryJobCard(Document):
             new_item.item_type = self.type
             new_item.item_group = item_group
             new_item.stock_uom = self.uom
+            new_item.weight_uom = self.weight_uom
             new_item.item_category = self.category
             new_item.purity = self.purity
-            new_item.gold_weight = self.expected_weight
+            new_item.gold_weight = self.product_weight
+            new_item.weight_per_unit = self.product_weight
             new_item.is_stock_item = True
             new_item.item_code = f"{self.purity} {self.type} {self.category} {self.product_weight} {self.stage}"
             frappe.db.set_value('Manufacturing Request', self.manufacturing_request, 'product', new_item.item_code)
@@ -119,7 +121,7 @@ class JewelleryJobCard(Document):
         if self.is_last_stage:
             item_code = frappe.db.get_value('Manufacturing Request', self.manufacturing_request, 'product')
             if item_code:
-                new_name = f"{self.purity} {self.type} {self.category} {self.product_weight} {self.stage}"
+                new_name = f"{self.purity} {self.type} {self.category} {self.product_weight}"
                 aumms_item = frappe.db.get_value('AuMMS Item', {'item_code': item_code}, 'name')
                 if aumms_item:
                     frappe.rename_doc('AuMMS Item', aumms_item, new_name, force=True)
@@ -133,4 +135,4 @@ class JewelleryJobCard(Document):
                 item_doc.item_code = new_name
                 item_doc.save(ignore_permissions=True)
                 frappe.db.set_value('Manufacturing Request', self.manufacturing_request, 'product', new_name)
-                frappe.msgprint("Item Renamed.", indicator="green", alert=1)
+                frappe.msgprint(f"Item Renamed as {new_name}.", indicator="green", alert=1)

@@ -1,0 +1,273 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SMS-.#####",
+ "creation": "2026-09-07 20:30:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "smith",
+  "smith_type",
+  "manufacturing_request",
+  "column_break_head",
+  "posting_date",
+  "posting_time",
+  "company",
+  "settlement_section",
+  "mode_of_settlement",
+  "payable_amount",
+  "column_break_settle",
+  "hours_worked",
+  "hourly_rate",
+  "gold_section",
+  "item",
+  "item_type",
+  "purity",
+  "stock_uom",
+  "column_break_gold",
+  "board_rate",
+  "weight",
+  "source_warehouse",
+  "cash_section",
+  "mode_of_payment",
+  "reference_no",
+  "column_break_cash",
+  "reference_date",
+  "posted_section",
+  "payment_entry",
+  "stock_entry",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "smith",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Smith",
+   "options": "Smith",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "smith.smith_type",
+   "fieldname": "smith_type",
+   "fieldtype": "Data",
+   "label": "Smith Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "manufacturing_request",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Manufacturing Request",
+   "options": "Manufacturing Request"
+  },
+  {
+   "fieldname": "column_break_head",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "hidden": 1,
+   "label": "Posting Time",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "settlement_section",
+   "fieldtype": "Section Break",
+   "label": "Settlement"
+  },
+  {
+   "fieldname": "mode_of_settlement",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Mode of Settlement",
+   "options": "Cash\nGold",
+   "reqd": 1
+  },
+  {
+   "description": "Suggested from the hours worked, edit it to the charge actually agreed.",
+   "fieldname": "payable_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Payable Amount",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_settle",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hours_worked",
+   "fieldtype": "Float",
+   "label": "Hours Worked",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "smith.hourly_rate",
+   "fieldname": "hourly_rate",
+   "fieldtype": "Currency",
+   "label": "Hourly Rate",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.mode_of_settlement == 'Gold'",
+   "fieldname": "gold_section",
+   "fieldtype": "Section Break",
+   "label": "Gold"
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "label": "Item",
+   "mandatory_depends_on": "eval:doc.mode_of_settlement == 'Gold'",
+   "options": "Item"
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Link",
+   "label": "Item Type",
+   "options": "Item Type"
+  },
+  {
+   "fieldname": "purity",
+   "fieldtype": "Link",
+   "label": "Purity",
+   "options": "Purity"
+  },
+  {
+   "fieldname": "stock_uom",
+   "fieldtype": "Link",
+   "label": "Weight UOM",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "column_break_gold",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "board_rate",
+   "fieldtype": "Currency",
+   "label": "Board Rate",
+   "read_only": 1
+  },
+  {
+   "description": "Payable amount converted at the board rate of the posting date.",
+   "fieldname": "weight",
+   "fieldtype": "Float",
+   "label": "Weight",
+   "precision": "3",
+   "read_only": 1
+  },
+  {
+   "fieldname": "source_warehouse",
+   "fieldtype": "Link",
+   "label": "Source Warehouse",
+   "mandatory_depends_on": "eval:doc.mode_of_settlement == 'Gold'",
+   "options": "Warehouse"
+  },
+  {
+   "depends_on": "eval:doc.mode_of_settlement == 'Cash'",
+   "fieldname": "cash_section",
+   "fieldtype": "Section Break",
+   "label": "Cash"
+  },
+  {
+   "fieldname": "mode_of_payment",
+   "fieldtype": "Link",
+   "label": "Mode of Payment",
+   "mandatory_depends_on": "eval:doc.mode_of_settlement == 'Cash'",
+   "options": "Mode of Payment"
+  },
+  {
+   "fieldname": "reference_no",
+   "fieldtype": "Data",
+   "label": "Reference No"
+  },
+  {
+   "fieldname": "column_break_cash",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reference_date",
+   "fieldtype": "Date",
+   "label": "Reference Date"
+  },
+  {
+   "fieldname": "posted_section",
+   "fieldtype": "Section Break",
+   "label": "Posted Documents"
+  },
+  {
+   "fieldname": "payment_entry",
+   "fieldtype": "Link",
+   "label": "Payment Entry",
+   "no_copy": 1,
+   "options": "Payment Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_entry",
+   "fieldtype": "Link",
+   "label": "Stock Entry",
+   "no_copy": 1,
+   "options": "Stock Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Smith Settlement",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-09-07 20:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "AuMMS Manufacturing",
+ "name": "Smith Settlement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "smith"
+}

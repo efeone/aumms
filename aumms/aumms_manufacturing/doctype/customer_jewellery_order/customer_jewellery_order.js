@@ -1,4 +1,11 @@
 frappe.ui.form.on("Customer Jewellery Order", {
+  onload: function(frm){
+    /* Remembered for rows added from here on. Saved rows are left untouched, or the
+       form would go dirty on every reload; validate backfills those on the server. */
+    frappe.db.get_single_value('AuMMS Settings', 'purity_uom').then(purity_uom => {
+      frm.__purity_uom = purity_uom;
+    });
+  },
   refresh: function(frm){
     frm.set_query('stock_uom','order_items',() => {
       return {
@@ -23,6 +30,7 @@ frappe.ui.form.on("Customer Jewellery Order", {
         frappe.model.set_value(item.doctype, item.name, 'purity', frm.doc.purity);
         frappe.model.set_value(item.doctype, item.name, 'making_chargein_percentage', frm.doc.making_chargein_percentage);
         frappe.model.set_value(item.doctype, item.name, 'item_type', frm.doc.type);
+        frappe.model.set_value(item.doctype, item.name, 'weight_uom', frm.__purity_uom);
       });
     }
     frm.refresh_fields();
@@ -63,6 +71,10 @@ frappe.ui.form.on("Customer Jewellery Order Detail", {
   },
   order_items_add : function(frm, cdt, cdn){
     frm.events.update_order_item_table(frm);
+    //The weight uom is the purity uom the business weighs its metal in
+    if(frm.__purity_uom){
+      frappe.model.set_value(cdt, cdn, 'weight_uom', frm.__purity_uom);
+    }
   },
   amount: function(frm, cdt, cdn){
     calculate_totals(frm);

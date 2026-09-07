@@ -2,12 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Jewellery Order", {
-  setup: function(frm) {
-    update_available_item_quantity(frm);
-  },
-
   refresh: function(frm) {
-    let total_qty = 0;
     frm.set_query('uom', () => {
       return {
         filters: {
@@ -23,16 +18,11 @@ frappe.ui.form.on("Jewellery Order", {
         }
       }
     });
-    if (!frm.doc.weight_of_available_item)
-    {
-      frm.toggle_display("weight_of_available_item", false);
-    }
-    if (!frm.doc.available_item_quantity)
-    {
-      frm.toggle_display("available_item_quantity", false);
-    }
+    /* The totals are worked out on validate, so refresh only shows what is stored.
+       Writing them here would dirty the form on every reload. */
+    toggle_available_item_fields(frm);
+    update_intro(frm);
 		limit_item_details(frm)
-    calculate_weight(frm)
   },
   quantity: function(frm) {
     limit_item_details(frm)
@@ -105,8 +95,14 @@ function update_available_item_quantity(frm) {
 			return row.is_available == 1;
 		}).length;
 	}
-    frm.set_df_property('available_item_quantity', 'hidden', total_qty === 0);
     frm.set_value('available_item_quantity', total_qty);
+    toggle_available_item_fields(frm);
+}
+
+//Neither total is worth a slot on the form until an item is actually in stock
+function toggle_available_item_fields(frm) {
+    frm.toggle_display("weight_of_available_item", !!frm.doc.weight_of_available_item);
+    frm.toggle_display("available_item_quantity", !!frm.doc.available_item_quantity);
 }
 
 function limit_item_details(frm) {

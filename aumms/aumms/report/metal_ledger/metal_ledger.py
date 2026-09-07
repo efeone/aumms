@@ -165,8 +165,9 @@ def get_filters(filters):
 		conditions["party_type"] = filters.party_type
 	if filters.party:
 
-		# to show common party accounts
-		if filters.common_party:
+		# to show common party accounts, which only a Customer or a Supplier can hold. A
+		# smith takes metal without an account of their own, so it is matched by name.
+		if filters.common_party and filters.party_type in ("Customer", "Supplier"):
 
 			# get party link of this party
 			party_link = get_party_link_if_exist(filters.party_type, filters.party)

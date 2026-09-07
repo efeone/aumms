@@ -1,4 +1,5 @@
 [pre_model_sync]
+aumms.patches.v1_0.set_weight_of_available_item_to_zero
 
 [post_model_sync]
 aumms.patches.v1_0.disable_invoiced_aumms_items

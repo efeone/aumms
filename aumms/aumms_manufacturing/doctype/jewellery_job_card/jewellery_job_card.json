@@ -12,6 +12,7 @@
   "column_break_kvpp",
   "stage",
   "status",
+  "required_date",
   "details_section",
   "type",
   "category",
@@ -29,7 +30,7 @@
   "keep_metal_ledger",
   "column_break_ojtc",
   "uom",
-  "required_date",
+  "weight_uom",
   "expected_execution_time",
   "raw_material_from_previous_stage_only",
   "section_break_qjuc",
@@ -137,7 +138,7 @@
    "fieldname": "expected_weight",
    "fieldtype": "Float",
    "label": "Expected Weight",
-   "precision": "1"
+   "precision": "3"
   },
   {
    "fieldname": "purity",
@@ -157,8 +158,7 @@
    "fieldname": "smith",
    "fieldtype": "Link",
    "label": "Smith",
-   "options": "Employee",
-   "reqd": 1
+   "options": "Smith"
   },
   {
    "default": "0",
@@ -226,6 +226,7 @@
    "options": "Warehouse"
   },
   {
+   "fetch_from": "smith.warehouse",
    "fieldname": "smith_warehouse",
    "fieldtype": "Link",
    "label": "Smith Warehouse",
@@ -245,7 +246,7 @@
    "fieldname": "weight",
    "fieldtype": "Float",
    "label": "Weight",
-   "precision": "1"
+   "precision": "3"
   },
   {
    "fieldname": "scrap_item_details_tab",
@@ -301,18 +302,24 @@
    "fieldname": "product_weight",
    "fieldtype": "Float",
    "label": "Product Weight",
-   "precision": "1",
+   "precision": "3",
    "reqd": 1
   },
   {
    "fieldname": "product_details_section",
    "fieldtype": "Section Break",
    "label": "Product Details"
+  },
+  {
+   "fieldname": "weight_uom",
+   "fieldtype": "Link",
+   "label": "Weight UOM",
+   "options": "UOM"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-05-22 15:25:54.758031",
+ "modified": "2026-09-07 21:42:14.185440",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Jewellery Job Card",
@@ -332,6 +339,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

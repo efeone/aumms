@@ -91,7 +91,7 @@
    "in_list_view": 1,
    "label": "Smith",
    "mandatory_depends_on": "eval:doc.raw_material_available == 1",
-   "options": "Employee"
+   "options": "Smith"
   },
   {
    "depends_on": "eval:(doc.is_raw_material_from_previous_stage_only ==0 && doc.raw_material_bundle_created == 0)",
@@ -144,7 +144,7 @@
   },
   {
    "default": "All Smith Warehouse",
-   "fetch_from": "smith.custom_warehouse",
+   "fetch_from": "smith.warehouse",
    "fieldname": "smith_warehouse",
    "fieldtype": "Link",
    "label": "Smith Warehouse",
@@ -191,13 +191,14 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-22 15:05:03.943903",
+ "modified": "2026-09-07 16:46:15.341262",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request Stage",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

@@ -15,6 +15,7 @@
   "section_break_eqq9",
   "type",
   "uom",
+  "weight_uom",
   "category",
   "column_break_23a2",
   "purity",
@@ -131,10 +132,10 @@
   },
   {
    "depends_on": "eval:doc.order_from == 'Customer Jewellery Order'",
-   "fetch_from": ".expected_total_weight",
    "fieldname": "weight_of_available_item",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "Weight of Available Item",
+   "precision": "2",
    "read_only": 1
   },
   {
@@ -170,7 +171,7 @@
   {
    "fieldname": "uom",
    "fieldtype": "Link",
-   "label": "UOM",
+   "label": "Stock UOM",
    "options": "UOM"
   },
   {
@@ -194,6 +195,12 @@
    "fieldtype": "Float",
    "hidden": 1,
    "label": "Total Weight"
+  },
+  {
+   "fieldname": "weight_uom",
+   "fieldtype": "Link",
+   "label": "Weight UOM",
+   "options": "UOM"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -208,11 +215,11 @@
    "link_fieldname": "jewellery_order"
   }
  ],
- "modified": "2024-04-16 12:35:41.958864",
+ "modified": "2026-09-07 19:15:00.000000",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Jewellery Order",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
@@ -229,6 +236,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
