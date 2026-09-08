@@ -63,9 +63,14 @@ class JewelleryJobCard(Document):
 			new_item.item_type = self.type
 			new_item.item_group = item_group
 			new_item.stock_uom = self.uom
-			new_item.weight_uom = self.weight_uom
+			# a piece is raised to be sold, and is sold by the weight it is stocked in, so
+			# the selling unit needs no conversion of its own
+			new_item.weight_uom = self.weight_uom or self.uom
+			new_item.is_sales_item = True
+			new_item.sales_uom = self.uom
 			new_item.item_category = self.category
 			new_item.purity = self.purity
+			self.set_making_charge(new_item)
 			new_item.gold_weight = self.product_weight
 			new_item.weight_per_unit = self.product_weight
 			new_item.is_stock_item = True
@@ -80,6 +85,39 @@ class JewelleryJobCard(Document):
 			new_item.save(ignore_permissions=True)
 			frappe.db.set_value('Jewellery Job Card', self.name, 'product', new_item.item_name)
 			frappe.msgprint("Item Created.", indicator="green", alert=1)
+
+	def set_making_charge(self, new_item):
+		"""
+			method to put the making charge the customer agreed to on the piece
+			args:
+				new_item: the AuMMS Item document being raised for the piece
+
+			The charge is settled with the customer when the order is taken, and the piece is
+			billed on what the item carries, so the two are the same charge. A piece made for
+			stock is charged for by the shop and is left to be priced on its own.
+		"""
+		making_charge_percentage = self.get_making_charge_percentage()
+		if not making_charge_percentage:
+			return
+
+		new_item.making_charge_based_on = 'Percentage'
+		new_item.making_charge_percentage = making_charge_percentage
+
+	def get_making_charge_percentage(self):
+		"""
+			method to get the making charge the customer was quoted
+			output: the percentage on the Customer Jewellery Order, else None
+		"""
+		if not frappe.db.exists('Manufacturing Request', self.manufacturing_request):
+			return None
+
+		manufacturing_request = frappe.get_doc('Manufacturing Request', self.manufacturing_request)
+		customer_jewellery_order = manufacturing_request.get_customer_jewellery_order()
+		if not customer_jewellery_order:
+			return None
+		return frappe.db.get_value(
+			'Customer Jewellery Order', customer_jewellery_order, 'making_chargein_percentage'
+		)
 
 	def update_item_name(self):
 		if self.is_last_stage:

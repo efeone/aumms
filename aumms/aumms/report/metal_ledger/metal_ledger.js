@@ -129,7 +129,12 @@ frappe.query_reports['Metal Ledger'] = {
 			'fieldname': 'party',
 			'label': __('Party'),
 			'fieldtype': 'Dynamic Link',
-			'options': 'party_type'
+			'options': 'party_type',
+			/* A Dynamic Link left to itself reads its doctype off the form that is open, which
+			   is the form the report was routed from, so the filter is told to read the one beside it. */
+			'get_options': function() {
+				return frappe.query_report.get_filter_value('party_type')
+			}
 		},
 		{
 			'fieldname': 'common_party',

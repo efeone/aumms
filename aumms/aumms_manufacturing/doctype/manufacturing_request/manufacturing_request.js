@@ -24,8 +24,32 @@ frappe.ui.form.on("Manufacturing Request", {
 			frm.toggle_display("weight",false);
 		}
 		add_smith_buttons(frm);
+		add_invoice_button(frm);
 	},
 });
+
+/* A piece made for a Jewellery Order is billed to the customer who ordered it, and only
+   once it is bought back from the smith and the store has something to sell. */
+function add_invoice_button(frm) {
+	if (frm.doc.docstatus !== 1 || !frm.doc.jewellery_order || !frm.doc.buy_back_stock_entry) {
+		return;
+	}
+
+	if (frm.doc.jewellery_invoice) {
+		frm.add_custom_button(__('Jewellery Invoice'), () => {
+			frappe.set_route('Form', 'Jewellery Invoice', frm.doc.jewellery_invoice);
+		}, __('View'));
+		return;
+	}
+
+	frm.add_custom_button(__('Jewellery Invoice'), () => {
+		frm.call('create_jewellery_invoice').then(r => {
+			if (r.message) {
+				frappe.set_route('Form', 'Jewellery Invoice', r.message);
+			}
+		});
+	}, __('Create'));
+}
 
 /* Everything here needs a submitted request and the smith who finished the piece, so the
    buttons only stand once the last stage has one. */
@@ -51,13 +75,7 @@ function add_smith_buttons(frm) {
 		}, __('Create'));
 	}
 
-	frm.add_custom_button(__('Settle Smith Payment'), () => {
-		frappe.new_doc('Smith Settlement', {
-			'smith': last_stage.smith,
-			'manufacturing_request': frm.doc.name,
-			'company': frm.doc.company
-		});
-	}, __('Create'));
+	add_settlement_button(frm, last_stage);
 
 	frm.add_custom_button(__("Smith's Metal Ledger"), () => {
 		frappe.set_route('query-report', 'Metal Ledger', {
@@ -80,6 +98,30 @@ function add_smith_buttons(frm) {
 			frappe.set_route('Form', 'Stock Entry', frm.doc.buy_back_stock_entry);
 		}, __('View'));
 	}
+}
+
+/* A request is settled with its smith once, so the button that raises the settlement stands
+   only until one exists, draft or submitted, and gives way to a link to the one that does. */
+function add_settlement_button(frm, last_stage) {
+	frappe.db.get_value('Smith Settlement', {
+		'manufacturing_request': frm.doc.name,
+		'docstatus': ['<', 2]
+	}, 'name').then(r => {
+		let settlement = r.message && r.message.name;
+		if (settlement) {
+			frm.add_custom_button(__('Smith Settlement'), () => {
+				frappe.set_route('Form', 'Smith Settlement', settlement);
+			}, __('View'));
+			return;
+		}
+		frm.add_custom_button(__('Settle Smith Payment'), () => {
+			frappe.new_doc('Smith Settlement', {
+				'smith': last_stage.smith,
+				'manufacturing_request': frm.doc.name,
+				'company': frm.doc.company
+			});
+		}, __('Create'));
+	});
 }
 
 /* Connections are there to reach the documents a request already has, not to raise new ones.

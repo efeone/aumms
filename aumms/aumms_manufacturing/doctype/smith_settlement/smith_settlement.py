@@ -18,6 +18,7 @@ from aumms.aumms.utils import (
 
 class SmithSettlement(Document):
 	def validate(self):
+		self.validate_duplicate()
 		self.set_company()
 		self.set_posting_time()
 		self.set_gold_weight()
@@ -32,6 +33,30 @@ class SmithSettlement(Document):
 		self.cancel_payment_entry()
 		self.cancel_stock_entry()
 		cancel_metal_ledger_entries(self)
+
+	def validate_duplicate(self):
+		"""
+			method to keep a request to a single settlement
+
+			The button that raises a settlement is taken away once the request has one, so a
+			second settlement is a request settled twice rather than a request settled again.
+		"""
+		if not self.manufacturing_request:
+			return
+
+		duplicate = frappe.db.exists('Smith Settlement', {
+			'manufacturing_request': self.manufacturing_request,
+			'docstatus': ['<', 2],
+			'name': ['!=', self.name]
+		})
+		if duplicate:
+			frappe.throw(
+				_('{0} is already settled by {1}.').format(
+					frappe.bold(self.manufacturing_request),
+					get_link_to_form('Smith Settlement', duplicate)
+				),
+				title = _('Already Settled')
+			)
 
 	def set_company(self):
 		if not self.company:

@@ -247,6 +247,8 @@ class RawMaterialBundle(Document):
 						frappe.db.set_value('Manufacturing Request Stage', stage.name, 'raw_material_bundle_created', created)
 						frappe.db.set_value('Manufacturing Request Stage', stage.name, 'raw_material_available', created)
 						break
+				# the metal going out to the smith is the first sign of the piece being made
+				manufacturing_request.set_status()
 
 
 @frappe.whitelist()

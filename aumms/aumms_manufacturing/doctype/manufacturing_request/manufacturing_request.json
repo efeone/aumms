@@ -8,6 +8,7 @@
  "field_order": [
   "connections_tab",
   "title",
+  "status",
   "request_from",
   "raw_material_request",
   "jewellery_order_item",
@@ -38,6 +39,7 @@
   "manufacture_section",
   "manufacture_stock_entry",
   "buy_back_stock_entry",
+  "jewellery_invoice",
   "column_break_mfg",
   "posting_date",
   "posting_time",
@@ -180,13 +182,25 @@
   {
    "fieldname": "connections_tab",
    "fieldtype": "Tab Break",
-   "label": "Details"
+   "label": "Details",
+   "show_dashboard": 1
   },
   {
    "fieldname": "title",
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Title"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Status",
+   "no_copy": 1,
+   "options": "Pending\nManufacturing\nManufactured\nCompleted\nCancelled",
+   "read_only": 1
   },
   {
    "fieldname": "request_from",
@@ -256,6 +270,14 @@
    "read_only": 1
   },
   {
+   "fieldname": "jewellery_invoice",
+   "fieldtype": "Link",
+   "label": "Jewellery Invoice",
+   "no_copy": 1,
+   "options": "Jewellery Invoice",
+   "read_only": 1
+  },
+  {
    "fieldname": "column_break_mfg",
    "fieldtype": "Column Break"
   },
@@ -291,7 +313,7 @@
    "link_fieldname": "manufacturing_request"
   }
  ],
- "modified": "2026-09-08 11:23:38.590388",
+ "modified": "2026-09-08 13:10:23.544635",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request",

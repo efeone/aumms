@@ -80,6 +80,20 @@ class JewelleryInvoice(Document):
 		self.cancel_sales_order()
 		self.cancel_purchase_invoice()
 		self.cancel_purchase_receipt()
+		self.update_manufacturing_request_status()
+
+	def update_manufacturing_request_status(self):
+		'''
+			Method to take the request that made the piece back off Completed
+
+			A Manufacturing Request is Completed once it is billed, and cancelling the bill
+			leaves the piece made and unsold again.
+		'''
+		manufacturing_request = frappe.db.get_value(
+			'Manufacturing Request', {'jewellery_invoice': self.name}, 'name'
+		)
+		if manufacturing_request:
+			frappe.get_doc('Manufacturing Request', manufacturing_request).set_status()
 
 	def set_item_amounts(self):
 		'''

@@ -4,11 +4,12 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.desk.form.assign_to import add as add_assignment
-from frappe.utils import flt, get_link_to_form, time_diff_in_hours
+from frappe.utils import flt, get_link_to_form, nowdate, time_diff_in_hours
 
 from aumms.aumms.utils import (
 	cancel_metal_ledger_entries,
 	create_notification_log,
+	get_board_rate,
 	get_metal_balance_qty,
 	repost_metal_ledger_balance,
 )
@@ -24,6 +25,10 @@ class ManufacturingRequest(Document):
 	def before_insert(self):
 		self.update_manufacturing_stages()
 
+	def validate(self):
+		# the document is not written yet, so the status is set on it rather than db_set
+		self.status = self.get_status()
+
 	def before_submit(self):
 		self.send_notification_to_owner()
 
@@ -34,11 +39,31 @@ class ManufacturingRequest(Document):
 		self.mark_as_finished_in_jewellery_order()
 		self.manufacturing_request_finished(finished = 1)
 		self.manufacture_finished_good()
+		self.set_status()
 
 	def on_cancel(self):
+		self.validate_jewellery_invoice()
 		self.manufacturing_request_finished(finished = 0)
 		self.cancel_stock_entries()
 		cancel_metal_ledger_entries(self)
+		self.set_status()
+
+	def validate_jewellery_invoice(self):
+		"""
+			method to stop a request being cancelled under a standing invoice
+
+			Cancelling takes the finished piece back out of the store, which is the stock the
+			invoice sells, so the invoice is cancelled first.
+		"""
+		if not self.jewellery_invoice:
+			return
+
+		if frappe.db.get_value('Jewellery Invoice', self.jewellery_invoice, 'docstatus') == 1:
+			frappe.throw(
+				_('Cancel {0} before this request is cancelled.').format(
+					get_link_to_form('Jewellery Invoice', self.jewellery_invoice)
+				)
+			)
 
 	def get_last_stage(self):
 		"""
@@ -217,6 +242,159 @@ class ManufacturingRequest(Document):
 		)
 		return stock_entry.name
 
+	def get_customer_jewellery_order(self):
+		"""
+			method to get the order the customer placed for the piece
+			output: name of the Customer Jewellery Order, else None
+
+			Only a request raised for a Jewellery Order is made against an order of someone's,
+			one raised for a Raw Material Request being made for stock. That order is placed
+			on a Customer Jewellery Order, which is what the customer agreed to.
+		"""
+		if not self.jewellery_order:
+			return None
+		return frappe.db.get_value(
+			'Jewellery Order', self.jewellery_order, 'customer_jewellery_order'
+		)
+
+	def get_customer(self):
+		"""
+			method to get the customer the piece is made for
+			output: name of the Customer, else None
+		"""
+		customer_jewellery_order = self.get_customer_jewellery_order()
+		if not customer_jewellery_order:
+			return None
+		return frappe.db.get_value('Customer Jewellery Order', customer_jewellery_order, 'customer')
+
+	@frappe.whitelist()
+	def create_jewellery_invoice(self):
+		"""
+			method to bill the customer for the piece this request made
+			output: name of the Jewellery Invoice
+
+			The invoice is left in draft. Submitting it raises the Sales Order and the rest
+			of the sales chain, and the making charge, the discount and the taxes are the
+			shop's to settle with the customer before that.
+		"""
+		if self.jewellery_invoice and frappe.db.get_value('Jewellery Invoice', self.jewellery_invoice, 'docstatus') != 2:
+			frappe.throw(
+				_('{0} is already invoiced by {1}.').format(
+					frappe.bold(self.name), get_link_to_form('Jewellery Invoice', self.jewellery_invoice)
+				)
+			)
+		if not self.buy_back_stock_entry:
+			frappe.throw(_('Buy the finished goods back from the smith before they are invoiced.'))
+
+		customer = self.get_customer()
+		if not customer:
+			frappe.throw(
+				_('No customer behind {0}. Only a request made for a Jewellery Order is invoiced from here.').format(
+					frappe.bold(self.name)
+				)
+			)
+
+		aumms_item = frappe.get_doc('AuMMS Item', self.product)
+		self.validate_invoice_item(aumms_item)
+
+		invoice = frappe.new_doc('Jewellery Invoice')
+		invoice.customer = customer
+		invoice.company = frappe.defaults.get_defaults().company
+		invoice.transaction_type = 'Sales'
+		invoice.transaction_date = nowdate()
+		invoice.delivery_date = nowdate()
+		# the form fills the default template in on a new invoice, and the taxes are worked
+		# out from it when the invoice validates
+		invoice.sales_taxes_and_charges_template = frappe.db.get_value(
+			'Sales Taxes and Charges Template',
+			{'company': invoice.company, 'is_default': 1, 'disabled': 0},
+			'name'
+		)
+		# an invoice row is priced by the weight of a single piece, so a request that made
+		# more than one is billed a row for each of them
+		item_row = self.get_jewellery_invoice_item(aumms_item, nowdate())
+		for piece in range(self.quantity or 1):
+			invoice.append('items', item_row)
+		for stone in aumms_item.stone_details:
+			invoice.append('stone_details', {
+				'item_name': stone.item_name,
+				'stone_type': stone.stone_type,
+				'stone_weight': stone.stone_weight,
+				'stone_charge': stone.stone_charge
+			})
+		invoice.insert(ignore_permissions = True)
+		set_invoice_weight_and_amount(invoice)
+
+		self.db_set('jewellery_invoice', invoice.name)
+		self.set_status()
+		frappe.msgprint(
+			msg = _('Jewellery Invoice {0} is created.').format(
+				get_link_to_form('Jewellery Invoice', invoice.name)
+			),
+			indicator = 'green',
+			alert = 1
+		)
+		return invoice.name
+
+	def validate_invoice_item(self, aumms_item):
+		"""
+			method to make sure the finished item can be billed as it stands
+			args:
+				aumms_item: the AuMMS Item document of the product
+
+			An invoice row takes its units from the item every time it is saved, so a unit
+			set on the row here is written back over by the blank one on the item and the row
+			is turned away as incomplete. The item is the only place they can be put right.
+		"""
+		for fieldname, label in (('stock_uom', _('Stock UOM')), ('weight_uom', _('Weight UOM'))):
+			if not aumms_item.get(fieldname):
+				frappe.throw(
+					_('Set {0} on Item {1} to invoice it.').format(
+						frappe.bold(label), get_link_to_form('AuMMS Item', aumms_item.name)
+					)
+				)
+
+	def get_jewellery_invoice_item(self, aumms_item, transaction_date):
+		"""
+			method to make the invoice row for one finished piece
+			args:
+				aumms_item: the AuMMS Item document of the product
+				transaction_date: the date the piece is priced on
+			output: dict of the Jewellery Invoice Item row
+
+			The row is filled in from the item the way the form fills it in when the item is
+			picked, and the framework writes the same values over it again as the invoice
+			saves. What is set here and nowhere else is the board rate of the day, the
+			delivery date, and the weight of a piece the item was never weighed for.
+		"""
+		gold_weight = flt(aumms_item.gold_weight) or flt(self.weight) / (self.quantity or 1)
+
+		return {
+			'item_code': aumms_item.name,
+			'item_name': aumms_item.item_name,
+			'item_type': aumms_item.item_type,
+			'purity': aumms_item.purity,
+			'is_purity_item': aumms_item.is_purity_item,
+			'stock_uom': aumms_item.stock_uom,
+			'uom': aumms_item.weight_uom,
+			'uom_conversion_factor': 1,
+			'board_rate': get_board_rate(
+				aumms_item.item_type, aumms_item.purity, aumms_item.stock_uom, transaction_date
+			),
+			'making_charge_based_on': aumms_item.making_charge_based_on,
+			'making_charge_percentage': aumms_item.making_charge_percentage,
+			'is_fixed_making_charge': aumms_item.making_charge,
+			'gold_weight': gold_weight,
+			'net_weight': flt(aumms_item.weight_per_unit) or gold_weight,
+			'has_stone': aumms_item.has_stone,
+			'stone_weight': aumms_item.stone_weight,
+			'stone_charge': aumms_item.stone_charge,
+			'under_manufacturing': aumms_item.under_manufacturing,
+			'qty': 1,
+			'stock_qty': 1,
+			'delivery_date': transaction_date
+		}
+
 	def create_metal_ledger_entry(self):
 		"""
 			method to bring the metal of the finished piece back into the metal ledger
@@ -324,6 +502,71 @@ class ManufacturingRequest(Document):
 				finished = 0
 				break
 		frappe.db.set_value('Manufacturing Request', self.name, 'finished', finished)
+		self.set_status()
+
+	def set_status(self):
+		"""
+			method to write how far the request has got
+
+			This is the only writer of status, and it is called from every point the request
+			moves on, the status being read off the request rather than set by hand.
+		"""
+		self.db_set('status', self.get_status())
+
+	def get_status(self):
+		"""
+			method to work out how far the request has got
+			output: one of the Status options
+
+			A request raised for a Raw Material Request is made for stock and is never
+			invoiced, so Manufactured is the end of its life.
+		"""
+		if self.docstatus == 2:
+			return 'Cancelled'
+		if self.is_invoiced():
+			return 'Completed'
+		if self.docstatus == 1 or self.is_finished():
+			return 'Manufactured'
+		if self.is_started():
+			return 'Manufacturing'
+		return 'Pending'
+
+	def is_invoiced(self):
+		"""
+			method to say whether the piece is billed to the customer
+			output: True if an invoice stands against the request
+
+			The invoice is left in draft to be settled with the customer, so a draft one
+			counts as billed. A cancelled one does not, the request being invoiced again.
+		"""
+		if not self.jewellery_invoice:
+			return False
+		return frappe.db.get_value('Jewellery Invoice', self.jewellery_invoice, 'docstatus') != 2
+
+	def is_finished(self):
+		"""
+			method to say whether the smiths are done with the piece
+			output: True if every stage is completed
+
+			A request without stages is not finished by having none of them, it is one that
+			has not been given the stages it is to be made in.
+		"""
+		if not self.manufacturing_stages:
+			return False
+		return all(stage.completed for stage in self.manufacturing_stages)
+
+	def is_started(self):
+		"""
+			method to say whether the piece is being worked on
+			output: True if any stage has been taken up
+
+			A stage is taken up when its raw material is bundled out to the smith or its job
+			card is raised, both of which happen before the smith has anything to complete.
+		"""
+		return any(
+			stage.raw_material_bundle_created or stage.job_card_created or stage.completed
+			for stage in self.manufacturing_stages
+		)
 
 	def mark_as_finished_in_jewellery_order(self):
 		if frappe.db.exists('Jewellery Order', self.jewellery_order):
@@ -395,6 +638,9 @@ class ManufacturingRequest(Document):
 			new_jewellery_job_card.expected_weight = self.expected_weight
 			new_jewellery_job_card.product_weight = self.expected_weight #TODO : Remove this line as it is repeated
 			new_jewellery_job_card.uom = self.uom
+			# the job card raises the item the piece is booked and billed as, which is weighed
+			# in this unit, and is left without one when the request is not asked for it
+			new_jewellery_job_card.weight_uom = self.weight_uom or self.uom
 			new_jewellery_job_card.type = self.type
 			new_jewellery_job_card.category = self.category
 			new_jewellery_job_card.smith_warehouse = stage.smith_warehouse
@@ -412,6 +658,12 @@ class ManufacturingRequest(Document):
 			new_jewellery_job_card.save(ignore_permissions=True)
 			frappe.db.set_value('Jewellery Job Card', self.manufacturing_request, 'product',self.product)
 			frappe.db.set_value(stage.doctype, stage.name, 'job_card_created', 1)
+			# the row this request holds is the one the status is read off, and the value was
+			# written to the stage row on its own
+			stage_row = self.get('manufacturing_stages', {'name': stage_row_id})
+			if stage_row:
+				stage_row[0].job_card_created = 1
+			self.set_status()
 			if smith_email:
 				add_assignment({
 					"doctype": new_jewellery_job_card.doctype,
@@ -421,6 +673,24 @@ class ManufacturingRequest(Document):
 			frappe.msgprint("Jewellery Job Card Created.", indicator="green", alert=1)
 		else:
 			frappe.throw(_("Job card already exists for this stage"))
+
+
+def set_invoice_weight_and_amount(invoice):
+	"""
+		method to total the weight and the amount of a Jewellery Invoice
+		args:
+			invoice: the Jewellery Invoice document, priced and saved
+
+		The invoice keeps these totals from the form, which adds them up as the rows are
+		keyed in. An invoice made here is never keyed in, so they are added up once the
+		rows have been priced by its own validation.
+	"""
+	total_gold_amount = sum(flt(item.amount) for item in invoice.items)
+	invoice.db_set({
+		'total_gold_weight': sum(flt(item.gold_weight) for item in invoice.items),
+		'total_gold_amount': total_gold_amount,
+		'balance_amount': total_gold_amount
+	})
 
 
 @frappe.whitelist()
