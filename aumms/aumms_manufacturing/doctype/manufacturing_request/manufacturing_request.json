@@ -6,6 +6,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "connections_tab",
   "title",
   "request_from",
   "raw_material_request",
@@ -40,8 +41,7 @@
   "column_break_mfg",
   "posting_date",
   "posting_time",
-  "amended_from",
-  "connections_tab"
+  "amended_from"
  ],
  "fields": [
   {
@@ -58,7 +58,8 @@
    "fieldtype": "Link",
    "label": "Jewellery Order",
    "mandatory_depends_on": "eval:doc.request_form ==\"Jewellery Order\"",
-   "options": "Jewellery Order"
+   "options": "Jewellery Order",
+   "search_index": 1
   },
   {
    "depends_on": "eval:doc.request_from =='Raw Material Request'",
@@ -179,8 +180,7 @@
   {
    "fieldname": "connections_tab",
    "fieldtype": "Tab Break",
-   "label": "Connections",
-   "show_dashboard": 1
+   "label": "Details"
   },
   {
    "fieldname": "title",
@@ -291,7 +291,7 @@
    "link_fieldname": "manufacturing_request"
   }
  ],
- "modified": "2026-09-07 22:40:00.000000",
+ "modified": "2026-09-08 11:23:38.590388",
  "modified_by": "Administrator",
  "module": "AuMMS Manufacturing",
  "name": "Manufacturing Request",

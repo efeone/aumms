@@ -393,6 +393,7 @@ class ManufacturingRequest(Document):
 			new_jewellery_job_card.required_date = self.required_date
 			new_jewellery_job_card.purity = self.purity
 			new_jewellery_job_card.expected_weight = self.expected_weight
+			new_jewellery_job_card.product_weight = self.expected_weight #TODO : Remove this line as it is repeated
 			new_jewellery_job_card.uom = self.uom
 			new_jewellery_job_card.type = self.type
 			new_jewellery_job_card.category = self.category

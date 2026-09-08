@@ -3,7 +3,8 @@
 /* eslint-disable */
 
 frappe.query_reports['Metal Ledger'] = {
-	onload () {
+	onload (report) {
+		hook_purity_chart(report)
 		// A route that opens the report already says which series it wants to see, so the
 		// settings only fill in the ones it left alone.
 		if (!frappe.query_report.get_filter_value('uom')) {
@@ -163,3 +164,103 @@ frappe.query_reports['Metal Ledger'] = {
 		return value;
 	}
 };
+
+// where the charts section remembers whether it was left folded away
+const CHARTS_HIDDEN_KEY = 'metal_ledger_charts_hidden'
+
+let hook_purity_chart = function (report) {
+	/* The desk draws one chart for a report, and skips its render hooks altogether when the
+	   filters leave nothing to show, which would leave the last filters' chart standing. So
+	   the purity chart is hung off the refresh that fetched the rows. */
+	if (report.purity_chart_hooked) {
+		return
+	}
+	report.purity_chart_hooked = true
+	let refresh = report.refresh.bind(report)
+	report.refresh = (...args) => {
+		// refresh is told whether the filters changed, and answers with the rows it fetched
+		return Promise.resolve(refresh(...args)).then(() => update_purity_chart(report))
+	}
+}
+
+let update_purity_chart = function (report) {
+	let $purity_chart = prepare_chart_area(report)
+	if (!report.data || !report.data.length) {
+		// the rows are gone, and the chart drawn beside this one goes with them
+		report.$chart.empty().hide()
+	}
+	if (!$purity_chart.parent().is(':visible')) {
+		// the section is folded away, and the chart is drawn again when it is opened
+		return
+	}
+	frappe.call({
+		method: 'aumms.aumms.report.metal_ledger.metal_ledger.get_purity_chart',
+		args: { filters: report.get_filter_values() }
+	}).then(r => {
+		$purity_chart.empty()
+		if (!r.message) {
+			$purity_chart.hide()
+			return
+		}
+		$purity_chart.show()
+		new frappe.Chart($purity_chart[0], Object.assign({
+			height: 280,
+			axisOptions: {
+				shortenYAxisNumbers: 1,
+				numberFormatter: frappe.utils.format_chart_axis_number
+			}
+		}, r.message))
+	})
+}
+
+let prepare_chart_area = function (report) {
+	// the charts share a row, which is looked up rather than built again on each refresh
+	let $dashboard = report.page.main.find('.metal-ledger-dashboard')
+	if (!$dashboard.length) {
+		$dashboard = build_chart_area(report)
+	}
+	let $charts = $dashboard.find('.metal-ledger-charts')
+	if (!$.contains($charts[0], report.$chart[0])) {
+		report.$chart.appendTo($charts).css({ flex: '1 1 360px', 'min-width': 0 })
+	}
+	return $dashboard.find('.purity-chart')
+}
+
+let build_chart_area = function (report) {
+	let $dashboard = $(`
+		<div class="metal-ledger-dashboard">
+			<div class="metal-ledger-charts-head" style="display: flex; align-items: center; gap: 4px; padding: 10px 15px 0; cursor: pointer; user-select: none;">
+				<span class="charts-caret"></span>
+				<span class="text-muted">${__('Charts')}</span>
+			</div>
+			<div class="metal-ledger-charts" style="display: flex; flex-wrap: wrap;"></div>
+		</div>
+	`).insertAfter(report.$chart)
+
+	$('<div class="chart-wrapper purity-chart" style="flex: 1 1 360px; min-width: 0;"></div>')
+		.appendTo($dashboard.find('.metal-ledger-charts'))
+	$dashboard.find('.metal-ledger-charts-head').on('click', () => {
+		toggle_charts(report, $dashboard.find('.metal-ledger-charts').is(':visible'))
+	})
+
+	// the section opens the way it was last left, on this report alone
+	apply_charts_state($dashboard, localStorage.getItem(CHARTS_HIDDEN_KEY) == '1')
+	return $dashboard
+}
+
+let toggle_charts = function (report, hidden) {
+	let $dashboard = report.page.main.find('.metal-ledger-dashboard')
+	localStorage.setItem(CHARTS_HIDDEN_KEY, hidden ? '1' : '0')
+	apply_charts_state($dashboard, hidden)
+	if (!hidden) {
+		// a chart drawn into a folded section had no width to draw into, so it is drawn again
+		report.chart_options && report.render_chart(report.chart_options)
+		update_purity_chart(report)
+	}
+}
+
+let apply_charts_state = function ($dashboard, hidden) {
+	$dashboard.find('.metal-ledger-charts').toggle(!hidden)
+	$dashboard.find('.charts-caret')
+		.html(frappe.utils.icon(hidden ? 'es-small-right' : 'es-small-down', 'sm'))
+}
