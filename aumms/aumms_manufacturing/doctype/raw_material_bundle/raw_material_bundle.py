@@ -20,14 +20,21 @@ class RawMaterialBundle(Document):
 			items.raw_material_id = f"{items.item}-{self.stage}-{items.required_weight}"
 
 	def validate(self):
+		self.validate_smith()
 		self.set_row_warehouses()
 		self.set_raw_material_available()
+
+	def after_insert(self):
+		self.update_stage_bundle_flags()
+
+	def after_delete(self):
+		self.update_stage_bundle_flags()
 
 	def before_submit(self):
 		self.validate_raw_material_available()
 
 	def on_submit(self):
-		self.mark_as_raw_material_bundle_created(created = 1)
+		self.update_stage_bundle_flags()
 		stock_entry = self.transfer_raw_materials_to_smith()
 		# the ledger is posted at the moment the stock moved, so the two agree on a repost
 		self.posting_date = stock_entry.posting_date
@@ -40,7 +47,7 @@ class RawMaterialBundle(Document):
 		self.create_metal_ledger_entries()
 
 	def on_cancel(self):
-		self.mark_as_raw_material_bundle_created(created = 0)
+		self.update_stage_bundle_flags()
 		self.cancel_stock_entry()
 		cancel_metal_ledger_entries(self)
 
@@ -106,6 +113,26 @@ class RawMaterialBundle(Document):
 				title = _('Raw Material Not Available')
 			)
 
+	def get_manufacturing_stage_row_name(self):
+		"""
+			method to get the stage row of the Manufacturing Request this bundle belongs to
+			output: name of the Manufacturing Request Stage row, else None
+
+			A bundle raised from the request carries the row it was raised from. One raised
+			before that was carried, or from a script, names only the stage it works, which
+			is looked for on the request the bundle belongs to.
+		"""
+		if self.manufacturing_stage and frappe.db.exists(
+			'Manufacturing Request Stage', self.manufacturing_stage
+		):
+			return self.manufacturing_stage
+
+		return frappe.db.get_value('Manufacturing Request Stage', {
+			'parent': self.manufacturing_request,
+			'parenttype': 'Manufacturing Request',
+			'manufacturing_stage': self.stage
+		}, 'name')
+
 	def get_manufacturing_stage_row(self):
 		"""
 			method to get the stage row of the Manufacturing Request this bundle is raised for
@@ -115,11 +142,32 @@ class RawMaterialBundle(Document):
 			both the warehouse the metal goes to and the party it is then held against, so
 			the stage row is the only place either can come from.
 		"""
-		if not self.manufacturing_stage:
+		stage_row = self.get_manufacturing_stage_row_name()
+		if not stage_row:
 			return None
 		return frappe.db.get_value(
-			'Manufacturing Request Stage', self.manufacturing_stage,
+			'Manufacturing Request Stage', stage_row,
 			['smith', 'smith_warehouse'], as_dict = 1
+		)
+
+	def validate_smith(self):
+		"""
+			method to stop a bundle being raised for a stage that has no smith
+
+			The metal moves into the smith's own warehouse and the metal ledger then holds it
+			against him as the party. Without a smith there is neither a warehouse to move it
+			to nor a party to hold it against, and the metal would be stranded partway.
+		"""
+		stage = self.get_manufacturing_stage_row()
+		if stage and stage.smith:
+			return
+
+		frappe.throw(
+			_('Select the Smith on stage {0} of {1} before its Raw Material Bundle is created.').format(
+				frappe.bold(self.stage),
+				get_link_to_form('Manufacturing Request', self.manufacturing_request)
+			),
+			title = _('Smith Not Selected')
 		)
 
 	def transfer_raw_materials_to_smith(self):
@@ -236,19 +284,37 @@ class RawMaterialBundle(Document):
 				alert = 1
 			)
 
-	def mark_as_raw_material_bundle_created(self, created):
+	def update_stage_bundle_flags(self):
+		"""
+			method to write onto the stage row what bundles stand against it
+
+			The two flags are worked out from the bundles themselves rather than turned on
+			and off a step at a time, so a stage whose bundle was raised, cancelled and
+			raised again reads the same as one that has only ever had the one.
+
+			They are not the same question. A stage is bundled the moment a bundle is raised
+			for it, draft or not, which is what keeps a second one from being raised over
+			the first. The metal is only in the smith's hands once that bundle is submitted,
+			which is what opens the job card.
+		"""
+		stage_row = self.get_manufacturing_stage_row_name()
+		if not stage_row:
+			return
+
+		# the bundle being cancelled or deleted is already off the books by the time this runs
+		docstatuses = frappe.get_all(
+			'Raw Material Bundle',
+			filters = {'manufacturing_stage': stage_row, 'docstatus': ['<', 2]},
+			pluck = 'docstatus'
+		)
+		frappe.db.set_value('Manufacturing Request Stage', stage_row, {
+			'raw_material_bundle_created': 1 if docstatuses else 0,
+			'raw_material_available': 1 if 1 in docstatuses else 0
+		})
+
 		if frappe.db.exists('Manufacturing Request', self.manufacturing_request):
-			manufacturing_request = frappe.get_doc('Manufacturing Request', self.manufacturing_request)
-			if manufacturing_request:
-				updated = False
-				for stage in manufacturing_request.manufacturing_stages:
-					if stage.manufacturing_stage == self.stage:
-						stage.raw_material_bundle_created = created
-						frappe.db.set_value('Manufacturing Request Stage', stage.name, 'raw_material_bundle_created', created)
-						frappe.db.set_value('Manufacturing Request Stage', stage.name, 'raw_material_available', created)
-						break
-				# the metal going out to the smith is the first sign of the piece being made
-				manufacturing_request.set_status()
+			# the metal going out to the smith is the first sign of the piece being made
+			frappe.get_doc('Manufacturing Request', self.manufacturing_request).set_status()
 
 
 @frappe.whitelist()

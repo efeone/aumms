@@ -80,7 +80,7 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval:(doc.raw_material_available == 1 || (doc.previous_stage_completed == 1 && doc.is_raw_material_from_previous_stage_only == 1))",
+   "depends_on": "eval:(doc.job_card_created == 0 && (doc.raw_material_available == 1 || (doc.previous_stage_completed == 1 && doc.is_raw_material_from_previous_stage_only == 1)))",
    "fieldname": "create_job_card",
    "fieldtype": "Button",
    "label": "Create Job Card"

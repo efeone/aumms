@@ -25,8 +25,37 @@ frappe.ui.form.on("Manufacturing Request", {
 		}
 		add_smith_buttons(frm);
 		add_invoice_button(frm);
+		update_submit_readiness(frm);
 	},
 });
+
+/* The bundle and the job card of a stage are documents of their own, so the request has to
+   be told from the server what its stages are still waiting on. */
+function update_submit_readiness(frm) {
+	if (frm.is_new() || frm.doc.docstatus !== 0) {
+		frm.set_intro('');
+		return;
+	}
+
+	frm.call('get_pending_stage_documents').then(r => {
+		let pending = r.message || [];
+		if (!pending.length) {
+			frm.set_intro('');
+			return;
+		}
+
+		frm.set_intro(
+			__('This request cannot be submitted until every stage is documented:') +
+			'<ul>' + pending.map(row => `<li>${row.stage}: ${row.message}</li>`).join('') + '</ul>',
+			'orange'
+		);
+		/* Save and Submit are the same button, so it is only cleared away when Submit is what
+		   it is offering. Editing the request puts Save back on its own. */
+		if (!frm.is_dirty()) {
+			frm.page.clear_primary_action();
+		}
+	});
+}
 
 /* A piece made for a Jewellery Order is billed to the customer who ordered it, and only
    once it is bought back from the smith and the store has something to sell. */
@@ -166,6 +195,14 @@ function hide_add_row_button(frm) {
 frappe.ui.form.on("Manufacturing Request Stage", {
 	create_raw_material_bundle: function(frm, cdt , cdn) {
 		let row = locals[cdt][cdn];
+		/* The bundle moves the metal into the smith's own warehouse and the metal ledger then
+		   holds it against him, so there is nowhere for it to go until the stage has one. */
+		if (!row.smith) {
+			frappe.throw({
+				title: __('Smith Not Selected'),
+				message: __('Select the Smith on stage {0} before its Raw Material Bundle is created.', [row.manufacturing_stage])
+			});
+		}
 		frappe.new_doc('Raw Material Bundle', {
 			'manufacturing_request': frm.doc.name,
 			'stage' : row.manufacturing_stage,
@@ -177,6 +214,8 @@ frappe.ui.form.on("Manufacturing Request Stage", {
 	create_job_card: function(frm, cdt, cdn) {
 		frm.call('create_jewellery_job_card', { 'stage_row_id': cdn }).then(r => {
 			frm.refresh_fields();
+			// refresh_fields leaves the form's own refresh unrun, so the banner is told itself
+			update_submit_readiness(frm);
 		});
 	},
 	previous_stage_completed: function(frm, cdt, cdn) {

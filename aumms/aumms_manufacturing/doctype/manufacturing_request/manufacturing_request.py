@@ -15,7 +15,6 @@ from aumms.aumms.utils import (
 )
 
 class ManufacturingRequest(Document):
-
 	def autoname(self):
 		if self.request_from == "Jewellery Order":
 			self.title = f"{self.purity}  {self.expected_weight} {self.uom}  {self.type}  {self.category}"
@@ -30,6 +29,7 @@ class ManufacturingRequest(Document):
 		self.status = self.get_status()
 
 	def before_submit(self):
+		self.validate_stage_documents()
 		self.send_notification_to_owner()
 
 	def on_update_after_submit(self):
@@ -64,6 +64,81 @@ class ManufacturingRequest(Document):
 					get_link_to_form('Jewellery Invoice', self.jewellery_invoice)
 				)
 			)
+
+	def validate_stage_documents(self):
+		"""
+			method to stop a request being submitted before its stages are documented
+
+			Submitting makes the piece out of the raw materials the bundles issued, so a stage
+			left undocumented is a piece made out of metal nobody was given. Every gap is
+			reported at once rather than one at a time, the stages being worked in parallel.
+		"""
+		pending = self.get_pending_stage_documents()
+		if not pending:
+			return
+
+		frappe.throw(
+			msg = _('Submit the following before {0} is submitted:').format(frappe.bold(self.name)) + '<ul>' + ''.join(
+				'<li>{0}: {1}</li>'.format(frappe.bold(row['stage']), row['message']) for row in pending
+			) + '</ul>',
+			title = _('Stage Documents Pending')
+		)
+
+	@frappe.whitelist()
+	def get_pending_stage_documents(self):
+		"""
+			method to list what the stages are still waiting on to be submitted
+			output: list of dicts of the stage, the document wanting and why it is wanting
+
+			A stage is worked on the strength of two documents: the bundle that puts the metal
+			in the smith's hands and the job card that records what he did with it. Neither
+			counts until it is submitted, a draft being a document only started.
+
+			The form asks for this list too, so what it offers and what a submit allows are
+			read off the one method and cannot fall out of step.
+		"""
+		pending = []
+		for stage in self.manufacturing_stages:
+			# a stage taking its metal from the stage before it is never bundled, the metal
+			# having already been handed on, which is why it is offered no bundle button
+			if not stage.is_raw_material_from_previous_stage_only:
+				pending += self.get_pending_stage_document(
+					'Raw Material Bundle', {'manufacturing_stage': stage.name}, stage.manufacturing_stage
+				)
+			pending += self.get_pending_stage_document(
+				'Jewellery Job Card',
+				{'manufacturing_request': self.name, 'manufacturing_stage': stage.manufacturing_stage},
+				stage.manufacturing_stage
+			)
+		return pending
+
+	def get_pending_stage_document(self, doctype, filters, stage):
+		"""
+			method to say whether one of a stage's documents stands submitted
+			args:
+				doctype: the doctype the stage is documented on
+				filters: what ties a document of that doctype to the stage
+				stage: the manufacturing stage the document belongs to
+			output: list of the one pending dict, else an empty list
+
+			A bundle is tied to the stage row it was raised from and a job card to the stage
+			it works, so the two are looked up on filters of their own rather than on one
+			shared between them.
+
+			A cancelled document is passed over rather than reported, the stage being back to
+			having none of that document, and its amendment is picked up in its place.
+		"""
+		if frappe.db.exists(doctype, dict(filters, docstatus = 1)):
+			return []
+
+		draft = frappe.db.get_value(doctype, dict(filters, docstatus = 0), 'name')
+		return [{
+			'stage': stage,
+			'doctype': doctype,
+			'document': draft,
+			'message': _('{0} is not submitted.').format(get_link_to_form(doctype, draft)) if draft
+				else _('No {0} is created.').format(_(doctype))
+		}]
 
 	def get_last_stage(self):
 		"""
