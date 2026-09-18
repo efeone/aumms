@@ -89,7 +89,55 @@ frappe.ui.form.on('Jewellery Invoice', {
 						}
 				});
 		}
-}
+	},
+	scan_barcode(frm) {
+		const scanned = (frm.doc.scan_barcode || "").trim();
+		if (!scanned) return;
+		let payload;
+		try {
+			payload = JSON.parse(scanned);
+		} catch (e) {
+			payload = {
+				item_code: scanned
+			};
+		}
+		if (!payload.item_code) {
+			frappe.show_alert({
+				message: __("Scanned code has no item_code"),
+				indicator: "red"
+			});
+			frm.set_value("scan_barcode", "");
+			return;
+		}
+		frappe.call({
+			method: "aumms.aumms.doctype.jewellery_invoice.jewellery_invoice.get_scanned_item_details",
+			args: {
+				item_code: payload.item_code,
+				company: frm.doc.company,
+				customer: frm.doc.customer,
+				posting_date: frm.doc.transaction_date
+			},
+			freeze: true,
+			callback(r) {
+				if (r.message) {
+					add_scanned_item(frm, r.message, payload);
+				} else {
+					frappe.show_alert({
+						message: __("No details returned for scanned item"),
+						indicator: "red"
+					});
+				}
+				frm.set_value("scan_barcode", "");
+			},
+			error(err) {
+				console.error(
+					"Error fetching scanned item:",
+					err
+				);
+				frm.set_value("scan_barcode", "");
+			}
+		});
+	}
 });
 
 frappe.ui.form.on('Old Jewellery Item', {
@@ -146,10 +194,129 @@ frappe.ui.form.on('Old Jewellery Item', {
 	},
 	old_jewellery_items_remove: function(frm){
 		set_net_weight_and_amount(frm);
-	}
+	},
 });
 
+function add_scanned_item(frm, d, scanned) {
+    if (!d || !d.item_code) {
+        frappe.show_alert({
+            message: __("Invalid AuMMS Item"),
+            indicator: "red"
+        });
+        return;
+    }
 
+    // ---------------------------------------------------------
+    // If same item already exists, increase qty
+    // ---------------------------------------------------------
+
+    const existing = (frm.doc.items || []).find(
+        row => row.item_code === d.item_code
+    );
+
+    if (existing) {
+        frappe.model.set_value(
+            existing.doctype,
+            existing.name,
+            "qty",
+            (existing.qty || 0) + 1
+        );
+        frappe.show_alert({
+            message: __("Qty updated for {0}", [
+                d.item_code
+            ]),
+            indicator: "green"
+        });
+
+        return;
+    }
+
+    // ---------------------------------------------------------
+    // Find blank row
+    // ---------------------------------------------------------
+
+    let row = (frm.doc.items || []).find(
+        row => !row.item_code
+    );
+    if (!row) {
+        row = frm.add_child("items");
+    }
+
+    // ---------------------------------------------------------
+    // Get child table fields
+    // ---------------------------------------------------------
+
+    const child_dt = frm.fields_dict.items.grid.doctype;
+
+    const valid_fields = new Set(
+        frappe.get_meta(child_dt).fields.map(
+            field => field.fieldname
+        )
+    );
+
+    const candidate = {
+        item_name: d.item_name,
+        description: d.description,
+        item_group: d.item_group,
+        item_type: d.item_type,
+        is_purity_item: d.is_purity_item,
+        purity: d.purity,
+        stock_uom: d.stock_uom,
+        uom: d.uom,
+        conversion_factor: d.conversion_factor || 1,
+        gold_weight: d.gold_weight,
+        stone_weight: d.stone_weight,
+        net_weight: d.net_weight,
+        weight_uom: d.weight_uom,
+        purity_percentage: d.purity_percentage,
+        making_charge_based_on: d.making_charge_based_on,
+        making_charge_percentage: d.making_charge_percentage,
+        making_charge: d.making_charge,
+        stone_charge: d.stone_charge,
+        rate: d.rate || 0,
+        price_list_rate: d.price_list_rate || 0,
+        qty: 1,
+    };
+
+    for (const [fieldname, value] of Object.entries(candidate)) {
+        if (
+            fieldname === "item_code" ||
+            value === undefined ||
+            value === null
+        ) {
+            continue;
+        }
+        if (valid_fields.has(fieldname)) {
+            frappe.model.set_value(
+                row.doctype,
+                row.name,
+                fieldname,
+                value
+            );
+        } else {
+            console.warn(
+                "Field not found in child table:",
+                fieldname
+            );
+        }
+    }
+    if (valid_fields.has("item_code")) {
+        frappe.model.set_value(
+            row.doctype,
+            row.name,
+            "item_code",
+            d.item_code
+        );
+    }
+    frm.refresh_field("items");
+
+    frappe.show_alert({
+        message: __("Added {0}", [
+            d.item_name || d.item_code
+        ]),
+        indicator: "green"
+    });
+}
 frappe.ui.form.on('Jewellery Invoice Item', {
 
 	gold_weight: function(frm, cdt, cdn){

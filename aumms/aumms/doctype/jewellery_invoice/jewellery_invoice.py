@@ -3,6 +3,7 @@
 
 import frappe
 from frappe import _
+from frappe.utils import nowdate
 from erpnext.accounts.party import get_party_account
 from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
 from erpnext.stock.doctype.item.item import get_item_defaults
@@ -12,6 +13,7 @@ from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.model.utils import get_fetch_values
 from frappe.utils import cint, flt, money_in_words, rounded
+
 
 class JewelleryInvoice(Document):
 	def validate(self):
@@ -927,3 +929,101 @@ def get_pricing_rule_and_items(customer):
     
     return {}
 
+def resolve_item_code(code):
+    """
+    QR item_code is the name of the AuMMS Item.
+    """
+
+    if not code:
+        frappe.throw(_("Item Code is required"))
+
+    if frappe.db.exists("AuMMS Item", code):
+        return code
+
+    frappe.throw(
+        _("No AuMMS Item found for scanned code {0}").format(code)
+    )
+
+
+@frappe.whitelist()
+def get_scanned_item_details(
+    item_code,
+    company=None,
+    customer=None,
+    posting_date=None
+):
+    """
+    Fetch the AuMMS Item details required by the
+    Jewellery Invoice Item table.
+
+    This function does NOT calculate the rate.
+    Your existing Jewellery Invoice Item events
+    will continue to handle the calculation.
+    """
+
+    item_code = resolve_item_code(item_code)
+
+    item = frappe.get_doc(
+        "AuMMS Item",
+        item_code
+    )
+
+    if item.get("disabled"):
+        frappe.throw(
+            _("AuMMS Item {0} is disabled").format(item.name)
+        )
+
+    uom = (
+        item.get("weight_uom")
+        or item.get("stock_uom")
+        or "Nos"
+    )
+
+    # ---------------------------------------------------------
+    # Return item details
+    # ---------------------------------------------------------
+
+    result = {
+
+        "item_code": item.name,
+        "item_name": item.get("item_name") or item.name,
+        "description": (
+            item.get("description")
+            or item.get("item_name")
+            or item.name
+        ),
+        "item_group": item.get("item_group"),
+
+        "item_type": item.get("item_type"),
+        "is_purity_item": item.get("is_purity_item"),
+
+        "purity": item.get("purity"),
+        "purity_percentage": item.get("purity_percentage"),
+
+        "stock_uom": item.get("stock_uom") or uom,
+        "uom": uom,
+        "gold_weight": item.get("gold_weight") or 0,
+        "stone_weight": item.get("stone_weight") or 0,
+        "net_weight": item.get("net_weight") or 0,
+        "weight_uom": item.get("weight_uom"),
+        "stone_charge": item.get("stone_charge") or 0,
+
+        "making_charge_based_on": item.get(
+            "making_charge_based_on"
+        ),
+
+        "making_charge_percentage": item.get(
+            "making_charge_percentage"
+        ),
+
+        "making_charge": item.get(
+            "making_charge"
+        ) or 0,
+        "conversion_factor": 1,
+        "qty": 1,
+        "rate": 0,
+        "price_list_rate": 0
+    }
+
+
+    return result

@@ -101,8 +101,7 @@
    "fieldname": "rate",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Rate",
-   "read_only": 1
+   "label": "Rate"
   },
   {
    "fetch_from": "item_code.stock_uom",
@@ -143,12 +142,13 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-08-23 14:56:04.396955",
+ "modified": "2026-09-18 07:24:27.454804",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Old Jewellery Item",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

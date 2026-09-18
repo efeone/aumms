@@ -19,6 +19,7 @@
   "column_break_8fcvh",
   "old_jewellery_items",
   "items_section",
+  "scan_barcode",
   "items",
   "stone_details",
   "discounts",
@@ -483,13 +484,19 @@
    "options": "currency",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "scan_barcode",
+   "fieldtype": "Data",
+   "label": "Scan Barcode",
+   "options": "Barcode"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-09-07 12:33:40.744681",
+ "modified": "2026-09-18 07:40:37.716292",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "Jewellery Invoice",
