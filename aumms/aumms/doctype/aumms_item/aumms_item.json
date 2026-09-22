@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:item_code",
  "creation": "2023-07-15 13:29:36.519669",
@@ -10,11 +11,14 @@
  "field_order": [
   "details_tab",
   "item_code",
+  "naming_series",
   "item_name",
   "item_group",
   "item_type",
   "stock_uom",
   "item_category",
+  "item_qr",
+  "item_qr_image",
   "column_break_36khf",
   "disabled",
   "is_stock_item",
@@ -365,11 +369,29 @@
    "fieldname": "is_raw_material",
    "fieldtype": "Check",
    "label": "Is Raw Material"
+  },
+  {
+   "fieldname": "item_qr_image",
+   "fieldtype": "Image",
+   "label": "Item QR Code",
+   "options": "item_qr"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "AUM-ITEM-.YYYY.-"
+  },
+  {
+   "fieldname": "item_qr",
+   "fieldtype": "Attach Image",
+   "label": "Item QR Code",
+   "options": "item_qr"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-09-06 17:39:40.495423",
+ "modified": "2026-09-18 16:32:08.236258",
  "modified_by": "Administrator",
  "module": "AuMMS",
  "name": "AuMMS Item",

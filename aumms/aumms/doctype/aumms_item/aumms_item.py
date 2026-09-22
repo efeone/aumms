@@ -6,6 +6,8 @@ import json
 import frappe
 from frappe.model.document import Document
 from frappe.utils import getdate
+from aumms.aumms.doc_events.item import create_qr
+from frappe.utils import strip
 
 # Fields used to map AuMMS Item to Item
 aumms_item_fields = [
@@ -55,6 +57,19 @@ class AuMMSItem(Document):
 	def validate_stone_charge(self):
 		if not self.stone_charge and self.is_stone_item:
 			frappe.throw(_('Please Enter Stone Charge'))"""
+
+    def autoname(self):
+        if frappe.db.get_default("item_naming_by") == "Naming Series":
+            from frappe.model.naming import set_name_by_naming_series
+
+            set_name_by_naming_series(self)
+            self.item_code = self.name
+
+        self.item_code = strip(self.item_code)
+        self.name = self.item_code
+
+    def before_save(self):
+        create_qr(self)
 
     def validate_gold_weight(self):
         if not self.gold_weight and not self.is_stone_item:
